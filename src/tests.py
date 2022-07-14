@@ -80,9 +80,9 @@ class AvoidNeckTest(unittest.TestCase):
         self.assertEqual(len(result_moves), 3)
         self.assertEqual(expected, result_moves)
 
-    def test_avoid_wall_left(self):
+    def test_avoid_wall_all(self):
         # Arrange
-        test_body = [{"x": 1, "y": 1}, {"x": 2, "y": 2}, {"x": 3, "y": 3}]
+        test_body = [{"x": 5, "y": 6}]
 
         board = {
             "height": 11,
@@ -90,7 +90,27 @@ class AvoidNeckTest(unittest.TestCase):
         }
 
         possible_moves = ["up", "down", "left", "right"]
-        expected = ["up", "left", "right"]
+        expected = ["up", "down", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_wall_moves(
+            test_body, possible_moves, board)
+
+        # Assert
+        self.assertEqual(len(result_moves), 4)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_wall_left(self):
+        # Arrange
+        test_body = [{"x": 1, "y": 5}, {"x": 2, "y": 5}, {"x": 3, "y": 5}]
+
+        board = {
+            "height": 11,
+            "width": 11,
+        }
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "down", "right"]
 
         # Act
         result_moves = logic._filter_wall_moves(
@@ -102,7 +122,7 @@ class AvoidNeckTest(unittest.TestCase):
 
     def test_avoid_wall_right(self):
         # Arrange
-        test_body = [{"x": 10, "y": 1}, {"x": 9, "y": 2}, {"x": 8, "y": 3}]
+        test_body = [{"x": 10, "y": 5}, {"x": 9, "y": 5}, {"x": 8, "y": 5}]
 
         board = {
             "height": 11,
@@ -110,7 +130,7 @@ class AvoidNeckTest(unittest.TestCase):
         }
 
         possible_moves = ["up", "down", "left", "right"]
-        expected = ["up", "left", "right"]
+        expected = ["up", "down", "left"]
 
         # Act
         result_moves = logic._filter_wall_moves(
@@ -130,7 +150,7 @@ class AvoidNeckTest(unittest.TestCase):
         }
 
         possible_moves = ["up", "down", "left", "right"]
-        expected = ["up", "left", "right"]
+        expected = ["down", "left", "right"]
 
         # Act
         result_moves = logic._filter_wall_moves(
@@ -155,6 +175,81 @@ class AvoidNeckTest(unittest.TestCase):
         # Act
         result_moves = logic._filter_wall_moves(
             test_body, possible_moves, board)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_self_all(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 6}, {"x": 8, "y": 9}]
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "down", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_self_moves(
+            test_body, possible_moves)
+
+        # Assert
+        self.assertEqual(len(result_moves), 4)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_self_left(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 6}, {"x": 8, "y": 6}, {"x": 4, "y": 6}]
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "down", "right"]
+
+        # Act
+        result_moves = logic._filter_self_moves(
+            test_body, possible_moves)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_self_right(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 6}, {"x": 3, "y": 6}, {"x": 6, "y": 6}]
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "down", "left"]
+
+        # Act
+        result_moves = logic._filter_self_moves(
+            test_body, possible_moves)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_self_up(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 6}, {"x": 5, "y": 7}, {"x": 5, "y": 8}]
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["down", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_self_moves(
+            test_body, possible_moves)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_self_down(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 6}, {"x": 5, "y": 5}, {"x": 5, "y": 8}]
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_self_moves(
+            test_body, possible_moves)
 
         # Assert
         self.assertEqual(len(result_moves), 3)
