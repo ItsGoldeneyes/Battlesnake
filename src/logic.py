@@ -11,10 +11,10 @@ def get_info() -> dict:
     """
     return {
         "apiversion": "1",
-        "author": "Goldeneyes",  # TODO: Your Battlesnake Username
-        "color": "#ff0000",  # "color": "#EB6443",  # TODO: Personalize
-        "head": "missile",  # TODO: Personalize
-        "tail": "rocket",  # TODO: Personalize
+        "author": "Goldeneyes",
+        "color": "#eeff03",  # "color": "#EB6443",
+        "head": "missile",
+        "tail": "rocket",
     }
 
 
@@ -64,7 +64,7 @@ def choose_move(data: dict) -> str:
     for direction in possible_moves:
         if 1 >= moves[direction][0] >= board_width-1:
             possible_moves.remove(direction)
-        elif 1 >= moves[direction][0] >= board_height-1:
+        elif 1 >= moves[direction][1] >= board_height-1:
             possible_moves.remove(direction)
 
     # TODO: Step 2 - Don't hit yourself.
