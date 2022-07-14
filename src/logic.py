@@ -78,14 +78,14 @@ def choose_move(data: dict) -> str:
             possible_moves.remove(direction)
 
         # Don't hit yourself
-        for segment in my_body:
-            if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
-                possible_moves.remove(direction)
+        # for segment in my_body:
+        #     if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
+        #         possible_moves.remove(direction)
 
-        # Don't hit others
-        for segment in other_snakes_pos:
-            if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
-                possible_moves.remove(direction)
+        # # Don't hit others
+        # for segment in other_snakes_pos:
+        #     if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
+        #         possible_moves.remove(direction)
 
     # if food != {}:
     #     possible_food_moves = []
