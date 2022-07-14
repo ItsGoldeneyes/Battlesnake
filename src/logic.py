@@ -13,7 +13,7 @@ def get_info() -> dict:
     return {
         "apiversion": "1",
         "author": "Goldeneyes",
-        "color": "#00ff00",  # "color": "#EB6443",
+        "color": "#EB6443",  # "color": "#EB6443",
         "head": "missile",
         "tail": "rocket",
     }
