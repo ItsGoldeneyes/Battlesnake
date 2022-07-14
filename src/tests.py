@@ -80,6 +80,86 @@ class AvoidNeckTest(unittest.TestCase):
         self.assertEqual(len(result_moves), 3)
         self.assertEqual(expected, result_moves)
 
+    def test_avoid_wall_left(self):
+        # Arrange
+        test_body = [{"x": 1, "y": 1}, {"x": 2, "y": 2}, {"x": 3, "y": 3}]
+
+        board = {
+            "height": 11,
+            "width": 11,
+        }
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_wall_moves(
+            test_body, possible_moves, board)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_wall_right(self):
+        # Arrange
+        test_body = [{"x": 10, "y": 1}, {"x": 9, "y": 2}, {"x": 8, "y": 3}]
+
+        board = {
+            "height": 11,
+            "width": 11,
+        }
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_wall_moves(
+            test_body, possible_moves, board)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_wall_up(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 10}, {"x": 5, "y": 9}, {"x": 5, "y": 8}]
+
+        board = {
+            "height": 11,
+            "width": 11,
+        }
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_wall_moves(
+            test_body, possible_moves, board)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
+    def test_avoid_wall_down(self):
+        # Arrange
+        test_body = [{"x": 5, "y": 1}, {"x": 5, "y": 2}, {"x": 5, "y": 3}]
+
+        board = {
+            "height": 11,
+            "width": 11,
+        }
+
+        possible_moves = ["up", "down", "left", "right"]
+        expected = ["up", "left", "right"]
+
+        # Act
+        result_moves = logic._filter_wall_moves(
+            test_body, possible_moves, board)
+
+        # Assert
+        self.assertEqual(len(result_moves), 3)
+        self.assertEqual(expected, result_moves)
+
 
 if __name__ == "__main__":
     unittest.main()

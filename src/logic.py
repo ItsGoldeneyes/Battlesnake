@@ -128,20 +128,29 @@ def _filter_wall_moves(my_body: dict, possible_moves: List[str], board: dict) ->
 
     board_height = board['height']
     board_width = board['width']
+    print("\n")
+
+    print(board_width, board_height)
 
     moves = {
-        "up": [my_head['x'], my_head['y']+1],
-        "down": [my_head['x'], my_head['y']-1],
-        "left": [my_head['x']-1, my_head['y']],
-        "right": [my_head['x']+1, my_head['y']]
+        "up": {"x": my_head['x'], "y": my_head['y']+1},
+        "down": {"x": my_head['x'], "y": my_head['y']-1},
+        "left": {"x": my_head['x']-1, "y": my_head['y']},
+        "right": {"x": my_head['x']+1, "y": my_head['y']}
     }
-
+    # print(moves)
     for direction in possible_moves:
+        print(direction)
         # Don't hit walls
-        if 1 >= moves[direction][0] >= board_width-1:
+
+        if 0 == moves[direction]["x"] or moves[direction]["x"] >= board_width-1:
+            print(moves[direction]["x"])
             possible_moves.remove(direction)
-        elif 1 >= moves[direction][1] >= board_height-1:
+            print("remove")
+        elif 0 == moves[direction]["y"] or moves[direction]["y"] >= board_height-1:
+            print(moves[direction]["y"])
             possible_moves.remove(direction)
+            print("remove")
 
     return possible_moves
 
