@@ -48,20 +48,17 @@ def choose_move(data: dict) -> str:
 
     # Step 0: Don't allow your Battlesnake to move back on it's own neck.
     possible_moves = _avoid_my_neck(my_body, possible_moves)
-
-    # TODO: Step 1 - Don't hit walls.
-    # Use information from `data` and `my_head` to not move beyond the game board.
     board = data['board']
-    board_height = board['height']
-    board_width = board['width']
+    # board_height = board['height']
+    # board_width = board['width']
 
-    other_snakes = board['snakes']
-    other_snakes_pos = []
-    for snake in other_snakes:
-        for i in snake["body"]:
-            other_snakes_pos.append(i["x"], i["y"])
+    # other_snakes = board['snakes']
+    # other_snakes_pos = []
+    # for snake in other_snakes:
+    #     for i in snake["body"]:
+    #         other_snakes_pos.append(i["x"], i["y"])
 
-    food = data["board"]["food"]
+    # food = data["board"]["food"]
 
     moves = {
         "up": [my_head['x'], my_head['y']+1],
@@ -70,14 +67,16 @@ def choose_move(data: dict) -> str:
         "right": [my_head['x']+1, my_head['y']]
     }
 
-    for direction in possible_moves:
-        # Don't hit walls
-        if 1 >= moves[direction][0] >= board_width-1:
-            possible_moves.remove(direction)
-        elif 1 >= moves[direction][1] >= board_height-1:
-            possible_moves.remove(direction)
+    possible_moves = _filter_wall_moves(my_body, board, possible_moves, moves)
 
-        # Don't hit yourself
+    # for direction in possible_moves:
+    #     # Don't hit walls
+    #     if 1 >= moves[direction][0] >= board_width-1:
+    #         possible_moves.remove(direction)
+    #     elif 1 >= moves[direction][1] >= board_height-1:
+    #         possible_moves.remove(direction)
+
+    # # Don't hit yourself
         # for segment in my_body:
         #     if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
         #         possible_moves.remove(direction)
@@ -123,6 +122,28 @@ def choose_move(data: dict) -> str:
 
     return move
 
+
+def _filter_wall_moves(my_body: dict, possible_moves: List[str], board: dict) -> List[str]:
+    my_head = my_body[0]
+
+    board_height = board['height']
+    board_width = board['width']
+
+    moves = {
+        "up": [my_head['x'], my_head['y']+1],
+        "down": [my_head['x'], my_head['y']-1],
+        "left": [my_head['x']-1, my_head['y']],
+        "right": [my_head['x']+1, my_head['y']]
+    }
+
+    for direction in possible_moves:
+        # Don't hit walls
+        if 1 >= moves[direction][0] >= board_width-1:
+            possible_moves.remove(direction)
+        elif 1 >= moves[direction][1] >= board_height-1:
+            possible_moves.remove(direction)
+
+    return possible_moves
 
 def _avoid_my_neck(my_body: dict, possible_moves: List[str]) -> List[str]:
     """
