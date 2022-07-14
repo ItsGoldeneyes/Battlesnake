@@ -54,15 +54,15 @@ def choose_move(data: dict) -> str:
     board_height = board['height']
     board_width = board['width']
 
-    if my_head['x'] >= board_width-1:
-        possible_moves.remove('right')
-    elif my_head['x'] <= 1:
-        possible_moves.remove('left')
-
-    if my_head['y'] >= board_height-1:
-        possible_moves.remove('up')
-    elif my_head['y'] <= 1:
-        possible_moves.remove('down')
+    moves = {
+        "up": [my_head['x'], my_head['y']+1],
+        "down": [my_head['x'], my_head['y']-1],
+        "left": [my_head['x']-1, my_head['y']],
+        "right": [my_head['x']+1, my_head['y']]
+    }
+    for direction in possible_moves:
+        if (1 >= moves[direction][0] >= board_width-1) or (1 >= moves[direction][0] >= board_height-1):
+            possible_moves.remove(direction)
 
     # TODO: Step 2 - Don't hit yourself.
     # Use information from `my_body` to avoid moves that would collide with yourself.
