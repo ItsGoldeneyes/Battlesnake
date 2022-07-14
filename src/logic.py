@@ -45,20 +45,7 @@ def choose_move(data: dict) -> str:
     # print(f"My Battlesnakes body this turn is: {my_body}")
 
     possible_moves = ["up", "down", "left", "right"]
-
-    # Step 0: Don't allow your Battlesnake to move back on it's own neck.
-    possible_moves = _avoid_my_neck(my_body, possible_moves)
     board = data['board']
-    # board_height = board['height']
-    # board_width = board['width']
-
-    # other_snakes = board['snakes']
-    # other_snakes_pos = []
-    # for snake in other_snakes:
-    #     for i in snake["body"]:
-    #         other_snakes_pos.append(i["x"], i["y"])
-
-    # food = data["board"]["food"]
 
     moves = {
         "up": [my_head['x'], my_head['y']+1],
@@ -67,25 +54,10 @@ def choose_move(data: dict) -> str:
         "right": [my_head['x']+1, my_head['y']]
     }
 
+    possible_moves = _avoid_my_neck(my_body, possible_moves)
     possible_moves = _filter_wall_moves(my_body, possible_moves, board)
     possible_moves = _filter_self_moves(my_body, possible_moves)
-
-    # for direction in possible_moves:
-    #     # Don't hit walls
-    #     if 1 >= moves[direction][0] >= board_width-1:
-    #         possible_moves.remove(direction)
-    #     elif 1 >= moves[direction][1] >= board_height-1:
-    #         possible_moves.remove(direction)
-
-    # # Don't hit yourself
-    # for segment in my_body:
-    #     if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
-    #         possible_moves.remove(direction)
-
-    # # Don't hit others
-    # for segment in other_snakes_pos:
-    #     if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
-    #         possible_moves.remove(direction)
+    possible_moves = _filter_enemy_moves(my_body, possible_moves, board)
 
     # if food != {}:
     #     possible_food_moves = []
@@ -104,20 +76,6 @@ def choose_move(data: dict) -> str:
     # else:
     #     move = random.choice(possible_moves)
     move = random.choice(possible_moves)
-
-    # TODO: Step 2 - Don't hit yourself.
-    # Use information from `my_body` to avoid moves that would collide with yourself.
-
-    # TODO: Step 3 - Don't collide with others.
-    # Use information from `data` to prevent your Battlesnake from colliding with others.
-
-    # TODO: Step 4 - Find food.
-    # Use information in `data` to seek out and find food.
-    # food = data['board']['food']
-
-    # Choose a random direction from the remaining possible_moves to move in, and then return that move
-
-    # TODO: Explore new strategies for picking a move that are better than random
 
     print(f"{data['game']['id']} MOVE {data['turn']}: {move} picked from all valid options in {possible_moves}")
 
@@ -140,11 +98,9 @@ def _filter_wall_moves(my_body: dict, possible_moves: List[str], board: dict) ->
     for direction in possible_moves:
 
         # Don't hit walls
-        if direction == "right" or direction == "left":
-            if 0 == moves[direction]["x"] or moves[direction]["x"] >= board_width-1:
+            if 0 == moves[direction]["x"] or moves[direction]["x"] == board_width:
                 possible_moves.remove(direction)
-        elif direction == "up" or direction == "down":
-            if 0 == moves[direction]["y"] or moves[direction]["y"] >= board_height-1:
+            if 0 == moves[direction]["y"] or moves[direction]["y"] == board_height:
                 possible_moves.remove(direction)
 
     print(possible_moves)
@@ -164,12 +120,32 @@ def _filter_self_moves(my_body: dict, possible_moves: List[str]) -> List[str]:
 
     for direction in possible_moves:
         for segment in my_body[1:]:
-            if direction == "right" or direction == "left":
-                if segment["x"] == moves[direction]["x"]:
-                    possible_moves.remove(direction)
-            elif direction == "up" or direction == "down":
-                if segment["y"] == moves[direction]["y"]:
-                    possible_moves.remove(direction)
+            if segment == moves[direction]:
+                possible_moves.remove(direction)
+
+    return possible_moves
+
+
+def _filter_enemy_moves(my_body: dict, possible_moves: List[str], board: dict) -> List[str]:
+    my_head = my_body[0]
+
+    moves = {
+        "up": {"x": my_head['x'], "y": my_head['y']+1},
+        "down": {"x": my_head['x'], "y": my_head['y']-1},
+        "left": {"x": my_head['x']-1, "y": my_head['y']},
+        "right": {"x": my_head['x']+1, "y": my_head['y']}
+    }
+
+    other_snakes = board['snakes']
+    other_snakes_pos = []
+    for snake in other_snakes:
+        for i in snake["body"]:
+            other_snakes_pos.append({"x": i["x"], "y": i["y"]})
+
+    for direction in possible_moves:
+        for segment in other_snakes_pos:
+            if segment == moves[direction]:
+                possible_moves.remove(direction)
 
     return possible_moves
 
