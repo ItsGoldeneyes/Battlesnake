@@ -13,7 +13,7 @@ def get_info() -> dict:
     return {
         "apiversion": "1",
         "author": "Goldeneyes",
-        "color": "#ff00ff",  # "color": "#EB6443",
+        "color": "#00ff00",  # "color": "#EB6443",
         "head": "missile",
         "tail": "rocket",
     }
@@ -87,22 +87,23 @@ def choose_move(data: dict) -> str:
             if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
                 possible_moves.remove(direction)
 
-    if food != {}:
-        possible_food_moves = []
-        closest = [food[0]["x"], food[0]["y"]]
-        for i in food:
-            if math.dist((my_head["x"], my_head["y"]), (i["x"], i["y"])) < math.dist((my_head["x"], my_head["y"]), (closest["x"], closest["y"])):
-                closest = [i["x"], i["y"]]
+    # if food != {}:
+    #     possible_food_moves = []
+    #     closest = [food[0]["x"], food[0]["y"]]
+    #     for i in food:
+    #         if math.dist((my_head["x"], my_head["y"]), (i["x"], i["y"])) < math.dist((my_head["x"], my_head["y"]), (closest["x"], closest["y"])):
+    #             closest = [i["x"], i["y"]]
 
-        for direction in possible_moves:
-            if math.dist(moves[direction], closest) > math.dist((my_head["x"], my_head["y"]), closest):
-                possible_food_moves.append(direction)
-        if possible_food_moves:
-            move = random.choice(possible_food_moves)
-        else:
-            move = random.choice(possible_moves)
-    else:
-        move = random.choice(possible_moves)
+    #     for direction in possible_moves:
+    #         if math.dist(moves[direction], closest) > math.dist((my_head["x"], my_head["y"]), closest):
+    #             possible_food_moves.append(direction)
+    #     if possible_food_moves:
+    #         move = random.choice(possible_food_moves)
+    #     else:
+    #         move = random.choice(possible_moves)
+    # else:
+    #     move = random.choice(possible_moves)
+    move = random.choice(possible_moves)
 
     # TODO: Step 2 - Don't hit yourself.
     # Use information from `my_body` to avoid moves that would collide with yourself.
