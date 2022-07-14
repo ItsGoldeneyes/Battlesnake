@@ -12,7 +12,7 @@ def get_info() -> dict:
     return {
         "apiversion": "1",
         "author": "Goldeneyes",  # TODO: Your Battlesnake Username
-        "color": "#EB6443",  # TODO: Personalize
+        "color": "#ffffff",  # "color": "#EB6443",  # TODO: Personalize
         "head": "missile",  # TODO: Personalize
         "tail": "rocket",  # TODO: Personalize
     }
