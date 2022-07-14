@@ -12,7 +12,7 @@ def get_info() -> dict:
     return {
         "apiversion": "1",
         "author": "Goldeneyes",  # TODO: Your Battlesnake Username
-        "color": "#000000",  # "color": "#EB6443",  # TODO: Personalize
+        "color": "#ff0000",  # "color": "#EB6443",  # TODO: Personalize
         "head": "missile",  # TODO: Personalize
         "tail": "rocket",  # TODO: Personalize
     }
@@ -60,8 +60,11 @@ def choose_move(data: dict) -> str:
         "left": [my_head['x']-1, my_head['y']],
         "right": [my_head['x']+1, my_head['y']]
     }
+
     for direction in possible_moves:
-        if (1 >= moves[direction][0] >= board_width-1) or (1 >= moves[direction][0] >= board_height-1):
+        if 1 >= moves[direction][0] >= board_width-1:
+            possible_moves.remove(direction)
+        elif 1 >= moves[direction][0] >= board_height-1:
             possible_moves.remove(direction)
 
     # TODO: Step 2 - Don't hit yourself.
@@ -93,7 +96,8 @@ def _avoid_my_neck(my_body: dict, possible_moves: List[str]) -> List[str]:
     return: The list of remaining possible_moves, with the 'neck' direction removed
     """
     my_head = my_body[0]  # The first body coordinate is always the head
-    my_neck = my_body[1]  # The segment of body right after the head is the 'neck'
+    # The segment of body right after the head is the 'neck'
+    my_neck = my_body[1]
 
     if my_neck["x"] < my_head["x"]:  # my neck is left of my head
         possible_moves.remove("left")
