@@ -1,12 +1,6 @@
 import random
 from typing import List, Dict
 
-"""
-This file can be a nice home for your Battlesnake's logic and helper functions.
-
-We have started this for you, and included some logic to remove your Battlesnake's 'neck'
-from the list of possible moves!
-"""
 
 def get_info() -> dict:
     """
@@ -37,8 +31,10 @@ def choose_move(data: dict) -> str:
 
     """
     my_snake = data["you"]      # A dictionary describing your snake's position on the board
-    my_head = my_snake["head"]  # A dictionary of coordinates like {"x": 0, "y": 0}
-    my_body = my_snake["body"]  # A list of coordinate dictionaries like [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0}]
+    # A dictionary of coordinates like {"x": 0, "y": 0}
+    my_head = my_snake["head"]
+    # A list of coordinate dictionaries like [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0}]
+    my_body = my_snake["body"]
 
     # Uncomment the lines below to see what this data looks like in your output!
     # print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
@@ -54,9 +50,19 @@ def choose_move(data: dict) -> str:
 
     # TODO: Step 1 - Don't hit walls.
     # Use information from `data` and `my_head` to not move beyond the game board.
-    # board = data['board']
-    # board_height = ?
-    # board_width = ?
+    board = data['board']
+    board_height = board['height']
+    board_width = board['width']
+
+    if my_head['x'] >= board_width-1:
+        possible_moves.remove('right')
+    elif my_head['x'] <= 1:
+        possible_moves.remove('left')
+
+    if my_head['y'] >= board_height-1:
+        possible_moves.remove('up')
+    elif my_head['y'] <= 1:
+        possible_moves.remove('down')
 
     # TODO: Step 2 - Don't hit yourself.
     # Use information from `my_body` to avoid moves that would collide with yourself.
