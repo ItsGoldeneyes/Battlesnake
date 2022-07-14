@@ -47,13 +47,6 @@ def choose_move(data: dict) -> str:
     possible_moves = ["up", "down", "left", "right"]
     board = data['board']
 
-    moves = {
-        "up": [my_head['x'], my_head['y']+1],
-        "down": [my_head['x'], my_head['y']-1],
-        "left": [my_head['x']-1, my_head['y']],
-        "right": [my_head['x']+1, my_head['y']]
-    }
-
     possible_moves = _avoid_my_neck(my_body, possible_moves)
     possible_moves = _filter_wall_moves(my_body, possible_moves, board)
     possible_moves = _filter_self_moves(my_body, possible_moves)
