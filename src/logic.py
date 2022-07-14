@@ -1,5 +1,6 @@
 import random
 from typing import List, Dict
+import math
 
 
 def get_info() -> dict:
@@ -54,6 +55,14 @@ def choose_move(data: dict) -> str:
     board_height = board['height']
     board_width = board['width']
 
+    other_snakes = board['snakes']
+    other_snakes_pos = []
+    for snake in other_snakes:
+        for i in snake["body"]:
+            other_snakes_pos.append(i["x"], i["y"])
+
+    food = data["board"]["food"]
+
     moves = {
         "up": [my_head['x'], my_head['y']+1],
         "down": [my_head['x'], my_head['y']-1],
@@ -62,10 +71,38 @@ def choose_move(data: dict) -> str:
     }
 
     for direction in possible_moves:
+        # Don't hit walls
         if 1 >= moves[direction][0] >= board_width-1:
             possible_moves.remove(direction)
         elif 1 >= moves[direction][1] >= board_height-1:
             possible_moves.remove(direction)
+
+        # Don't hit yourself
+        for segment in my_body:
+            if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
+                possible_moves.remove(direction)
+
+        # Don't hit others
+        for segment in other_snakes_pos:
+            if segment["x"] == moves[direction][0] or segment["y"] == moves[direction][1]:
+                possible_moves.remove(direction)
+
+    if food != {}:
+        possible_food_moves = []
+        closest = [food[0]["x"], food[0]["y"]]
+        for i in food:
+            if math.dist((my_head["x"], my_head["y"]), (i["x"], i["y"])) < math.dist((my_head["x"], my_head["y"]), (closest["x"], closest["y"])):
+                closest = [i["x"], i["y"]]
+
+        for direction in possible_moves:
+            if math.dist(moves[direction], closest) > math.dist((my_head["x"], my_head["y"]), closest):
+                possible_food_moves.append(direction)
+        if possible_food_moves:
+            move = random.choice(possible_food_moves)
+        else:
+            move = random.choice(possible_moves)
+    else:
+        move = random.choice(possible_moves)
 
     # TODO: Step 2 - Don't hit yourself.
     # Use information from `my_body` to avoid moves that would collide with yourself.
@@ -78,7 +115,7 @@ def choose_move(data: dict) -> str:
     # food = data['board']['food']
 
     # Choose a random direction from the remaining possible_moves to move in, and then return that move
-    move = random.choice(possible_moves)
+
     # TODO: Explore new strategies for picking a move that are better than random
 
     print(f"{data['game']['id']} MOVE {data['turn']}: {move} picked from all valid options in {possible_moves}")
