@@ -17,7 +17,7 @@ def handle_info():
     See https://docs.battlesnake.com/guides/getting-started#step-4-register-your-battlesnake
     """
     print("INFO")
-    return logic.get_info()
+    return SnakeLogic.get_info()
 
 
 @app.post("/start")

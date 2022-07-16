@@ -88,13 +88,19 @@ class SnakeLogic:
 
         return move
 
-    def _set_state(self, board: dict, head: dict, body: dict, good_moves: dict, my_snake: dict, ):
+    def _set_state(self, board: dict, head: dict, body: list, good_moves: dict, my_snake: dict, ):
         self.my_snake = my_snake
         self.head = head
         self.body = body
         self.good_moves = good_moves
-
         self.board = board
+        
+        self.potential_moves = {
+        "up": [self.head['x'], self.head['y']+1],
+        "down": [self.head['x'], self.head['y']-1],
+        "left": [self.head['x']-1, self.head['y']],
+        "right": [self.head['x']+1, self.head['y']]
+    }
 
         # Find a better way to do this
         other_snakes_dict = self.board['snakes']
@@ -104,11 +110,8 @@ class SnakeLogic:
                 self.other_snakes.append({"x": i["x"], "y": i["y"]})
 
     def _filter_wall_moves(self) -> List[str]:
-        print("\n")
         board_height = self.board['height']
         board_width = self.board['width']
-
-        print(self.good_moves)
 
         to_remove = []
 
