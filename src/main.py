@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask import request
 
-import logic
+from logic import SnakeLogic
 
 
 app = Flask(__name__)
@@ -42,7 +42,8 @@ def handle_move():
     data = request.get_json()
 
     # TODO - look at the logic.py file to see how we decide what move to return!
-    move = logic.choose_move(data)
+    move_logic = SnakeLogic()
+    move = move_logic.choose_move(data)
 
     return {"move": move}
 

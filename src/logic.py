@@ -3,184 +3,181 @@ from typing import List, Dict
 import math
 
 
-def get_info() -> dict:
-    """
-    This controls your Battlesnake appearance and author permissions.
-    For customization options, see https://docs.battlesnake.com/references/personalization
+class SnakeLogic:
+    def __init__(self, look_ahead=2):
+        self.look_ahead = look_ahead
+        self.data = None
+        self.head = None
+        self.good_moves = None
+        self.potential_moves = None
 
-    TIP: If you open your Battlesnake URL in browser you should see this data.
-    """
-    return {
-        "apiversion": "1",
-        "author": "Goldeneyes",
-        "color": "#EB6443",  # "color": "#EB6443",
-        "head": "missile",
-        "tail": "rocket",
-    }
+    def get_info() -> dict:
+        """
+        This controls your Battlesnake appearance and author permissions.
+        For customization options, see https://docs.battlesnake.com/references/personalization
 
+        TIP: If you open your Battlesnake URL in browser you should see this data.
+        """
+        return {
+            "apiversion": "1",
+            "author": "Goldeneyes",
+            "color": "#EB6443",  # "color": "#EB6443",
+            "self.head": "missile",
+            "tail": "rocket",
+        }
 
-def choose_move(data: dict) -> str:
-    """
-    data: Dictionary of all Game Board data as received from the Battlesnake Engine.
-    For a full example of 'data', see https://docs.battlesnake.com/references/api/sample-move-request
+    def choose_move(self, data: dict) -> str:
+        """
+        data: Dictionary of all Game Board data as received from the Battlesnake Engine.
+        For a full example of 'data', see https://docs.battlesnake.com/references/api/sample-move-request
 
-    return: A String, the single move to make. One of "up", "down", "left" or "right".
+        return: A String, the single move to make. One of "up", "down", "left" or "right".
 
-    Use the information in 'data' to decide your next move. The 'data' variable can be interacted
-    with as a Python Dictionary, and contains all of the information about the Battlesnake board
-    for each move of the game.
+        Use the information in 'data' to decide your next move. The 'data' variable can be interacted
+        with as a Python Dictionary, and contains all of the information about the Battlesnake board
+        for each move of the game.
 
-    """
-    my_snake = data["you"]      # A dictionary describing your snake's position on the board
-    # A dictionary of coordinates like {"x": 0, "y": 0}
-    my_head = my_snake["head"]
-    # A list of coordinate dictionaries like [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0}]
-    my_body = my_snake["body"]
+        """
 
-    # Uncomment the lines below to see what this data looks like in your output!
-    # print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
-    # print(f"All board data this turn: {data}")
-    # print(f"My Battlesnake this turn is: {my_snake}")
-    # print(f"My Battlesnakes head this turn is: {my_head}")
-    # print(f"My Battlesnakes body this turn is: {my_body}")
+        my_snake = data["you"]
+        head = self.my_snake["self.head"]
+        body = self.my_snake["body"]
+        good_moves = ["up", "down", "left", "right"]
+        board = data['board']
 
-    possible_moves = ["up", "down", "left", "right"]
-    board = data['board']
+        self._set_state(self, my_snake, head, body, good_moves, board)
 
-    possible_moves = _avoid_my_neck(my_body, possible_moves)
-    possible_moves = _filter_wall_moves(my_body, possible_moves, board)
-    possible_moves = _filter_self_moves(my_body, possible_moves)
-    possible_moves = _filter_enemy_moves(my_body, possible_moves, board)
+        # Uncomment the lines below to see what this data looks like in your output!
+        # print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
+        # print(f"All board data this turn: {data}")
+        # print(f"My Battlesnake this turn is: {my_snake}")
+        # print(f"My Battlesnakes head this turn is: {self.head}")
+        # print(f"My Battlesnakes body this turn is: {body}")
 
-    # if food != {}:
-    #     possible_food_moves = []
-    #     closest = [food[0]["x"], food[0]["y"]]
-    #     for i in food:
-    #         if math.dist((my_head["x"], my_head["y"]), (i["x"], i["y"])) < math.dist((my_head["x"], my_head["y"]), (closest["x"], closest["y"])):
-    #             closest = [i["x"], i["y"]]
+        self.good_moves = self._filter_my_neck()
+        self.good_moves = self._filter_wall_moves()
+        self.good_moves = self._filter_self_moves()
+        self.good_moves = self._filter_enemy_moves()
 
-    #     for direction in possible_moves:
-    #         if math.dist(moves[direction], closest) > math.dist((my_head["x"], my_head["y"]), closest):
-    #             possible_food_moves.append(direction)
-    #     if possible_food_moves:
-    #         move = random.choice(possible_food_moves)
-    #     else:
-    #         move = random.choice(possible_moves)
-    # else:
-    #     move = random.choice(possible_moves)
-    if len(possible_moves) == 0:
-        move = "up"
-    elif len(possible_moves) == 1:
-        move = possible_moves[0]
-    else:
-        move = random.choice(possible_moves)
+        # if food != {}:
+        #     possible_food_moves = []
+        #     closest = [food[0]["x"], food[0]["y"]]
+        #     for i in food:
+        #         if math.dist((self.head["x"], self.head["y"]), (i["x"], i["y"])) < math.dist((self.head["x"], self.head["y"]), (closest["x"], closest["y"])):
+        #             closest = [i["x"], i["y"]]
 
-    print(f"{data['game']['id']} MOVE {data['turn']}: {move} picked from all valid options in {possible_moves}")
+        #     for direction in good_moves:
+        #         if math.dist(moves[direction], closest) > math.dist((self.head["x"], self.head["y"]), closest):
+        #             possible_food_moves.append(direction)
+        #     if possible_food_moves:
+        #         move = random.choice(possible_food_moves)
+        #     else:
+        #         move = random.choice(good_moves)
+        # else:
+        #     move = random.choice(good_moves)
 
-    return move
+        if len(self.good_moves) == 0:
+            move = "up"
+        elif len(self.good_moves) == 1:
+            move = self.good_moves[0]
+        else:
+            move = random.choice(self.good_moves)
 
+        print(
+            f"{data['game']['id']} MOVE {data['turn']}: {move} picked from all valid options in {self.good_moves}")
 
-def _filter_wall_moves(my_body: dict, possible_moves: List[str], board: dict) -> List[str]:
-    my_head = my_body[0]
-    print("\n")
-    board_height = board['height']
-    board_width = board['width']
+        return move
 
-    moves = {
-        "up": {"x": my_head['x'], "y": my_head['y']+1},
-        "down": {"x": my_head['x'], "y": my_head['y']-1},
-        "left": {"x": my_head['x']-1, "y": my_head['y']},
-        "right": {"x": my_head['x']+1, "y": my_head['y']}
-    }
-    print(possible_moves)
-    print(moves)
-    
-    to_remove = []
-    
-    for direction in possible_moves:
-        print(direction)
-        # Don't hit walls
-        if -1 == moves[direction]["x"] or moves[direction]["x"] == board_width:
-            to_remove.append(direction)
-        elif -1 == moves[direction]["y"] or moves[direction]["y"] == board_height:
-            to_remove.append(direction)
-    
-    for i in to_remove:
-        if i in possible_moves:
-            possible_moves.remove(i)
-    
+    def _set_state(self, board: dict, head: dict, body: dict, good_moves: dict, my_snake: dict, ):
+        self.my_snake = my_snake
+        self.head = head
+        self.body = body
+        self.good_moves = good_moves
 
-    print(possible_moves)
-    
-    return possible_moves
+        self.board = board
 
+        # Find a better way to do this
+        other_snakes_dict = self.board['snakes']
+        self.other_snakes = []
+        for snake in other_snakes_dict:
+            for i in snake["body"]:
+                self.other_snakes.append({"x": i["x"], "y": i["y"]})
 
-def _filter_self_moves(my_body: dict, possible_moves: List[str]) -> List[str]:
-    my_head = my_body[0]
+    def _filter_wall_moves(self) -> List[str]:
+        print("\n")
+        board_height = self.board['height']
+        board_width = self.board['width']
 
-    moves = {
-        "up": {"x": my_head['x'], "y": my_head['y']+1},
-        "down": {"x": my_head['x'], "y": my_head['y']-1},
-        "left": {"x": my_head['x']-1, "y": my_head['y']},
-        "right": {"x": my_head['x']+1, "y": my_head['y']}
-    }
-    to_remove = []
-    for direction in possible_moves:
-        for segment in my_body[1:]:
-            if segment == moves[direction]:
+        print(self.good_moves)
+
+        to_remove = []
+
+        for direction in self.good_moves:
+            # Don't hit walls
+            if -1 == self.potential_moves[direction]["x"] or self.potential_moves[direction]["x"] == board_width:
                 to_remove.append(direction)
-                
-    for i in to_remove:
-        if i in possible_moves:
-            possible_moves.remove(i)
+            elif -1 == self.potential_moves[direction]["y"] or self.potential_moves[direction]["y"] == board_height:
+                to_remove.append(direction)
 
-    return possible_moves
+        for i in to_remove:
+            if i in self.good_moves:
+                self.good_moves.remove(i)
 
+        return self.good_moves  # For testing purposes
 
-def _filter_enemy_moves(my_body: dict, possible_moves: List[str], board: dict) -> List[str]:
-    my_head = my_body[0]
+    def _filter_self_moves(self):
+        """
+        USES - body, moves, board
+        
+        
+        """
 
-    moves = {
-        "up": {"x": my_head['x'], "y": my_head['y']+1},
-        "down": {"x": my_head['x'], "y": my_head['y']-1},
-        "left": {"x": my_head['x']-1, "y": my_head['y']},
-        "right": {"x": my_head['x']+1, "y": my_head['y']}
-    }
+        to_remove = []
+        for direction in self.good_moves:
+            for segment in self.body[1:]:
+                if segment == self.potential_moves[direction]:
+                    to_remove.append(direction)
 
-    other_snakes = board['snakes']
-    other_snakes_pos = []
-    for snake in other_snakes:
-        for i in snake["body"]:
-            other_snakes_pos.append({"x": i["x"], "y": i["y"]})
+        for i in to_remove:
+            if i in self.good_moves:
+                self.good_moves.remove(i)
 
-    for direction in possible_moves:
-        for segment in other_snakes_pos:
-            if segment == moves[direction]:
-                possible_moves.remove(direction)
+        return self.good_moves  # For testing purposes
 
-    return possible_moves
+    def _filter_enemy_moves(self) -> List[str]:
+        """
+        USES - body, moves, board
+        
+        
+        """
 
+        for direction in self.good_moves:
+            for segment in self.other_snakes:
+                if segment == self.potential_moves[direction]:
+                    self.good_moves.remove(direction)
 
-def _avoid_my_neck(my_body: dict, possible_moves: List[str]) -> List[str]:
-    """
-    my_body: List of dictionaries of x/y coordinates for every segment of a Battlesnake.
-            e.g. [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0}]
-    possible_moves: List of strings. Moves to pick from.
-            e.g. ["up", "down", "left", "right"]
+        return self.good_moves  # For testing purposes
 
-    return: The list of remaining possible_moves, with the 'neck' direction removed
-    """
-    my_head = my_body[0]  # The first body coordinate is always the head
-    # The segment of body right after the head is the 'neck'
-    my_neck = my_body[1]
+    def _filter_my_neck(self) -> List[str]:
+        """
+        body: List of dictionaries of x/y coordinates for every segment of a Battlesnake.
+                e.g. [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0}]
+        good_moves: List of strings. Moves to pick from.
+                e.g. ["up", "down", "left", "right"]
 
-    if my_neck["x"] < my_head["x"]:  # my neck is left of my head
-        possible_moves.remove("left")
-    elif my_neck["x"] > my_head["x"]:  # my neck is right of my head
-        possible_moves.remove("right")
-    elif my_neck["y"] < my_head["y"]:  # my neck is below my head
-        possible_moves.remove("down")
-    elif my_neck["y"] > my_head["y"]:  # my neck is above my head
-        possible_moves.remove("up")
+        return: The list of remaining good_moves, with the 'neck' direction removed
+        """
 
-    return possible_moves
+        # The segment of body right after the self.head is the 'neck'
+        my_neck = self.body[1]
+
+        if my_neck["x"] < self.head["x"]:  # my neck is left of my self.head
+            self.good_moves.remove("left")
+        elif my_neck["x"] > self.head["x"]:  # my neck is right of my self.head
+            self.good_moves.remove("right")
+        elif my_neck["y"] < self.head["y"]:  # my neck is below my self.head
+            self.good_moves.remove("down")
+        elif my_neck["y"] > self.head["y"]:  # my neck is above my self.head
+            self.good_moves.remove("up")
+
+        return self.good_moves  # For testing purposes
