@@ -24,13 +24,16 @@ class AvoidNeckTest(unittest.TestCase):
         possible_moves = ["up", "down", "left", "right"]
 
         logic = SnakeLogic()
-        board = {"snakes": [{
+        board = {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_my_neck()
@@ -48,13 +51,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_my_neck()
@@ -72,13 +78,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "left"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_my_neck()
@@ -96,13 +105,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["down", "left", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_my_neck()
@@ -120,13 +132,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "left", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_my_neck()
@@ -146,7 +161,6 @@ class AvoidNeckTest(unittest.TestCase):
 
         logic = SnakeLogic()
         board =  {
-            
             "height": 11,
             "width": 11,
             "snakes": [{
@@ -155,7 +169,7 @@ class AvoidNeckTest(unittest.TestCase):
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_wall_moves()
@@ -168,7 +182,7 @@ class AvoidNeckTest(unittest.TestCase):
 
 
         # Arrange
-        test_body = [{"x": 1, "y": 5}, {"x": 2, "y": 5}, {"x": 3, "y": 5}]
+        test_body = [{"x": 0, "y": 5}, {"x": 2, "y": 5}, {"x": 3, "y": 5}]
 
         possible_moves = ["up", "down", "left", "right"]
         expected = ["up", "down", "right"]
@@ -183,7 +197,7 @@ class AvoidNeckTest(unittest.TestCase):
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_wall_moves()
@@ -211,7 +225,7 @@ class AvoidNeckTest(unittest.TestCase):
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_wall_moves()
@@ -239,7 +253,7 @@ class AvoidNeckTest(unittest.TestCase):
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_wall_moves()
@@ -249,17 +263,15 @@ class AvoidNeckTest(unittest.TestCase):
         self.assertEqual(expected, result_moves)
 
     def test_avoid_wall_down(self):
-
-
+        
         # Arrange
-        test_body = [{"x": 5, "y": 1}, {"x": 5, "y": 2}, {"x": 5, "y": 3}]
+        test_body = [{"x": 5, "y": 0}, {"x": 5, "y": 2}, {"x": 5, "y": 3}]
 
         possible_moves = ["up", "down", "left", "right"]
         expected = ["up", "left", "right"]
 
         logic = SnakeLogic()
         board =  {
-            
             "height": 11,
             "width": 11,
             "snakes": [{
@@ -268,8 +280,8 @@ class AvoidNeckTest(unittest.TestCase):
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
-
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
+        print(logic.state)
         # Act
         result_moves = logic._filter_wall_moves()
 
@@ -287,13 +299,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "left", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_self_moves()
@@ -312,13 +327,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_self_moves()
@@ -337,13 +355,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "left"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_self_moves()
@@ -362,13 +383,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["down", "left", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_self_moves()
@@ -387,13 +411,16 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "left", "right"]
 
         logic = SnakeLogic()
-        board =  {"snakes": [{
+        board =  {
+            "height": 11,
+            "width": 11,
+            "snakes": [{
             "body": [
                 {"x": 0, "y": 0},
                 {"x": 1, "y": 0},
                 {"x": 2, "y": 0}
             ]}]}
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_self_moves()
@@ -409,6 +436,8 @@ class AvoidNeckTest(unittest.TestCase):
         test_body = [{"x": 5, "y": 6}]
 
         board = {
+            "height": 11,
+            "width": 11,
             "snakes": [
                 {"body": [
                     {"x": 7, "y": 8}
@@ -420,7 +449,7 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "left", "right"]
 
         logic = SnakeLogic()
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_enemy_moves()
@@ -436,6 +465,8 @@ class AvoidNeckTest(unittest.TestCase):
         test_body = [{"x": 5, "y": 6}]
 
         board = {
+            "height": 11,
+            "width": 11,
             "snakes": [
                 {"body": [
                     {"x": 4, "y": 6}
@@ -447,7 +478,7 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "right"]
 
         logic = SnakeLogic()
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_enemy_moves()
@@ -463,6 +494,8 @@ class AvoidNeckTest(unittest.TestCase):
         test_body = [{"x": 5, "y": 6}]
 
         board = {
+            "height": 11,
+            "width": 11,
             "snakes": [
                 {"body": [
                     {"x": 6, "y": 6}
@@ -474,7 +507,7 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "down", "left"]
 
         logic = SnakeLogic()
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_enemy_moves()
@@ -490,6 +523,8 @@ class AvoidNeckTest(unittest.TestCase):
         test_body = [{"x": 5, "y": 6}]
 
         board = {
+            "height": 11,
+            "width": 11,
             "snakes": [
                 {"body": [
                     {"x": 5, "y": 7}
@@ -501,7 +536,7 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["down", "left", "right"]
 
         logic = SnakeLogic()
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_enemy_moves()
@@ -517,6 +552,8 @@ class AvoidNeckTest(unittest.TestCase):
         test_body = [{"x": 5, "y": 6}]
 
         board = {
+            "height": 11,
+            "width": 11,
             "snakes": [
                 {"body": [
                     {"x": 5, "y": 5}
@@ -528,7 +565,7 @@ class AvoidNeckTest(unittest.TestCase):
         expected = ["up", "left", "right"]
 
         logic = SnakeLogic()
-        logic._set_state(board, test_body[0], test_body, possible_moves, {})
+        logic.set_state(board, test_body[0], test_body, possible_moves, {})
 
         # Act
         result_moves = logic._filter_enemy_moves()

@@ -40,19 +40,12 @@ class SnakeLogic:
         """
 
         my_snake = data["you"]
-        head = self.my_snake["self.head"]
-        body = self.my_snake["body"]
+        head = my_snake["head"]
+        body = my_snake["body"]
         good_moves = ["up", "down", "left", "right"]
         board = data['board']
 
-        self._set_state(self, my_snake, head, body, good_moves, board)
-
-        # Uncomment the lines below to see what this data looks like in your output!
-        # print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
-        # print(f"All board data this turn: {data}")
-        # print(f"My Battlesnake this turn is: {my_snake}")
-        # print(f"My Battlesnakes head this turn is: {self.head}")
-        # print(f"My Battlesnakes body this turn is: {body}")
+        self.set_state(board, head, body, good_moves, my_snake)
 
         self.good_moves = self._filter_my_neck()
         self.good_moves = self._filter_wall_moves()
@@ -88,7 +81,7 @@ class SnakeLogic:
 
         return move
 
-    def _set_state(self, board: dict, head: dict, body: list, good_moves: dict, my_snake: dict, ):
+    def set_state(self, board: dict, head: dict, body: list, good_moves: dict, my_snake: dict, ):
         self.my_snake = my_snake
         self.head = head
         self.body = body
@@ -96,11 +89,11 @@ class SnakeLogic:
         self.board = board
         
         self.potential_moves = {
-        "up": [self.head['x'], self.head['y']+1],
-        "down": [self.head['x'], self.head['y']-1],
-        "left": [self.head['x']-1, self.head['y']],
-        "right": [self.head['x']+1, self.head['y']]
-    }
+        "up": {"x": self.head['x'], "y": self.head['y']+1}, 
+        "down": {"x": self.head['x'], "y": self.head['y']-1},
+        "right": {"x": self.head['x']+1, "y": self.head['y']},
+        "left": {"x": self.head['x']-1, "y": self.head['y']}
+        }
 
         # Find a better way to do this
         other_snakes_dict = self.board['snakes']
@@ -108,14 +101,22 @@ class SnakeLogic:
         for snake in other_snakes_dict:
             for i in snake["body"]:
                 self.other_snakes.append({"x": i["x"], "y": i["y"]})
+                
+                
+        self.state = ""
+        
+        self.state += f"Snake head: {self.head}\n"
+        self.state += f"Snake body: {self.body}\n"
+        self.state += f"Board: {self.board['width']} x {self.board['height']} \n"
 
     def _filter_wall_moves(self) -> List[str]:
         board_height = self.board['height']
         board_width = self.board['width']
 
         to_remove = []
-
+        
         for direction in self.good_moves:
+            
             # Don't hit walls
             if -1 == self.potential_moves[direction]["x"] or self.potential_moves[direction]["x"] == board_width:
                 to_remove.append(direction)
@@ -153,7 +154,6 @@ class SnakeLogic:
         
         
         """
-
         for direction in self.good_moves:
             for segment in self.other_snakes:
                 if segment == self.potential_moves[direction]:
