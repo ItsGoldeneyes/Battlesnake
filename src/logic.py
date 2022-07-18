@@ -1,6 +1,6 @@
 import random
 from typing import List, Dict
-import math
+import minimax
 
 
 class SnakeLogic:
@@ -51,6 +51,8 @@ class SnakeLogic:
         self.good_moves = self._filter_wall_moves()
         self.good_moves = self._filter_self_moves()
         self.good_moves = self._filter_enemy_moves()
+        
+        
 
         # if food != {}:
         #     possible_food_moves = []
@@ -108,6 +110,7 @@ class SnakeLogic:
         self.state += f"Snake head: {self.head}\n"
         self.state += f"Snake body: {self.body}\n"
         self.state += f"Board: {self.board['width']} x {self.board['height']} \n"
+        
 
     def _filter_wall_moves(self) -> List[str]:
         board_height = self.board['height']
