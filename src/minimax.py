@@ -33,14 +33,15 @@ class MiniMaxSnake:
             if snake["id"] != self.my_snake["id"]:
                 self.snakes.append(snake["body"])
                     
-         # Food           
-                    
+         # Food
+            
+    def _print_state(self):
         state = ""
         state += f"Snake head: {self.head}\n"
         state += f"Snake body: {self.body}\n"
         state += f"Board: {self.board['width']} x {self.board['height']} \n"
-        print(state)    
-    
+        print(state)
+        
     def _find_moves(self, position):
         return {
             "up": {"x": position['x'], "y": position['y']+1}, 
@@ -76,7 +77,12 @@ class MiniMaxSnake:
         # if _check_kill(position):
         #   total += 3
         if depth == 0:
-            return 1
+            eval = 0
+            moves = self._find_moves(position)
+            for move in moves.keys():
+                if self._check_loss(moves[move]) == False:
+                    eval += 1
+            return eval
         
         if isMaximizing:
             maxEval = -np.Infinity
@@ -103,9 +109,11 @@ class MiniMaxSnake:
         self._parse_board(data)
         moves = self._find_moves(self.head)
         
+        
         moveRanks = {}
         for move in moves.keys():
             moveRanks[move] = self.minimax(moves[move], self.depth, -np.Infinity, np.Infinity, True)
-        print(moveRanks)
+        print("moveRanks =",moveRanks)
+        
         return max(moveRanks, key=moveRanks.get)
              
