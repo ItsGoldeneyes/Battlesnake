@@ -32,7 +32,7 @@ class MiniMaxSnake:
         self.snakes = []
         for snake in snakes_dict:
             if snake["id"] != self.my_snake["id"]:
-                self.snakes.append(snake["body"])
+                self.snakes.extend(snake["body"])
 
     def _print_state(self):
         state = ""
@@ -49,18 +49,18 @@ class MiniMaxSnake:
             "left": {"x": position['x']-1, "y": position['y']}
         }
 
-    def _check_loss(self, move):
+    def _collision_check(self, move):
         print(" -- ", move)
         # 1. Check for self
         if move in self.body:
             print(" -- Body collision")
             return True
         # 2. Check board borders
-        if -1 == move["x"] or move["x"] == self.board['width']:
-            print(" -- Wall collision")
+        if -1 == move["x"] or move["x"] >= self.board['width']:
+            print(" -- Horizontal Wall collision")
             return True
-        if -1 == move["y"] or move["y"] == self.board['height']:
-            print(" -- Wall collision")
+        if -1 == move["y"] or move["y"] >= self.board['height']:
+            print(" -- Vertical Wall collision")
             return True
         # 3. Check snakes
         if move in self.snakes:
@@ -75,7 +75,7 @@ class MiniMaxSnake:
 
     def minimax(self, position, depth, alpha, beta, isMaximizing):
         # total = 0
-        if self._check_loss(position):
+        if self._collision_check(position):
             return 0
         # if _check_food(position):
         #     total += 2
@@ -85,7 +85,7 @@ class MiniMaxSnake:
             eval = 0
             moves = self._find_moves(position)
             for move in moves.keys():
-                if self._check_loss(moves[move]) == False:
+                if self._collision_check(moves[move]) == False:
                     eval += 1
             return eval
 
