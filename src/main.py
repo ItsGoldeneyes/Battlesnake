@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask import request
 
-from logic import SnakeLogic
+from minimax import MiniMaxSnake
 
 
 app = Flask(__name__)
@@ -17,7 +17,13 @@ def handle_info():
     See https://docs.battlesnake.com/guides/getting-started#step-4-register-your-battlesnake
     """
     print("INFO")
-    return SnakeLogic.get_info()
+    return {
+            "apiversion": "1",
+            "author": "Goldeneyes",
+            "color": "#EB6443",  # "color": "#EB6443",
+            "self.head": "missile",
+            "tail": "rocket",
+        }
 
 
 @app.post("/start")
@@ -41,9 +47,8 @@ def handle_move():
     """
     data = request.get_json()
 
-    # TODO - look at the logic.py file to see how we decide what move to return!
-    move_logic = SnakeLogic()
-    move = move_logic.choose_move(data)
+    snake = MiniMaxSnake(3)
+    move = snake.choose_move(data)
 
     return {"move": move}
 

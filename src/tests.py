@@ -12,7 +12,7 @@ in the folder where this file exists:
 """
 import unittest
 
-from logic import SnakeLogic
+from basic import SnakeLogic
 
 
 class AvoidNeckTest(unittest.TestCase):
