@@ -17,7 +17,7 @@ return list of highest probability
 import numpy as np
 
 class MiniMaxSnake:
-    def __init__(self, depth=3):
+    def __init__(self, depth=2):
         self.depth = depth
         
     def _parse_board(self, data):
@@ -56,10 +56,10 @@ class MiniMaxSnake:
             print(" -- Body collision")
             return True
         # 2. Check board borders
-        if -1 == move["x"] or move["x"] >= self.board['width']:
+        if -1 == move["x"] or move["x"] >= self.board['width']-1:
             print(" -- Horizontal Wall collision")
             return True
-        if -1 == move["y"] or move["y"] >= self.board['height']:
+        if -1 == move["y"] or move["y"] >= self.board['height']-1:
             print(" -- Vertical Wall collision")
             return True
         # 3. Check snakes
@@ -92,6 +92,7 @@ class MiniMaxSnake:
         if isMaximizing:
             maxEval = -np.Infinity
             moves = self._find_moves(position)
+            self.body.append(moves)
             for move in moves.keys():
                 eval = self.minimax(moves[move], depth-1, alpha, beta, False)
                 maxEval = max(maxEval, eval)
@@ -102,6 +103,7 @@ class MiniMaxSnake:
         else:
             minEval = np.Infinity
             moves = self._find_moves(position)
+            self.body.append(moves)
             for move in moves.keys():
                 eval = self.minimax(moves[move], depth-1, alpha, beta, True)
                 minEval = min(minEval, eval)
@@ -115,10 +117,12 @@ class MiniMaxSnake:
         moves = self._find_moves(self.head)
 
         moveRanks = {}
-        for move in moves.keys():
-            print(move, moves[move])
-            moveRanks[move] = self.minimax(moves[move], self.depth, -np.Infinity, np.Infinity, True)
-        print("moveRanks =",moveRanks)
+        # for move in moves.keys():
+        #     print(move, moves[move])
+        #     moveRanks[move] = self.minimax(moves[move], self.depth, -np.Infinity, np.Infinity, True)
+        # print("moveRanks =",moveRanks)
+        
+        moveRanks = {move: self.minimax(moves[move], self.depth, -np.Infinity, np.Infinity, True) for move in moves}
         
         return max(moveRanks, key=moveRanks.get)
              

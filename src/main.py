@@ -47,7 +47,7 @@ def handle_move():
     """
     data = request.get_json()
 
-    snake = MiniMaxSnake(3)
+    snake = MiniMaxSnake(depth=2)
     move = snake.choose_move(data)
 
     return {"move": move}
