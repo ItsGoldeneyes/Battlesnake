@@ -53,13 +53,13 @@ class MiniMaxSnake:
         print(" -- ", move)
         # 1. Check for self
         if move in self.body:
-            print(" -- Body collision")
+            # print(" -- Body collision")
             return True
         # 2. Check board borders
-        if -1 == move["x"] or move["x"] >= self.board['width']-1:
+        if -1 == move["x"] or move["x"] >= self.board['width']:
             print(" -- Horizontal Wall collision")
             return True
-        if -1 == move["y"] or move["y"] >= self.board['height']-1:
+        if -1 == move["y"] or move["y"] >= self.board['height']:
             print(" -- Vertical Wall collision")
             return True
         # 3. Check snakes
@@ -82,6 +82,7 @@ class MiniMaxSnake:
         # if _check_kill(position):
         #   total += 3
         if depth == 0:
+            print("End move:",position)
             eval = 0
             moves = self._find_moves(position)
             for move in moves.keys():
@@ -92,9 +93,9 @@ class MiniMaxSnake:
         if isMaximizing:
             maxEval = -np.Infinity
             moves = self._find_moves(position)
-            self.body.append(moves)
             for move in moves.keys():
                 eval = self.minimax(moves[move], depth-1, alpha, beta, False)
+                self.body.append(move)
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
                 if beta <= alpha:
@@ -103,9 +104,9 @@ class MiniMaxSnake:
         else:
             minEval = np.Infinity
             moves = self._find_moves(position)
-            self.body.append(moves)
             for move in moves.keys():
                 eval = self.minimax(moves[move], depth-1, alpha, beta, True)
+                self.body.append(move)
                 minEval = min(minEval, eval)
                 beta = min(beta, eval)
                 if beta <= alpha:
