@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask import request
 
-from minimax import MiniMaxSnake
+from maxmax import MiniMaxSnake
 
 
 app = Flask(__name__)
@@ -20,9 +20,9 @@ def handle_info():
     return {
             "apiversion": "1",
             "author": "Goldeneyes",
-            "color": "#EB6443",  # "color": "#EB6443",
-            "self.head": "missile",
-            "tail": "rocket",
+            "color": "#00FFFF",  # "color": "#EB6443",
+            "self.head": "moto-helmet",
+            "tail": "ion",
         }
 
 
