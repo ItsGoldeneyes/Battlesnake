@@ -12,7 +12,7 @@ in the folder where this file exists:
 """
 import unittest
 import numpy as np
-from maxmax import MaxNSnake
+from maxn import MaxNSnake
 
 
 # class CollisionTests(unittest.TestCase):
@@ -229,42 +229,161 @@ from maxmax import MaxNSnake
 #         self.assertEqual(result, correct)
 
 
-MaxmaxNoneTests(unittest.TestCase):
-    def test_find_moves_none_depth_0(self):
+# class MaxNNoneTests(unittest.TestCase):
+#     def test_find_moves_none_depth_0(self):
+#         # Arrange
+#         data = {
+#             "board": {
+#                 "height": 11,
+#                 "width": 11,
+#                 "food": [{"x": 0, "y": 0}],
+#                 "hazards": [{"x": 0, "y": 0}],
+#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
+#                             "body": [{"x": 0, "y": 0}],
+#                             "head": {"x": 5, "y": 5}}]},
+#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
+#                     "body": [{"x": 0, "y": 0}],
+#                     "head": {"x": 5, "y": 5}}}
+#         position = data["you"]["head"]
+#         depth = 0
+#         logic = MaxNSnake()
+#         logic._parse_board(data)
+
+#         correct = 4
+
+#         # Act
+#         result = logic.maxn(0,depth)
+
+#         # Assert
+#         self.assertEqual(result, correct)
+        
+#     def test_find_moves_none_depth_1(self):
+#         # Arrange
+#         data = {
+#             "board": {
+#                 "height": 11,
+#                 "width": 11,
+#                 "food": [{"x": 0, "y": 0}],
+#                 "hazards": [{"x": 0, "y": 0}],
+#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
+#                             "body": [{"x": 0, "y": 0}],
+#                             "head": {"x": 5, "y": 5}}]},
+#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
+#                     "body": [{"x": 0, "y": 0}],
+#                     "head": {"x": 5, "y": 5}, }}
+#         position = data["you"]["head"]
+#         depth = 1
+#         logic = MaxNSnake()
+#         logic._parse_board(data)
+
+#         correct = 4
+
+#         # Act
+#         result = logic.maxn(0, depth)
+
+#         # Assert
+#         self.assertEqual(result, correct)
+        
+#     def test_find_moves_none_depth_2(self):
+#         # Arrange
+#         data = {
+#             "board": {
+#                 "height": 11,
+#                 "width": 11,
+#                 "food": [{"x": 0, "y": 0}],
+#                 "hazards": [{"x": 0, "y": 0}],
+#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
+#                             "body": [{"x": 0, "y": 0}],
+#                             "head": {"x": 5, "y": 5}}]},
+#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
+#                     "body": [{"x": 0, "y": 0}],
+#                     "head": {"x": 5, "y": 5}, }}
+#         position = data["you"]["head"]
+#         depth = 2
+#         logic = MaxNSnake()
+#         logic._parse_board(data)
+
+#         correct = 4
+
+#         # Act
+#         result = logic.maxn(0, depth)
+
+#         # Assert
+#         self.assertEqual(result, correct)
+        
+#     def test_find_moves_none_depth_3(self):
+#         # Arrange
+#         data = {
+#             "board": {
+#                 "height": 11,
+#                 "width": 11,
+#                 "food": [{"x": 0, "y": 0}],
+#                 "hazards": [{"x": 0, "y": 0}],
+#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
+#                             "body": [{"x": 0, "y": 0}],
+#                             "head": {"x": 5, "y": 5}}]},
+#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
+#                     "body": [{"x": 0, "y": 0}],
+#                     "head": {"x": 5, "y": 5}, }}
+#         position = data["you"]["head"]
+#         depth = 3
+#         logic = MaxNSnake()
+#         logic._parse_board(data)
+
+#         correct = 4
+
+#         # Act
+#         result = logic.maxn(0, depth)
+
+#         # Assert
+#         self.assertEqual(result, correct)
+
+
+class MaxNZeroTests(unittest.TestCase):
+    def test_find_moves_up_depth_0(self):
         # Arrange
         data = {
             "board": {
                 "height": 11,
                 "width": 11,
                 "food": [{"x": 0, "y": 0}],
-                "hazards": [{"x": 0, "y": 0}],
+                "hazards": [{"x": 5, "y": 6}],
                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
                             "body": [{"x": 0, "y": 0}],
                             "head": {"x": 5, "y": 5}}]},
             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
                     "body": [{"x": 0, "y": 0}],
-                    "head": {"x": 5, "y": 5}}}
+                    "head": {"x": 5, "y": 5}, }}
         position = data["you"]["head"]
         depth = 0
         logic = MaxNSnake()
         logic._parse_board(data)
+        moves = logic._find_moves(position)
 
-        correct = 4
+        correct = {
+            "up": 0,
+            "down": 4,
+            "left": 4,
+            "right": 4
+        }
 
         # Act
-        result = logic.maxmax(0,depth)
+        moveRanks = {move: logic.maxn(0, depth) for move in moves}
 
         # Assert
-        self.assertEqual(result, correct)
+        self.assertEqual(moveRanks["up"], correct["up"])
+        self.assertEqual(moveRanks["down"], correct["down"])
+        self.assertEqual(moveRanks["left"], correct["left"])
+        self.assertEqual(moveRanks["right"], correct["right"])
         
-    def test_find_moves_none_depth_1(self):
+    def test_find_moves_down_depth_0(self):
         # Arrange
         data = {
             "board": {
                 "height": 11,
                 "width": 11,
                 "food": [{"x": 0, "y": 0}],
-                "hazards": [{"x": 0, "y": 0}],
+                "hazards": [{"x": 5, "y": 4}],
                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
                             "body": [{"x": 0, "y": 0}],
                             "head": {"x": 5, "y": 5}}]},
@@ -272,26 +391,35 @@ MaxmaxNoneTests(unittest.TestCase):
                     "body": [{"x": 0, "y": 0}],
                     "head": {"x": 5, "y": 5}, }}
         position = data["you"]["head"]
-        depth = 1
+        depth = 0
         logic = MaxNSnake()
         logic._parse_board(data)
+        moves = logic._find_moves(position)
 
-        correct = 4
+        correct = {
+            "up": 4,
+            "down": 0,
+            "left": 4,
+            "right": 4
+        }
 
         # Act
-        result = logic.maxmax(0, depth)
+        moveRanks = {move: logic.maxn(0, depth) for move in moves}
 
         # Assert
-        self.assertEqual(result, correct)
+        self.assertEqual(moveRanks["up"], correct["up"])
+        self.assertEqual(moveRanks["down"], correct["down"])
+        self.assertEqual(moveRanks["left"], correct["left"])
+        self.assertEqual(moveRanks["right"], correct["right"])
         
-    def test_find_moves_none_depth_2(self):
+    def test_find_moves_left_depth_0(self):
         # Arrange
         data = {
             "board": {
                 "height": 11,
                 "width": 11,
                 "food": [{"x": 0, "y": 0}],
-                "hazards": [{"x": 0, "y": 0}],
+                "hazards": [{"x": 4, "y": 5}],
                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
                             "body": [{"x": 0, "y": 0}],
                             "head": {"x": 5, "y": 5}}]},
@@ -299,26 +427,36 @@ MaxmaxNoneTests(unittest.TestCase):
                     "body": [{"x": 0, "y": 0}],
                     "head": {"x": 5, "y": 5}, }}
         position = data["you"]["head"]
-        depth = 2
+        depth = 0
         logic = MaxNSnake()
         logic._parse_board(data)
+        moves = logic._find_moves(position)
 
-        correct = 4
+        correct = {
+            "up": 4,
+            "down": 4,
+            "left": 0,
+            "right": 4
+        }
 
         # Act
-        result = logic.maxmax(0, depth)
+        moveRanks = {move: logic.maxn(0, depth) for move in moves}
+
 
         # Assert
-        self.assertEqual(result, correct)
+        self.assertEqual(moveRanks["up"], correct["up"])
+        self.assertEqual(moveRanks["down"], correct["down"])
+        self.assertEqual(moveRanks["left"], correct["left"])
+        self.assertEqual(moveRanks["right"], correct["right"])
         
-    def test_find_moves_none_depth_3(self):
+    def test_find_moves_right_depth_0(self):
         # Arrange
         data = {
             "board": {
                 "height": 11,
                 "width": 11,
                 "food": [{"x": 0, "y": 0}],
-                "hazards": [{"x": 0, "y": 0}],
+                "hazards": [{"x": 6, "y": 5}],
                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
                             "body": [{"x": 0, "y": 0}],
                             "head": {"x": 5, "y": 5}}]},
@@ -326,165 +464,28 @@ MaxmaxNoneTests(unittest.TestCase):
                     "body": [{"x": 0, "y": 0}],
                     "head": {"x": 5, "y": 5}, }}
         position = data["you"]["head"]
-        depth = 3
+        depth = 0
         logic = MaxNSnake()
         logic._parse_board(data)
+        moves = logic._find_moves(position)
 
-        correct = 4
+        correct = {
+            "up": 4,
+            "down": 4,
+            "left": 4,
+            "right": 0
+        }
 
         # Act
-        result = logic.maxmax(0, depth)
+        moveRanks = {move: logic.maxn(0, depth) for move in moves}
 
         # Assert
-        self.assertEqual(result, correct)
-
-
-# MaxmaxZeroTests(unittest.TestCase):
-#     def test_find_moves_up_depth_0(self):
-#         # Arrange
-#         data = {
-#             "board": {
-#                 "height": 11,
-#                 "width": 11,
-#                 "food": [{"x": 0, "y": 0}],
-#                 "hazards": [{"x": 5, "y": 6}],
-#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
-#                             "body": [{"x": 0, "y": 0}],
-#                             "head": {"x": 0, "y": 0}}]},
-#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
-#                     "body": [{"x": 0, "y": 0}],
-#                     "head": {"x": 5, "y": 5}, }}
-#         position = data["you"]["head"]
-#         depth = 0
-#         logic = MaxNSnake()
-#         logic._parse_board(data)
-#         moves = logic._find_moves(position)
-
-#         correct = {
-#             "up": 0,
-#             "down": 4,
-#             "left": 4,
-#             "right": 4
-#         }
-
-#         # Act
-#         moveRanks = {move: logic.maxmax(moves[move], depth, -np.Infinity, np.Infinity, True) for move in moves}
-
-#         # Assert
-#         self.assertEqual(moveRanks["up"], correct["up"])
-#         self.assertEqual(moveRanks["down"], correct["down"])
-#         self.assertEqual(moveRanks["left"], correct["left"])
-#         self.assertEqual(moveRanks["right"], correct["right"])
-        
-#     def test_find_moves_down_depth_0(self):
-#         # Arrange
-#         data = {
-#             "board": {
-#                 "height": 11,
-#                 "width": 11,
-#                 "food": [{"x": 0, "y": 0}],
-#                 "hazards": [{"x": 5, "y": 4}],
-#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
-#                             "body": [{"x": 0, "y": 0}],
-#                             "head": {"x": 0, "y": 0}}]},
-#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
-#                     "body": [{"x": 0, "y": 0}],
-#                     "head": {"x": 5, "y": 5}, }}
-#         position = data["you"]["head"]
-#         depth = 0
-#         logic = MaxNSnake()
-#         logic._parse_board(data)
-#         moves = logic._find_moves(position)
-
-#         correct = {
-#             "up": 4,
-#             "down": 0,
-#             "left": 4,
-#             "right": 4
-#         }
-
-#         # Act
-#         moveRanks = {move: logic.maxmax(moves[move], depth, -np.Infinity, np.Infinity, True) for move in moves}
-
-#         # Assert
-#         self.assertEqual(moveRanks["up"], correct["up"])
-#         self.assertEqual(moveRanks["down"], correct["down"])
-#         self.assertEqual(moveRanks["left"], correct["left"])
-#         self.assertEqual(moveRanks["right"], correct["right"])
-        
-#     def test_find_moves_left_depth_0(self):
-#         # Arrange
-#         data = {
-#             "board": {
-#                 "height": 11,
-#                 "width": 11,
-#                 "food": [{"x": 0, "y": 0}],
-#                 "hazards": [{"x": 4, "y": 5}],
-#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
-#                             "body": [{"x": 0, "y": 0}],
-#                             "head": {"x": 0, "y": 0}}]},
-#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
-#                     "body": [{"x": 0, "y": 0}],
-#                     "head": {"x": 5, "y": 5}, }}
-#         position = data["you"]["head"]
-#         depth = 0
-#         logic = MaxNSnake()
-#         logic._parse_board(data)
-#         moves = logic._find_moves(position)
-
-#         correct = {
-#             "up": 4,
-#             "down": 4,
-#             "left": 0,
-#             "right": 4
-#         }
-
-#         # Act
-#         moveRanks = {move: logic.maxmax(moves[move], depth, -np.Infinity, np.Infinity, True) for move in moves}
-
-#         # Assert
-#         self.assertEqual(moveRanks["up"], correct["up"])
-#         self.assertEqual(moveRanks["down"], correct["down"])
-#         self.assertEqual(moveRanks["left"], correct["left"])
-#         self.assertEqual(moveRanks["right"], correct["right"])
-        
-#     def test_find_moves_right_depth_0(self):
-#         # Arrange
-#         data = {
-#             "board": {
-#                 "height": 11,
-#                 "width": 11,
-#                 "food": [{"x": 0, "y": 0}],
-#                 "hazards": [{"x": 6, "y": 5}],
-#                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
-#                             "body": [{"x": 0, "y": 0}],
-#                             "head": {"x": 0, "y": 0}}]},
-#             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
-#                     "body": [{"x": 0, "y": 0}],
-#                     "head": {"x": 5, "y": 5}, }}
-#         position = data["you"]["head"]
-#         depth = 0
-#         logic = MaxNSnake()
-#         logic._parse_board(data)
-#         moves = logic._find_moves(position)
-
-#         correct = {
-#             "up": 4,
-#             "down": 4,
-#             "left": 4,
-#             "right": 0
-#         }
-
-#         # Act
-#         moveRanks = {move: logic.maxmax(moves[move], depth, -np.Infinity, np.Infinity, True) for move in moves}
-
-#         # Assert
-#         self.assertEqual(moveRanks["up"], correct["up"])
-#         self.assertEqual(moveRanks["down"], correct["down"])
-#         self.assertEqual(moveRanks["left"], correct["left"])
-#         self.assertEqual(moveRanks["right"], correct["right"])
+        self.assertEqual(moveRanks["up"], correct["up"])
+        self.assertEqual(moveRanks["down"], correct["down"])
+        self.assertEqual(moveRanks["left"], correct["left"])
+        self.assertEqual(moveRanks["right"], correct["right"])
     
-# MaxmaxZeroTests(unittest.TestCase):
+# class MaxNZeroTests(unittest.TestCase):
 #     def test_complex_1(self):
 #         # Arrange
 #         data = {
@@ -503,7 +504,7 @@ MaxmaxNoneTests(unittest.TestCase):
 #                             ],
 #                 "snakes": [{"id": "snake-b67f4906-94ae-11ea-bb37",
 #                             "body": [{"x": 0, "y": 0}],
-#                             "head": {"x": 0, "y": 0}}]},
+#                             "head": {"x": 5, "y": 5}}]},
 #             "you": {"id": "snake-508e96ac-94ad-11ea-bb37",
 #                     "body": [{"x": 5, "y": 5}],
 #                     "head": {"x": 5, "y": 5}, }}
@@ -525,9 +526,9 @@ MaxmaxNoneTests(unittest.TestCase):
 #         for direction in moves.keys():
 #             print("\n\n")
 #             print(direction, moves[direction])
-#             moveRanks[direction] = logic.maxmax(moves[direction], depth, -np.Infinity, np.Infinity, True)
+#             moveRanks[direction] = logic.maxn(moves[direction], depth, -np.Infinity, np.Infinity, True)
 #         print("moveRanks =", moveRanks)
-#         # moveRanks = {move: logic.maxmax(moves[move], depth, -np.Infinity, np.Infinity, True) for move in moves}
+#         # moveRanks = {move: logic.maxn(moves[move], depth, -np.Infinity, np.Infinity, True) for move in moves}
 
 #         # Assert
 #         self.assertEqual(moveRanks["up"], correct["up"])
