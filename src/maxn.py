@@ -50,22 +50,22 @@ class MaxNSnake:
             "left": {"x": position['x']-1, "y": position['y']}
         }
 
-    def _collision_check(self, move):
-        # print(" -- ", move)
+    def _collision_check(self, move, primary = False):
+        print(" -- ", move)
         # 2. Check board borders
         if -1 == move["x"] or move["x"] >= self.board['width']:
-            # print(" -- Horizontal Wall collision")
+            print(" -- Horizontal Wall collision")
             return True
         if -1 == move["y"] or move["y"] >= self.board['height']:
-            # print(" -- Vertical Wall collision")
+            print(" -- Vertical Wall collision")
             return True
         # 3. Check snakes
         if move in self.snakes_collision:
-            # print(" -- Snake collision")
+            print(" -- Snake collision")
             return True
         # 4. Check hazards
         if move in self.hazards:
-            # print(" -- Hazard collision")
+            print(" -- Hazard collision")
             return True
 
         return False
@@ -76,12 +76,19 @@ class MaxNSnake:
         if not did_eat:
             self.data["board"]["snakes"][snake_num]["body"].pop()
             
-    def maxn(self, snake_num, depth):
-        
+    def maxn(self, snake_num, depth, test_position = False):
         if snake_num >= len(self.snakes):
             snake_num = 0 
         
-        position = self.snakes[snake_num]["head"]
+        # For testing
+        if test_position:
+            position = test_position
+        else:
+            position = self.snakes[snake_num]["head"]
+            
+        if self._collision_check(position, True): #Filter out own body somehow
+            return 0    
+        
         snake_id = self.snakes[snake_num]["id"]
         self.data = self.max_data
         max_eval = -np.Infinity
@@ -89,18 +96,18 @@ class MaxNSnake:
         moves = self._find_moves(position)
         
         if depth == 0:
-            print("End move:", position)
+            print("End rank position:", position)
             eval = 0
             for move in moves.keys():
+                print(move)
                 if self._collision_check(moves[move]) == False:
                     eval += 1
             return eval
         
         for move in moves.keys():
+            # print("move:", move)
+            # print("move move:",moves[move])
             print(self._find_moves(position))
-            print("move:", move)
-            print("move move:",moves[move])
-            print("\n")
             if self._collision_check(moves[move]):
                 eval = 0
             else:
@@ -109,6 +116,7 @@ class MaxNSnake:
                     self.max_data = self.data
                     max_move = moves[move]
                     max_eval = max(max_eval, eval)
+            print("\n")
                     
         self._position_update(snake_num, max_move, False) #eat
         return max_eval
@@ -118,13 +126,13 @@ class MaxNSnake:
         self._parse_board(data)
         moves = self._find_moves(self.head)
 
-        moveRanks = {}
-        for direction in moves.keys():
-            # print(direction, moves[direction])
-            moveRanks[direction] = self.maxn(0, self.depth)
-        print("moveRanks =",moveRanks)
+        # moveRanks = {}
+        # for direction in moves.keys():
+        #     # print(direction, moves[direction])
+        #     moveRanks[direction] = self.maxn(0, self.depth)
+        # print("moveRanks =",moveRanks)
         
-        # moveRanks = {move: self.maxn(0, self.depth) for move in moves}
+        moveRanks = {move: self.maxn(0, self.depth) for move in moves}
         
         return max(moveRanks, key=moveRanks.get)
              
