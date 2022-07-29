@@ -552,7 +552,7 @@ class MaxNComplexTests(unittest.TestCase):
         moveRanks = {}
         for direction in moves.keys():
             # if direction == "down":
-                print(direction, moves[direction])
+                print(direction.upper(), moves[direction], "\n")
                 moveRanks[direction] = logic.maxn(0, depth, moves[direction])
         print("moveRanks =",moveRanks)
 

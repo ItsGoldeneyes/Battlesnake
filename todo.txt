@@ -1,0 +1,4 @@
+objectify snakes
+objectify board
+
+translate js function to python

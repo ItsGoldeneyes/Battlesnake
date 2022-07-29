@@ -83,9 +83,11 @@ class MaxNSnake:
         # For testing
         if test_position:
             position = test_position
+            print('if')
         else:
             position = self.snakes[snake_num]["head"]
-            
+            print("else")
+        
         if self._collision_check(position, True): #Filter out own body somehow
             return 0    
         
@@ -106,7 +108,7 @@ class MaxNSnake:
         
         for move in moves.keys():
             # print("move:", move)
-            # print("move move:",moves[move])
+            print(move, "move:",moves[move])
             print(self._find_moves(position))
             if self._collision_check(moves[move]):
                 eval = 0
