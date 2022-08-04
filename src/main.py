@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask import request
 
-from maxmax import MiniMaxSnake
+from maxn import MiniMaxSnake
 
 
 app = Flask(__name__)
