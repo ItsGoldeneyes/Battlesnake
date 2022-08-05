@@ -45,6 +45,8 @@ class BattleSnake:
         }
     
     def choose_move(self):
-        moves = self.find_moves(self.get_head())
-        moves = [move for move in moves if self.board.collision_check(move)==False]
-        random.choice(moves)
+        potential_moves = self.find_moves(self.get_head())
+        moves = [move for move in potential_moves if self.board.collision_check(potential_moves[move])==False]
+        move_choice = random.choice(moves)
+        print(move_choice)
+        return move_choice

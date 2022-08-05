@@ -10,61 +10,68 @@ class Board:
         self.food = data["board"]["food"]
         
         self.snakes = {snake["id"] : snake for snake in self.board["snakes"]}
+        self.snakes_hitbox = [] #Update snake collision
         self.update_snake_collision()
             
-        def get_data(self):
-            return self.data
+    def get_data(self):
+        return self.data
+    
+    def get_board(self):
+        return self.board
+    
+    def get_width(self):
+        return self.width
+    
+    def get_height(self):
+        return self.height
+    
+    def get_hazards(self):
+        return self.hazards
+    
+    def set_food(self, food):
+        self.food = food
         
-        def get_board(self):
-            return self.board
+    def get_food(self):
+        return self.food
+    
+    def get_snakes(self):
+        return self.snakes 
+    
+    def get_player_id(self):
+        return self.data["you"]["id"]     
+    
+    def update_snake_collision(self):
+        self.snakes_hitbox = []
+        for snake in self.snakes.keys():
+            self.snakes_hitbox.extend(self.snakes[snake]["body"])
+    
+    def collision_check(self, move):
+        # 1. Check board borders
+        if -1 == move["x"] or move["x"] >= self.width:
+            # print(" -- Horizontal Wall collision")
+            return True
         
-        def get_hazards(self):
-            return self.hazards
+        if -1 == move["y"] or move["y"] >= self.height:
+            # print(" -- Vertical Wall collision")
+            return True
         
-        def set_food(self, food):
-            self.food = food
+        # 2. Check snakes
+        if move in self.snakes_hitbox:
+            # print(" -- Snake collision")
+            return True
+        
+        # 3. Check hazards
+        if move in self.hazards:
+            # print(" -- Hazard collision")
+            return True
+        return False
             
-        def get_food(self):
-            return self.food
+    def move(self, snake_id, move, did_eat = False):
+        self.snakes[snake_id]["head"] = move
+        self.snakes[snake_id]["body"].insert(0, move)
+        if not did_eat:
+            self.snakes[snake_id]["body"].pop()
+        self.update_snake_collision()
         
-        def get_snakes(self):
-            return self.snakes 
-        
-        def get_player_id(self):
-            return self.board["you"]["id"]     
-        
-        def update_snake_collision(self):
-            self.snakes_hitbox = []
-            for snake in self.snakes.keys():
-                self.snakes_hitbox.extend(self.snakes[snake]["body"])
-        
-        def collision_check(self, move):
-            # 1. Check board borders
-            if -1 == move["x"] or move["x"] >= self.get_width():
-                # print(" -- Horizontal Wall collision")
-                return True
-            
-            if -1 == move["y"] or move["y"] >= self.get_height():
-                # print(" -- Vertical Wall collision")
-                return True
-            
-            # 2. Check snakes
-            if move in self.get_snake_hitbox():
-                # print(" -- Snake collision")
-                return True
-            
-            # 3. Check hazards
-            if move in self.board.get_hazards():
-                # print(" -- Hazard collision")
-                return True
-            return False
-            
-        def move(self, snake_id, move, did_eat = False):
-            self.snakes[snake_id]["head"] = move
-            self.snakes[snake_id]["body"].insert(0, move)
-            if not did_eat:
-                self.snakes[snake_id]["body"].pop()
-            self.update_snake_collision()
-            
-        def get_position(self, id):
-            return self.snakes[id]["head"], self.snakes[id]["body"]
+    def get_position(self, id):
+        return self.snakes[id]["head"], self.snakes[id]["body"]
