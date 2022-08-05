@@ -1,12 +1,14 @@
-#from board import board
+from board import Board
+import random
 
 
 class BattleSnake:
     
-    def __init__(self, head, body, board):
-        self.head = head
-        self.body = body
-        self.board = board
+    def __init__(self, head, body, id, board):
+        self.set_head(head)
+        self.set_body(body)
+        self.set_board(board)
+        self.set_id(id)
         
     def set_head(self, head):
         self.head = head
@@ -26,8 +28,14 @@ class BattleSnake:
     def get_board(self):
         return self.board
     
-    def set_position(self, snake_id, move, didEat=False):
-        self.board.set_position(snake_id, move, didEat) 
+    def set_id(self, id):
+        self.id = id
+    
+    def get_id(self):
+        return self.id
+    
+    def move(self, snake_id, move, did_eat=False):
+        self.board.move(snake_id, move, did_eat) 
         self.head, self.body = self.board.get_position(snake_id)
     
     def find_moves(self, position):
@@ -38,28 +46,7 @@ class BattleSnake:
             "left": {"x": position['x']-1, "y": position['y']}
         }
     
-    def collision_check(self, move):
-        # 1. Check board borders
-        if -1 == move["x"] or move["x"] >= self.board.get_width():
-            # print(" -- Horizontal Wall collision")
-            return True
-        
-        if -1 == move["y"] or move["y"] >= self.board.get_height():
-            # print(" -- Vertical Wall collision")
-            return True
-        
-        # 2. Check snakes
-        if move in self.board.get_other_snakes():
-            # print(" -- Snake collision")
-            return True
-        
-        # 3. Check hazards
-        if move in self.board.get_hazards():
-            # print(" -- Hazard collision")
-            return True
-
-        return False
-    
     def choose_move(self):
         moves = self.find_moves(self.get_head())
-        moves = {move for move in moves if self.collision_check(move)==False}
+        moves = [move for move in moves if self.board.collision_check(move)==False]
+        random.choice(moves)
