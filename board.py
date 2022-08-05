@@ -28,7 +28,10 @@ class Board:
             return self.food
         
         def get_snakes(self):
-            return self.snakes       
+            return self.snakes 
+        
+        def get_player_id(self):
+            return self.board["you"]["id"]     
         
         def update_snake_collision(self):
             self.snakes_hitbox = []
@@ -62,3 +65,6 @@ class Board:
             if not did_eat:
                 self.snakes[snake_id]["body"].pop()
             self.update_snake_collision()
+            
+        def get_position(self, id):
+            return self.snakes[id]["head"], self.snakes[id]["body"]

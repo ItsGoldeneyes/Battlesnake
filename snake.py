@@ -4,12 +4,10 @@ import random
 
 class BattleSnake:
     
-    def __init__(self, head, body, id, board):
-        self.set_head(head)
-        self.set_body(body)
+    def __init__(self, board):
         self.set_board(board)
-        self.set_id(id)
-        
+        self.set_id(board.get_player_id())
+        self.head, self.body = self.board.get_position(self.id)
     def set_head(self, head):
         self.head = head
     

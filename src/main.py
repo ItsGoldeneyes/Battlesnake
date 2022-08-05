@@ -4,7 +4,8 @@ import os
 from flask import Flask
 from flask import request
 
-from maxn import MiniMaxSnake
+from snake import BattleSnake
+from board import Board
 
 
 app = Flask(__name__)
@@ -46,8 +47,8 @@ def handle_move():
     Valid moves are "up", "down", "left", or "right".
     """
     data = request.get_json()
-
-    snake = MiniMaxSnake(depth=2)
+    board = Board(data)
+    snake = BattleSnake(board)
     move = snake.choose_move(data)
 
     return {"move": move}
