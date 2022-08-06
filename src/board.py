@@ -87,7 +87,6 @@ class Board:
         
     
     def prioritize_food(self, head, move_dict):
-        print(move_dict)
         if self.food == []:
             return random.choice(list(move_dict.keys()))
         food = self.closest_food(head)
