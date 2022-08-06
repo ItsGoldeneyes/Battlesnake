@@ -43,9 +43,7 @@ class Board:
         return self.snakes 
     
     def get_health(self, id):
-        for snake in self.snakes:
-            if snake["id"] == id:
-                return snake["health"]
+        return self.snakes[id]["health"]
     
     def get_player_id(self):
         return self.data["you"]["id"]     
