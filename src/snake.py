@@ -50,5 +50,5 @@ class BattleSnake:
         if self.board.get_health(self.id) < 30:
             move_choice = self.board.prioritize_food(self.get_head(), moves)
         else:
-            move_choice = random.choice(moves)
+            move_choice = random.choice(list(moves.keys()))
         return move_choice
