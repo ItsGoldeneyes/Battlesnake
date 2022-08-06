@@ -75,9 +75,6 @@ class Board:
         return False
     
     def closest_food(self, point_dict):
-        if self.food == []:
-            return point_dict[random.choice(point_dict.keys())]
-        
         food_list = np.array([self.point_to_list(point) for point in self.food])
         point = np.array([self.point_to_list(point_dict)])
         
@@ -87,6 +84,8 @@ class Board:
         
     
     def prioritize_food(self, head, move_dict):
+        if self.food == []:
+            return move_dict[random.choice(move_dict.keys())]
         food = self.closest_food(head)
         max_dist = 999
         best_move = None
