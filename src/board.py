@@ -1,6 +1,7 @@
 from scipy.spatial import distance
 import numpy as np
 import math
+import random
 
 
 class Board:
@@ -74,6 +75,8 @@ class Board:
         return False
     
     def closest_food(self, point_dict):
+        if self.food == []:
+            return point_dict[random.randint(0,len(point_dict))]
         food_list = np.array([self.point_to_list(point) for point in self.food])
         point = np.array([self.point_to_list(point_dict)])
         
