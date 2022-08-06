@@ -76,7 +76,8 @@ class Board:
     
     def closest_food(self, point_dict):
         if self.food == []:
-            return point_dict[random.randint(0,len(point_dict))]
+            return point_dict[random.choice(point_dict.keys())]
+        
         food_list = np.array([self.point_to_list(point) for point in self.food])
         point = np.array([self.point_to_list(point_dict)])
         
