@@ -1,3 +1,8 @@
+from scipy.spatial import distance
+import numpy as np
+import math
+
+
 class Board:
     
     def __init__(self, data):
@@ -10,7 +15,6 @@ class Board:
         self.food = data["board"]["food"]
         
         self.snakes = {snake["id"] : snake for snake in self.board["snakes"]}
-        self.snakes_hitbox = [] #Update snake collision
         self.update_snake_collision()
             
     def get_data(self):
@@ -40,6 +44,9 @@ class Board:
     def get_player_id(self):
         return self.data["you"]["id"]     
     
+    def point_to_list(self, point):
+        return [point["x"],point["y"]]
+    
     def update_snake_collision(self):
         self.snakes_hitbox = []
         for snake in self.snakes.keys():
@@ -65,6 +72,26 @@ class Board:
             # print(" -- Hazard collision")
             return True
         return False
+    
+    def closest_food(self, point_dict):
+        food_list = np.array([self.point_to_list(point) for point in self.food])
+        point = np.array([self.point_to_list(point_dict)])
+        
+        distances = np.linalg.norm(food_list-point, axis=1)
+        min_index = np.argmin(distances)
+        return food_list[min_index]
+        
+    
+    def prioritize_food(self, head, move_dict):
+        food = self.closest_food(head)
+        max_dist = 999
+        best_move = None
+        for move in move_dict:
+            move_list = self.point_to_list(move_dict[move])
+            if math.dist(move_list,food) < max_dist:
+                max_dist = math.dist(move_list,food)
+                best_move = move
+        return best_move
             
     def move(self, snake_id, move, did_eat = False):
         self.snakes[snake_id]["head"] = move

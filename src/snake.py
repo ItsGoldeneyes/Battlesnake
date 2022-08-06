@@ -46,7 +46,7 @@ class BattleSnake:
     
     def choose_move(self):
         potential_moves = self.find_moves(self.get_head())
-        moves = [move for move in potential_moves if self.board.collision_check(potential_moves[move])==False]
-        move_choice = random.choice(moves)
-        print(move_choice)
-        return move_choice
+        moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
+        food_move = self.board.prioritize_food(self.get_head(), moves)
+        # move_choice = random.choice(moves)
+        return food_move
