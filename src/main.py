@@ -22,7 +22,7 @@ def handle_info():
             "apiversion": "1",
             "author": "Goldeneyes",
             "color": "#00FFFF",  # "color": "#EB6443",
-            "self.head": "bendr",
+            "self.head": "beluga",
             "tail": "cosmic-horror",
         }
 
