@@ -21,7 +21,7 @@ def handle_info():
     return {
             "apiversion": "1",
             "author": "Goldeneyes",
-            "color": "#00FFFF",  # "color": "#EB6443",
+            "color": "#4C89C8",  # "color": "#EB6443",
             "head": "lantern-fish", #all-seeing
             "tail": "flame", #cosmic-horror
         }
@@ -79,5 +79,5 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8080"))
 
     print(f"\nRunning Battlesnake server at http://{host}:{port}")
-    app.env = 'development'
+    # app.env = 'development'
     app.run(host=host, port=port, debug=True)
