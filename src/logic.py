@@ -1,5 +1,5 @@
-from src.snake import BattleSnake
-from src.board import Board
+from snake import BattleSnake
+from board import Board
 
 class LogicSnake(BattleSnake):
     def __init__(self, board):

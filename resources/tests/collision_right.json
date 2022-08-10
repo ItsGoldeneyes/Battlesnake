@@ -1,0 +1,42 @@
+{
+    "game": {
+      "id": "game-00fe20da-94ad-11ea-bb37",
+      "ruleset": {
+        "name": "standard"
+      }
+    },
+    "turn": 14,
+    "board": {
+      "height": 5,
+      "width": 5,
+      "food": [
+      ],
+      "hazards": [
+        {"x": 0, "y": 0},
+        {"x": 4, "y": 0},
+        {"x": 0, "y": 4},
+        {"x": 4, "y": 4},
+        {"x": 3, "y": 2}
+      ],
+      "snakes": [
+        {
+          "id": "snake-508e96ac-94ad-11ea-bb37",
+          "name": "My Snake",
+          "health": 54,
+          "body": [
+              {"x": 2, "y": 2}
+            ],
+          "head": {"x": 2, "y": 2}
+        }
+      ]
+    },
+    "you": {
+        "id": "snake-508e96ac-94ad-11ea-bb37",
+        "name": "My Snake",
+        "health": 54,
+        "body": [
+            {"x": 2, "y": 2}
+            ],
+        "head": {"x": 2, "y": 2}
+    }
+  }
