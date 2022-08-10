@@ -12,7 +12,7 @@ in the folder where this file exists:
 """
 import unittest
 import numpy as np
-from maxn import MaxNSnake
+from maxn_old import MaxNSnake
 
 
 class CollisionTests(unittest.TestCase):

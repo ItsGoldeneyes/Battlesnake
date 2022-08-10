@@ -17,6 +17,9 @@ class Board:
         
         self.snakes = {snake["id"] : snake for snake in self.board["snakes"]}
         self.update_snake_collision()
+    
+    def clone(self):
+        return Board(self.data)
             
     def get_data(self):
         return self.data
