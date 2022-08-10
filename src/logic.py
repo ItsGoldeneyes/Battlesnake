@@ -7,13 +7,15 @@ class LogicSnake(BattleSnake):
         
     def flood_fill(self, board, move, accessed = []):
         # print(move)
-        total = 0
         if board.collision_check(move):
             return 0
+        
+        accessed.append(move)
+        total = 1
         for new_move in self.find_moves(move).values():
             if new_move not in accessed:
-                accessed.append(new_move)
-                total = total + 1 + self.flood_fill(board, new_move, accessed)
+                total = total + self.flood_fill(board, new_move, accessed)
+        # print(accessed)
         return total
                 
     
