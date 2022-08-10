@@ -1,4 +1,4 @@
-from board import Board
+from src.board import Board
 import random
 
 
@@ -46,9 +46,9 @@ class BattleSnake:
     
     def choose_move(self):
         potential_moves = self.find_moves(self.get_head())
-        moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
+        alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
         if self.board.get_health(self.id) < 30:
-            move_choice = self.board.prioritize_food(self.get_head(), moves)
+            move_choice = self.board.prioritize_food(self.get_head(), alive_moves)
         else:
-            move_choice = random.choice(list(moves.keys()))
+            move_choice = random.choice(list(alive_moves.keys()))
         return move_choice

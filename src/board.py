@@ -54,6 +54,32 @@ class Board:
     def point_to_list(self, point):
         return [point["x"],point["y"]]
     
+    def print_board(self):
+        board_array = [[] for i in range(self.height)]
+        for y_pos in range(self.height):
+            for x_pos in range(self.width):
+                coord = {"x": x_pos, "y": y_pos}
+                # Check for food
+                if coord in self.food:
+                    board_array[y_pos].append("F")
+                # Check for hazards
+                elif coord in self.hazards:
+                    board_array[y_pos].append("X")
+                # Check for snakes
+                elif coord in self.snakes_hitbox:
+                    board_array[y_pos].append("O")
+                # Empty space
+                else:
+                    board_array[y_pos].append("◦")
+        
+        for col in board_array:
+            for elem in col:
+                print(elem, end=" ")
+            print("\n")
+            # print(col)
+                
+                
+        
     def update_snake_collision(self):
         self.snakes_hitbox = []
         for snake in self.snakes.keys():
