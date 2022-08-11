@@ -1,5 +1,6 @@
 from snake import BattleSnake
 from board import Board
+import random
 
 class LogicSnake(BattleSnake):
     def __init__(self, board):
@@ -27,6 +28,7 @@ class LogicSnake(BattleSnake):
         
         #Get Floodfill scores
         flood_scores = {move:self.flood_fill(self.board, alive_moves[move], []) for move in alive_moves}
+        move_choice = random.choice(list(alive_moves.keys()))
         
         if len(set(flood_scores.values())) != 1:
             move_choice = max(flood_scores, key=flood_scores.get)
