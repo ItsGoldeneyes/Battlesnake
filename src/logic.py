@@ -35,6 +35,7 @@ class LogicSnake(BattleSnake):
             
         elif self.board.get_health(self.id) < 40:
             food_dists = self.board.food_dist(self.get_head(), alive_moves)
-            move_choice = min(food_dists, key=food_dists.get)
+            if len(set(food_dists.values())) != 1:
+                move_choice = min(food_dists, key=food_dists.get)
             
         return move_choice
