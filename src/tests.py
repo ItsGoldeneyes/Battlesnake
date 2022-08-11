@@ -102,6 +102,23 @@ class CollisionTests(unittest.TestCase):
         # Assert
         self.assertEqual(result, expected)
 
+class PrioritizeFoodTests(unittest.TestCase):
+    def test_prioritize_none(self):
+        # Arrange
+        board_json = open("resources/tests/collision_none.json","r")
+        board_dict = json.loads(board_json.read())
+        board_json.close()
+        board = Board(board_dict)
+
+        snake = BattleSnake(board)
+        potential_moves = snake.find_moves(snake.get_head())
+        expected = [False, False, False, False]
+        
+        # Act
+        result = [board.collision_check(move) for move in potential_moves.values()]
+
+        # Assert
+        self.assertEqual(result, expected)
           
 if __name__ == "__main__":
     unittest.main()

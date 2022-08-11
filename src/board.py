@@ -78,12 +78,12 @@ class Board:
             print("\n")
             # print(col)
                 
-                
-        
+    
     def update_snake_collision(self):
         self.snakes_hitbox = []
         for snake in self.snakes.keys():
             self.snakes_hitbox.extend(self.snakes[snake]["body"])
+            
     
     def collision_check(self, move):
         # 1. Check board borders
@@ -106,6 +106,7 @@ class Board:
             return True
         return False
     
+    
     def closest_food(self, point_dict):
         food_list = np.array([self.point_to_list(point) for point in self.food])
         point = np.array([self.point_to_list(point_dict)])
@@ -115,18 +116,18 @@ class Board:
         return food_list[min_index]
         
     
-    def prioritize_food(self, head, move_dict):
+    def food_dist(self, head, move_dict): #Change to scoring
         if self.food == []:
-            return random.choice(list(move_dict.keys()))
+            scores = [0 for move in move_dict]
+            return scores
+
         food = self.closest_food(head)
-        max_dist = 999
-        best_move = None
+        scores = {}
         for move in move_dict:
-            move_list = self.point_to_list(move_dict[move])
-            if math.dist(move_list,food) < max_dist:
-                max_dist = math.dist(move_list,food)
-                best_move = move
-        return best_move
+            val = abs((food["x"]+food["y"]) - (move_dict[move]["x"]+move_dict[move]["y"]))
+            scores[move] = val
+        return scores
+    
             
     def move(self, snake_id, move, did_eat = False):
         self.snakes[snake_id]["head"] = move
@@ -134,6 +135,7 @@ class Board:
         if not did_eat:
             self.snakes[snake_id]["body"].pop()
         self.update_snake_collision()
+        
         
     def get_position(self, id):
         return self.snakes[id]["head"], self.snakes[id]["body"]
