@@ -50,7 +50,7 @@ class BattleSnake:
         if self.board.get_health(self.id) < 30:
             food_dists = self.board.food_dist(self.get_head(), alive_moves)
             print(food_dists)
-            move_choice = max(food_dists, key=food_dists.get)
+            move_choice = min(food_dists, key=food_dists.get)
         else:
             move_choice = random.choice(list(alive_moves.keys()))
         return move_choice

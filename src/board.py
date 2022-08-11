@@ -71,11 +71,11 @@ class Board:
                 # Empty space
                 else:
                     board_array[y_pos].append("◦")
-        
+        board_array.reverse()
         for col in board_array:
             for elem in col:
                 print(elem, end=" ")
-            print("\n")
+            print("")
             # print(col)
                 
     
@@ -124,7 +124,8 @@ class Board:
         food = self.closest_food(head)
         scores = {}
         for move in move_dict:
-            val = math.sqrt(((food[0]-food[1])**2) + ((move_dict[move]["x"]-move_dict[move]["y"])**2))
+            print(food,move_dict[move])
+            val = math.sqrt(((move_dict[move]["x"]-food[0])**2) + ((move_dict[move]["y"]-food[1])**2))
             scores[move] = val
         return scores
     
