@@ -49,7 +49,7 @@ def handle_move():
     """
     data = request.get_json()
     board = Board(data)
-    snake = BattleSnake(board)
+    snake = LogicSnake(board)
     move = snake.choose_move()
 
     return {"move": move}

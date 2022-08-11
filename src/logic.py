@@ -22,13 +22,17 @@ class LogicSnake(BattleSnake):
         #Filter collision moves
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if self.board.collision_check(potential_moves[move])==False}
+        if alive_moves == {}:
+            return "up"
+        
         #Get Floodfill scores
         flood_scores = {move:self.flood_fill(self.board, alive_moves[move], []) for move in alive_moves}
         
-        if self.board.get_health(self.id) < 30:
+        if len(set(flood_scores.values())) != 1:
+            move_choice = max(flood_scores, key=flood_scores.get)
+            
+        elif self.board.get_health(self.id) < 40:
             food_dists = self.board.food_dist(self.get_head(), alive_moves)
             move_choice = min(food_dists, key=food_dists.get)
-            if flood_scores[move_choice] < flood_scores[max(flood_scores, key=flood_scores.get)]/2:
-                return max(flood_scores, key=flood_scores.get)
-        
-        return max(flood_scores, key=flood_scores.get)
+            
+        return move_choice
