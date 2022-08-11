@@ -28,7 +28,7 @@ class LogicSnake(BattleSnake):
         if self.board.get_health(self.id) < 30:
             food_dists = self.board.food_dist(self.get_head(), alive_moves)
             move_choice = min(food_dists, key=food_dists.get)
-            if flood_scores[move_choice] < max(flood_scores, key=flood_scores.get)/2:
+            if flood_scores[move_choice] < flood_scores[max(flood_scores, key=flood_scores.get)]/2:
                 return max(flood_scores, key=flood_scores.get)
         
         return max(flood_scores, key=flood_scores.get)
