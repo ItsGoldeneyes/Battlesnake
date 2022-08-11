@@ -118,7 +118,7 @@ class Board:
     
     def food_dist(self, head, move_dict): 
         if self.food == []:
-            scores = [0 for move in move_dict]
+            scores = {move:0 for move in move_dict}
             return scores
 
         food = self.closest_food(head)
