@@ -106,6 +106,11 @@ class Board:
             return True
         return False
     
+    def avoid_food(self, move):
+        if move in self.food:
+            return True
+        return False
+    
     
     def closest_food(self, point_dict):
         food_list = np.array([self.point_to_list(point) for point in self.food])
@@ -124,7 +129,6 @@ class Board:
         food = self.closest_food(head)
         scores = {}
         for move in move_dict:
-            print(food,move_dict[move])
             val = math.sqrt(((move_dict[move]["x"]-food[0])**2) + ((move_dict[move]["y"]-food[1])**2))
             scores[move] = val
         return scores

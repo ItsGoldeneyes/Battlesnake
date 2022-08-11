@@ -18,6 +18,7 @@ class LogicSnake(BattleSnake):
                 total = total + self.flood_fill(board, new_move, accessed)
         return total
     
+    
     def choose_move(self):
         potential_moves = self.find_moves(self.get_head())
         #Filter collision moves
@@ -26,16 +27,23 @@ class LogicSnake(BattleSnake):
         if alive_moves == {}:
             return "up"
         
+        if self.board.get_health(self.id) > 50:
+                alive_moves = {move : potential_moves[move] for move in potential_moves 
+                        if self.board.avoid_food(potential_moves[move])==False}
+                if alive_moves == {}:
+                    alive_moves = {move : potential_moves[move] for move in potential_moves 
+                                if self.board.collision_check(potential_moves[move])==False}
         #Get Floodfill scores
         flood_scores = {move:self.flood_fill(self.board, alive_moves[move], []) for move in alive_moves}
         move_choice = random.choice(list(alive_moves.keys()))
-        
         if len(set(flood_scores.values())) != 1:
             move_choice = max(flood_scores, key=flood_scores.get)
             
-        elif self.board.get_health(self.id) < 40:
+        if self.board.get_health(self.id) < 10:
             food_dists = self.board.food_dist(self.get_head(), alive_moves)
             if len(set(food_dists.values())) != 1:
                 move_choice = min(food_dists, key=food_dists.get)
+            
+        
             
         return move_choice
