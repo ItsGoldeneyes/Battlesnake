@@ -5,6 +5,7 @@ class LogicSnake(BattleSnake):
     def __init__(self, board):
         super().__init__(board)
         
+        
     def flood_fill(self, board, move, accessed = []):
         if board.collision_check(move):
             return 0
@@ -20,8 +21,9 @@ class LogicSnake(BattleSnake):
     def choose_move(self):
         potential_moves = self.find_moves(self.get_head())
         #Filter collision moves
-        moves = {move : potential_moves[move] for move in potential_moves 
+        alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if self.board.collision_check(potential_moves[move])==False}
         #Get Floodfill scores
-        flood_scores = [self.flood_fill(self.board, potential_moves[move]) for move in potential_moves]
+        flood_scores = {move:self.flood_fill(self.board, alive_moves[move], []) for move in alive_moves}
+        
         return flood_scores
