@@ -116,7 +116,7 @@ class Board:
         return food_list[min_index]
         
     
-    def food_dist(self, head, move_dict): #Wrong distance calc
+    def food_dist(self, head, move_dict): 
         if self.food == []:
             scores = [0 for move in move_dict]
             return scores
