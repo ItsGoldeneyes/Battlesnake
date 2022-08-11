@@ -4,7 +4,7 @@ import os
 from flask import Flask
 from flask import request
 
-from snake import BattleSnake
+from logic import LogicSnake
 from board import Board
 
 
@@ -48,7 +48,7 @@ def handle_move():
     """
     data = request.get_json()
     board = Board(data)
-    snake = BattleSnake(board)
+    snake = LogicSnake(board)
     move = snake.choose_move()
 
     return {"move": move}

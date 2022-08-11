@@ -16,7 +16,6 @@ class LogicSnake(BattleSnake):
             if new_move not in accessed:
                 total = total + self.flood_fill(board, new_move, accessed)
         return total
-                
     
     def choose_move(self):
         potential_moves = self.find_moves(self.get_head())
@@ -26,4 +25,4 @@ class LogicSnake(BattleSnake):
         #Get Floodfill scores
         flood_scores = {move:self.flood_fill(self.board, alive_moves[move], []) for move in alive_moves}
         
-        return flood_scores
+        return max(flood_scores, key=flood_scores.get)
