@@ -25,4 +25,10 @@ class LogicSnake(BattleSnake):
         #Get Floodfill scores
         flood_scores = {move:self.flood_fill(self.board, alive_moves[move], []) for move in alive_moves}
         
+        if self.board.get_health(self.id) < 30:
+            food_dists = self.board.food_dist(self.get_head(), alive_moves)
+            move_choice = min(food_dists, key=food_dists.get)
+            if flood_scores[move_choice] < max(flood_scores, key=flood_scores.get)/2:
+                return max(flood_scores, key=flood_scores.get)
+        
         return max(flood_scores, key=flood_scores.get)

@@ -116,7 +116,7 @@ class Board:
         return food_list[min_index]
         
     
-    def food_dist(self, head, move_dict): #Change to scoring
+    def food_dist(self, head, move_dict): #Wrong distance calc
         if self.food == []:
             scores = [0 for move in move_dict]
             return scores
@@ -124,7 +124,7 @@ class Board:
         food = self.closest_food(head)
         scores = {}
         for move in move_dict:
-            val = abs((food["x"]+food["y"]) - (move_dict[move]["x"]+move_dict[move]["y"]))
+            val = abs((food[0]+food[1]) - (move_dict[move]["x"]+move_dict[move]["y"]))
             scores[move] = val
         return scores
     
