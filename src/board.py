@@ -124,7 +124,7 @@ class Board:
         food = self.closest_food(head)
         scores = {}
         for move in move_dict:
-            val = abs((food[0]+food[1]) - (move_dict[move]["x"]+move_dict[move]["y"]))
+            val = math.sqrt(((food[0]-food[1])**2) + ((move_dict[move]["x"]-move_dict[move]["y"])**2))
             scores[move] = val
         return scores
     
