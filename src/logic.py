@@ -49,7 +49,7 @@ class LogicSnake(BattleSnake):
             move_choice = random.choice(list(alive_moves.keys()))
         
         # If hungry    
-        if self.board.get_health(self.id) < 10:
+        if self.board.get_health(self.id) < 20:
             food_dists = self.board.food_dist(self.get_head(), alive_moves)
             if len(set(food_dists.values())) != 1:
                 move_choice = min(food_dists, key=food_dists.get)
