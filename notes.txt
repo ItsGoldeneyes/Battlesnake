@@ -1,0 +1,9 @@
+get food if smaller than other snakes on board
+
+head to heads
+
+circle until getting food?
+
+how to hunt
+
+circle by targeting boundaries of enemy snakes
