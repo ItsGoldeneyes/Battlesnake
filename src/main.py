@@ -23,8 +23,8 @@ def handle_info():
             "apiversion": "1",
             "author": "Goldeneyes",
             "color": "#4C89C8",  # "color": "#EB6443",
-            "head": "lantern-fish", #all-seeing
-            "tail": "flame", #cosmic-horror
+            "head": "lantern-fish", #beluga
+            "tail": "flame", #bolt
         }
 
 
