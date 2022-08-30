@@ -83,6 +83,7 @@ class StandardMove:
                 pos = 1
                 for move in sorted(flood_amt, key=flood_amt.get, reverse=True):
                     flood_scores.update({move: value_divide/pos})
+                    pos += 1
                 scores = self.add_scores(scores, flood_scores)
                 print(scores)
             

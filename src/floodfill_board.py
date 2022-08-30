@@ -1,6 +1,6 @@
 
 class floodfill:
-        
+    
     def floodfill(self, board, move, accessed = []):
         if board.collision_check(move):
             return 0
