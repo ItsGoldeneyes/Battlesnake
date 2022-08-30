@@ -15,6 +15,9 @@ class Board:
         
         self.snakes = {snake["id"] : snake for snake in self.board["snakes"]}
         self.update_snake_collision()
+        
+        self.map = self.board["map"]
+        self.ruleset = self.board["ruleset"]["name"]
     
     def clone(self):
         return Board(self.data)
@@ -43,14 +46,23 @@ class Board:
     def get_snakes(self):
         return self.snakes 
     
+    def get_map(self):
+        return self.map
+    
+    def get_ruleset(self):
+        return self.ruleset
+    
     def get_health(self, id):
         return self.snakes[id]["health"]
     
-    def get_player_id(self):
+    def get_self_id(self):
         return self.data["you"]["id"]     
     
     def point_to_list(self, point):
         return [point["x"],point["y"]]
+    
+    def get_position(self, id):
+        return self.snakes[id]["head"], self.snakes[id]["body"]
     
     def print_board(self):
         board_array = [[] for i in range(self.height)]
@@ -75,14 +87,23 @@ class Board:
                 print(elem, end=" ")
             print("")
             # print(col)
-                
+            
+            
+    def find_moves(self, position):
+        return {
+            "up": {"x": position['x'], "y": position['y']+1},
+            "down": {"x": position['x'], "y": position['y']-1},
+            "right": {"x": position['x']+1, "y": position['y']},
+            "left": {"x": position['x']-1, "y": position['y']}
+        }        
+    
     
     def update_snake_collision(self):
         self.snakes_hitbox = []
         for snake in self.snakes.keys():
             self.snakes_hitbox.extend(self.snakes[snake]["body"])
+       
             
-    
     def collision_check(self, move):
         # 1. Check board borders
         if -1 == move["x"] or move["x"] >= self.width:
@@ -103,6 +124,7 @@ class Board:
             # print(" -- Hazard collision")
             return True
         return False
+    
     
     def avoid_food(self, move):
         if move in self.food:
@@ -139,6 +161,3 @@ class Board:
             self.snakes[snake_id]["body"].pop()
         self.update_snake_collision()
         
-        
-    def get_position(self, id):
-        return self.snakes[id]["head"], self.snakes[id]["body"]

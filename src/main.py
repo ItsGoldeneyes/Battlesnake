@@ -4,12 +4,12 @@ import os
 from flask import Flask
 from flask import request
 
-from logic import LogicSnake
 from snake import BattleSnake
 from board import Board
 
 
 app = Flask(__name__)
+
 
 
 @app.get("/")
@@ -35,8 +35,11 @@ def handle_start():
     It's purely for informational purposes, you don't have to make any decisions here.
     request.json contains information about the game that's about to be played.
     """
+    global snake
     data = request.get_json()
-
+    board = Board(data)
+    snake = BattleSnake(board)
+    
     print(f"{data['game']['id']} START")
     return "ok"
 
@@ -49,7 +52,7 @@ def handle_move():
     """
     data = request.get_json()
     board = Board(data)
-    snake = LogicSnake(board)
+    snake.board_update(board)
     move = snake.choose_move()
 
     return {"move": move}

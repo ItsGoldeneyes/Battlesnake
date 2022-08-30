@@ -1,13 +1,20 @@
 from board import Board
+
+from standard_move import standard_move
+
 import random
 
 
 class BattleSnake:
     
-    def __init__(self, board):
+    def __init__(self, board, id=""):
+        if id == "":
+            id = board.get_self_id()
+            
         self.set_board(board)
-        self.set_id(board.get_player_id())
+        self.set_id(id)
         self.head, self.body = self.board.get_position(self.id)
+        
     def set_head(self, head):
         self.head = head
     
@@ -32,20 +39,21 @@ class BattleSnake:
     def get_id(self):
         return self.id
     
+    def board_update(self, board):
+        self.set_board(board)
+        self.head, self.body = self.board.get_position(self.id)
+    
     def move(self, snake_id, move, did_eat=False):
         self.board.move(snake_id, move, did_eat) 
         self.head, self.body = self.board.get_position(snake_id)
     
-    def find_moves(self, position):
-        return {
-            "up": {"x": position['x'], "y": position['y']+1},
-            "down": {"x": position['x'], "y": position['y']-1},
-            "right": {"x": position['x']+1, "y": position['y']},
-            "left": {"x": position['x']-1, "y": position['y']}
-        }
-    
     def choose_move(self):
-        potential_moves = self.find_moves(self.get_head())
+        
+        if self.board.get_rulset() == "standard":
+            standard_move.choose_move()
+        
+        
+        potential_moves = self.board.find_moves(self.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
         if alive_moves == {}:
             return "up"
