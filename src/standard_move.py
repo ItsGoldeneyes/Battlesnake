@@ -1,5 +1,3 @@
-from snake import BattleSnake
-from board import Board
 from floodfill import Floodfill
 
 class StandardMove:
