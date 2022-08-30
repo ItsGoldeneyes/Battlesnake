@@ -46,8 +46,7 @@ class BattleSnake:
         self.head, self.body = self.board.get_position(snake_id)
     
     def choose_move(self):
-        print(self.board.get_rules())
-        if self.board.get_rules() == "standard":
+        if self.board.get_rules() == "standard" or "solo":
             standard_move = StandardMove(self.board)
             move = standard_move.choose_move(self)
             

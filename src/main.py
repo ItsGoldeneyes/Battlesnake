@@ -52,8 +52,15 @@ def handle_move():
     Valid moves are "up", "down", "left", or "right".
     """
     data = request.get_json()
-    move = games[data["game"]["id"]].turn(data)
-    print(f"{data['game']['id']} MOVE {move}", flush=True)
+    gameid = data["game"]["id"]
+    if gameid in games: 
+        move = games[gameid].turn(data)
+    else:
+        new_game = Game(data)
+        game = {new_game.get_id() : new_game}
+        games.update(game)
+        move = games[gameid].turn(data)
+    print(f"{gameid} MOVE {move}", flush=True)
     
     return {"move": move, "shout": ""}
 
