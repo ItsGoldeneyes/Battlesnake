@@ -4,13 +4,12 @@ import os
 from flask import Flask
 from flask import request
 
-from snake import BattleSnake
-from board import Board
+from game import Game
 
 
 app = Flask(__name__)
 
-
+games = {}
 
 @app.get("/")
 def handle_info():
@@ -35,10 +34,11 @@ def handle_start():
     It's purely for informational purposes, you don't have to make any decisions here.
     request.json contains information about the game that's about to be played.
     """
-    global snake
+    
     data = request.get_json()
-    board = Board(data)
-    snake = BattleSnake(board)
+    new_game = Game(data)
+    game = {new_game.get_id() : new_game}
+    games.update(game)
     
     print(f"{data['game']['id']} START")
     return "ok"
@@ -51,11 +51,11 @@ def handle_move():
     Valid moves are "up", "down", "left", or "right".
     """
     data = request.get_json()
-    board = Board(data)
-    snake.board_update(board)
-    move = snake.choose_move()
+    move = games[data["game"]["id"]].turn(data)
+    print(f"{data['game']['id']} MOVE {move}")
+    
+    return {"move": move, "shout": ""}
 
-    return {"move": move}
 
 
 @app.post("/end")
@@ -65,7 +65,8 @@ def handle_end():
     It's purely for informational purposes, you don't have to make any decisions here.
     """
     data = request.get_json()
-
+    games.pop(data["game"]["id"])
+    
     print(f"{data['game']['id']} END")
     return "ok"
 
