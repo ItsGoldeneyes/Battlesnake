@@ -1,5 +1,3 @@
-from board import Board
-
 from standard_move import StandardMove
 
 import random

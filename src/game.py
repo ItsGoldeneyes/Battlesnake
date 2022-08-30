@@ -1,4 +1,3 @@
-from ast import Str
 from snake import BattleSnake
 from board import Board
 
