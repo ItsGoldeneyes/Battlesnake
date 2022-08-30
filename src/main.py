@@ -41,6 +41,7 @@ def handle_start():
     games.update(game)
     
     print(f"{data['game']['id']} START", flush=True)
+    print(f"{data['game']['id']} RULES {new_game.get_rules()}")
     return "ok"
 
 

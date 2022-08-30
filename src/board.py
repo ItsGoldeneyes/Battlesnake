@@ -17,7 +17,7 @@ class Board:
         self.update_snake_collision()
         
         self.map = self.data["game"]["map"]
-        self.ruleset = self.data["game"]["ruleset"]["name"]
+        self.rules = self.data["game"]["ruleset"]["name"]
     
     def clone(self):
         return Board(self.data)
@@ -49,8 +49,8 @@ class Board:
     def get_map(self):
         return self.map
     
-    def get_ruleset(self):
-        return self.ruleset
+    def get_rules(self):
+        return self.rules
     
     def get_health(self, id):
         return self.snakes[id]["health"]
