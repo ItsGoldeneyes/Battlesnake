@@ -1,6 +1,6 @@
 from board import Board
 
-# from standard_move import standard_move
+from standard_move import StandardMove
 
 import random
 
@@ -49,17 +49,20 @@ class BattleSnake:
     
     def choose_move(self):
         
-        # if self.board.get_rulset() == "standard":
-        #     standard_move.choose_move()
-        
-        
-        potential_moves = self.board.find_moves(self.get_head())
-        alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
-        if alive_moves == {}:
-            return "up"
-        if self.board.get_health(self.id) < 30:
-            food_dists = self.board.food_dist(self.get_head(), alive_moves)
-            move_choice = min(food_dists, key=food_dists.get)
-        else:
-            move_choice = random.choice(list(alive_moves.keys()))
-        return move_choice
+        if self.board.get_rulset() == "standard":
+            standard_move = StandardMove(self.board)
+            move = standard_move.choose_move(self)
+            
+        else: 
+            potential_moves = self.board.find_moves(self.get_head())
+            alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
+            if alive_moves == {}:
+                return "up"
+            if self.board.get_health(self.id) < 30:
+                food_dists = self.board.food_dist(self.get_head(), alive_moves)
+                move_choice = min(food_dists, key=food_dists.get)
+            else:
+                move_choice = random.choice(list(alive_moves.keys()))
+            move = move_choice
+            
+        return move
