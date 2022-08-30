@@ -1,6 +1,6 @@
 from board import Board
 
-from standard_move import standard_move
+# from standard_move import standard_move
 
 import random
 
@@ -49,8 +49,8 @@ class BattleSnake:
     
     def choose_move(self):
         
-        if self.board.get_rulset() == "standard":
-            standard_move.choose_move()
+        # if self.board.get_rulset() == "standard":
+        #     standard_move.choose_move()
         
         
         potential_moves = self.board.find_moves(self.get_head())
