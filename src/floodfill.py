@@ -1,7 +1,3 @@
-from snake import BattleSnake
-from board import Board
-import random
-
 class Floodfill:
         
     def flood_fill(self, board, move, accessed = []):
