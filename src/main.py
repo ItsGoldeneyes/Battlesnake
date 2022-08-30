@@ -18,6 +18,7 @@ def handle_info():
     See https://docs.battlesnake.com/guides/getting-started#step-4-register-your-battlesnake
     """
     print("INFO", flush=True)
+    print(games)
     return {
             "apiversion": "1",
             "author": "Goldeneyes",

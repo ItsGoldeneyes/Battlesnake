@@ -1,5 +1,5 @@
 from snake import BattleSnake
-from floodfill import LogicSnake
+from floodfill_board import LogicSnake
 from board import Board
 
 import json
