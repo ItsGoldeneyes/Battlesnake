@@ -17,8 +17,7 @@ def handle_info():
     This function is called when you register your Battlesnake on play.battlesnake.com
     See https://docs.battlesnake.com/guides/getting-started#step-4-register-your-battlesnake
     """
-    print("INFO")
-    print("Hello World", flush=True)
+    print("INFO", flush=True)
     return {
             "apiversion": "1",
             "author": "Goldeneyes",
@@ -41,7 +40,7 @@ def handle_start():
     game = {new_game.get_id() : new_game}
     games.update(game)
     
-    print(f"{data['game']['id']} START")
+    print(f"{data['game']['id']} START", flush=True)
     return "ok"
 
 
@@ -53,7 +52,7 @@ def handle_move():
     """
     data = request.get_json()
     move = games[data["game"]["id"]].turn(data)
-    print(f"{data['game']['id']} MOVE {move}")
+    print(f"{data['game']['id']} MOVE {move}", flush=True)
     
     return {"move": move, "shout": ""}
 
@@ -84,6 +83,6 @@ if __name__ == "__main__":
     host = "0.0.0.0"
     port = int(os.environ.get("PORT", "8080"))
 
-    print(f"\nRunning Battlesnake server at http://{host}:{port}")
+    print(f"\nRunning Battlesnake server at http://{host}:{port}", flush=True)
     # app.env = 'development'
     app.run(host=host, port=port, debug=True)
