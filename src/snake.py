@@ -47,7 +47,7 @@ class BattleSnake:
     
     def choose_move(self):
         
-        if self.board.get_rulset() == "standard":
+        if self.board.get_ruleset() == "standard":
             standard_move = StandardMove(self.board)
             move = standard_move.choose_move(self)
             
