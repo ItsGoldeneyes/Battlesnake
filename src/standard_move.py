@@ -89,7 +89,7 @@ class StandardMove:
                 for snake_id in snakes:
                     new_board.fake_move(snake_id)
             
-            # UPDATE BOARD NOT WORKING
+            # UPDATE BOARD NOT WORKING, doesn't know how to deal with other snakes
             
             # print('update_board')
             # print(new_snake.get_board().snakes)
