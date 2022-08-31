@@ -74,13 +74,14 @@ class StandardMove:
             new_board = board.clone()
             snakes = board.get_snakes()
             new_board.move(self_snake.get_id(), alive_moves[move])
-            new_snake = self_snake.board_update(new_board)
+            new_snake = self_snake.clone(new_board)
 
             # If snake is self, get move evals for other snakes
             if new_snake.get_id() == new_board.get_self_id():
                 for snake_id in snakes:
                     if snake_id != new_snake.get_id():
-                        snake_move = self.minimax(new_board, snakes[snake_id], 0)
+                        snake = self_snake.clone(new_board)
+                        snake_move = self.minimax(new_board, snake, 0)
                         new_board.move(snake_id, snake_move[0])
                         
             # If deciding for other snakes, prevent infinite loop            
