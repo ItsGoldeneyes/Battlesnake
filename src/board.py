@@ -103,7 +103,23 @@ class Board:
         for snake in self.snakes.keys():
             self.snakes_hitbox.extend(self.snakes[snake]["body"])
        
-            
+       
+    def move(self, snake_id, move):
+        self.snakes[snake_id]["head"] = move
+        self.snakes[snake_id]["body"].insert(0, move)
+        if move not in self.get_food():
+            self.snakes[snake_id]["body"].pop()
+        else:
+            self.food.remove(move)
+        self.update_snake_collision()
+        
+    
+    def fake_move(self, snake_id):
+        self.snakes[snake_id]["body"].insert(0, self.snakes[snake_id]["head"])
+        self.snakes[snake_id]["body"].pop()
+        self.update_snake_collision()
+        
+                
     def collision_check(self, move):
         # 1. Check board borders
         if -1 == move["x"] or move["x"] >= self.width:
@@ -116,6 +132,27 @@ class Board:
         
         # 2. Check snakes
         if move in self.snakes_hitbox:
+            # print(" -- Snake collision")
+            return True
+        
+        # 3. Check hazards
+        if move in self.hazards:
+            # print(" -- Hazard collision")
+            return True
+        return False
+    
+    def collision_check_not_new(self, move):
+        # 1. Check board borders
+        if -1 == move["x"] or move["x"] >= self.width:
+            # print(" -- Horizontal Wall collision")
+            return True
+        
+        if -1 == move["y"] or move["y"] >= self.height:
+            # print(" -- Vertical Wall collision")
+            return True
+        
+        # 2. Check snakes
+        if self.snakes_hitbox.count(move) > 1:
             # print(" -- Snake collision")
             return True
         
@@ -140,8 +177,16 @@ class Board:
         min_index = np.argmin(distances)
         return food_list[min_index]
         
+    def food_dist_pos(self, pos):
+        if self.food == []:
+            score = 0
+            return score
+
+        food = self.closest_food(pos)
+        score = math.sqrt(((pos["x"]-food[0])**2) + ((pos["y"]-food[1])**2))
+        return score
     
-    def food_dist(self, head, move_dict): 
+    def food_dist_moves(self, head, move_dict): 
         if self.food == []:
             scores = {move:0 for move in move_dict}
             return scores
@@ -153,11 +198,12 @@ class Board:
             scores[move] = val
         return scores
     
-            
-    def move(self, snake_id, move, did_eat = False):
-        self.snakes[snake_id]["head"] = move
-        self.snakes[snake_id]["body"].insert(0, move)
-        if not did_eat:
-            self.snakes[snake_id]["body"].pop()
-        self.update_snake_collision()
-        
+    def update_board_after_move(self):
+        # Lowers HP, remove dead snakes
+        new_snakes = dict(self.snakes)
+        for snake_id in self.snakes:
+            if self.collision_check_not_new(new_snakes[snake_id]["head"]) or new_snakes[snake_id]["health"] <= 0:
+                new_snakes.pop(snake_id)
+            else:
+                new_snakes[snake_id]["health"] = new_snakes[snake_id]["health"] - 1
+        self.snakes = dict(new_snakes)

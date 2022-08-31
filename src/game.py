@@ -25,7 +25,7 @@ class Game:
         
         self.snakes[self.self_id].board_update(board)
         move = self.snakes[self.self_id].choose_move()
-        if move in self.possible_moves:
+        if move in self.possible_moves and move != None:
             return move
         else:
             print(move)
