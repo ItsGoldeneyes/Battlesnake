@@ -42,7 +42,7 @@ class BattleSnake:
         self.head, self.body = self.board.get_position(self.id)
     
     def clone(self, board):
-        return BattleSnake(self.get_board())
+        return BattleSnake(board)
     
     def move(self, snake_id, move, did_eat=False):
         self.board.move(snake_id, move, did_eat) 
