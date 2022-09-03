@@ -67,12 +67,12 @@ class Minimax:
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
         
-        # Set score to a random number between 0 and 1
+        # Set score to a random number between 49 and 51
         score = random.randint(49,51)
         
         move = snake.get_head()
         
-        # If a collision happens, floodfill
+        # If a collision is possible, floodfill
         if len(alive_moves) < 3:
             value_divide = 100
             flooder = ff() # Remove this line when able to do without object
