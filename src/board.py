@@ -100,7 +100,7 @@ class Board:
         
     
     def fake_move(self, snake_id):
-        self.snakes[snake_id].body.insert(0, self.snakes[snake_id]["head"])
+        self.snakes[snake_id].body.insert(0, self.snakes[snake_id].get_head())
         self.snakes[snake_id].body.pop()
         
                 
@@ -165,8 +165,8 @@ class Board:
         # Lowers HP, remove dead snakes
         new_snakes = dict(self.snakes)
         for snake_id in self.snakes:
-            if self.collision_check_not_new(new_snakes[snake_id]["head"], snake_id) or new_snakes[snake_id]["health"] <= 0:
+            if self.collision_check_not_new(new_snakes[snake_id].get_head(), snake_id) or new_snakes[snake_id].get_health() <= 0:
                 new_snakes.pop(snake_id)
             else:
-                new_snakes[snake_id].health = new_snakes[snake_id].health - 1
+                new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
         self.snakes = dict(new_snakes)
