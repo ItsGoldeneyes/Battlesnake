@@ -61,7 +61,7 @@ class Minimax:
         return best_move
                     
                     
-    def evaluate_state(self, board, snake):
+    def evaluate_state(self, board, snake): # Scoring not working correctly
          # Get moves where snake survives
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
