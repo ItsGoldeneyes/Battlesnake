@@ -54,6 +54,7 @@ class Board:
         for snake_id in self.snakes:
             snakes_hitbox.extend(self.snakes[snake_id].get_body())
             if snake_id == id:
+                print(snakes_hitbox, flush = True)
                 snakes_hitbox.remove(self.snakes[snake_id].get_head())
         return snakes_hitbox
     
