@@ -13,6 +13,8 @@ class Game:
         
         self.possible_moves = ["up", "down", "left", "right"]
         
+        print(self.rules, flush= True)
+        
     def get_id(self):
         return self.game_id
     
