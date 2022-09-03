@@ -53,7 +53,7 @@ class Board:
         snakes_hitbox = []
         for snake_id in self.snakes:
             snakes_hitbox.extend(self.snakes[snake_id].get_body())
-        if id:
+        if id and self.snakes[id].get_head() in snakes_hitbox:
             snakes_hitbox.remove(self.snakes[id].get_head())
         return snakes_hitbox
     
@@ -114,10 +114,8 @@ class Board:
             # print(" -- Vertical Wall collision")
             return True
         
-        # 2. Check snakes
-        if not id:
-            self.get_snake_collision()
-        elif move in self.get_snake_collision(id):
+        # 2. Check snake
+        if move in self.get_snake_collision(id):
                 # print(" -- Snake collision")
                 return True
         
