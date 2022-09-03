@@ -53,9 +53,8 @@ class Board:
         snakes_hitbox = []
         for snake_id in self.snakes:
             snakes_hitbox.extend(self.snakes[snake_id].get_body())
-            if snake_id == id:
-                print(snakes_hitbox, flush = True)
-        snakes_hitbox.remove(self.snakes[id].get_head())
+        if id:
+            snakes_hitbox.remove(self.snakes[id].get_head())
         return snakes_hitbox
     
     def print_board(self):
