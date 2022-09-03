@@ -118,8 +118,7 @@ class Board:
         # 2. Check snakes
         if not id:
             self.get_snake_collision()
-        else:
-            if move in self.get_snake_collision(id):
+        elif move in self.get_snake_collision(id):
                 # print(" -- Snake collision")
                 return True
         
