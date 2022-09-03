@@ -6,7 +6,7 @@ class Minimax:
         eval_state = self.evaluate_state(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
-                       if board.collision_check(potential_moves[move])==False}
+                       if board.collision_check(potential_moves[move], snake.get_id())==False}
         best_move = False
         eval_new_state = []
         
@@ -61,16 +61,16 @@ class Minimax:
         return best_move
                     
                     
-    def evaluate_state(self, board, self_snake):
+    def evaluate_state(self, board, snake):
          # Get moves where snake survives
-        potential_moves = board.find_moves(self_snake.get_head())
+        potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
-                       if board.collision_check(potential_moves[move])==False}
+                       if board.collision_check(potential_moves[move], snake.get_id())==False}
         
         # Set score to a random number between 0 and 1
         score = random.randint(49,51)
         
-        move = self_snake.get_head()
+        move = snake.get_head()
         
         # If a collision happens, floodfill
         if len(alive_moves) < 3:
@@ -80,15 +80,15 @@ class Minimax:
             score = score + flood_score
             
         # Decrease value if snake not hungry
-        if board.get_health(self_snake.id) > 80:
+        if board.get_health(snake.id) > 80:
             value_add = -40
             if not board.avoid_food(move):
                 score = score + value_add
         
         # Increase value if Snake is hungry
-        elif board.get_health(self_snake.id) < 30:
+        elif board.get_health(snake.id) < 30:
             value_to_subtract_a_multiple = 10
-            food_dist = board.food_dist_pos(self_snake.get_head())
+            food_dist = board.food_dist_pos(snake.get_head())
             if food_dist == 0:
                 food_score = 100
             else:
@@ -98,15 +98,15 @@ class Minimax:
         return score
      
     
-    def evaluate_state_moves(self, self_snake):
+    def evaluate_state_moves(self, snake):
         # Get moves where snake survives
-        potential_moves = self.board.find_moves(self_snake.get_head())
+        potential_moves = self.board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
-                       if self.board.collision_check(potential_moves[move])==False}
+                       if self.board.collision_check(potential_moves[move], snake.get_id())==False}
         
         # Set scores to a random number between 1 and 5
         scores = {move : random.randint(1,4)*0.25 for move in potential_moves 
-                       if self.board.collision_check(potential_moves[move])==False}
+                       if self.board.collision_check(potential_moves[move], snake.get_id())==False}
         
         # If a collision happens, floodfill
         if len(alive_moves) < 3:
@@ -123,20 +123,20 @@ class Minimax:
                 scores = self.add_scores(scores, flood_scores)
             
         # Decrease value if snake not hungry
-        if self.board.get_health(self_snake.id) > 90:
+        if self.board.get_health(snake.id) > 90:
             value_add = -10
             no_food_moves = {move : potential_moves[move] for move in potential_moves 
                 if self.board.avoid_food(potential_moves[move])==False and 
-                    self.board.collision_check(potential_moves[move])==False}
+                    self.board.collision_check(potential_moves[move], snake.get_id())==False}
             
             if no_food_moves != {}:
                 no_food_scores = {move : value_add for move in alive_moves if move not in no_food_moves}
                 scores = self.add_scores(scores, no_food_scores)
         
         # Increase value if Snake is hungry
-        elif self.board.get_health(self_snake.id) < 20:
+        elif self.board.get_health(snake.id) < 20:
             value_to_divide = 30
-            food_dists = self.board.food_dist_moves(self_snake.get_head(), alive_moves)
+            food_dists = self.board.food_dist_moves(snake.get_head(), alive_moves)
             if len(set(food_dists.values())) != 1:
                 food_scores = {}
                 pos = 1
