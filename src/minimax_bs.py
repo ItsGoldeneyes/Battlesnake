@@ -2,9 +2,9 @@ from floodfill_board import floodfill as ff
 import random
 
 class Minimax:    
-    def minimax(self, board, self_snake, depth=2):
-        eval_state = self.evaluate_state(board, self_snake)
-        potential_moves = board.find_moves(self_snake.get_head())
+    def minimax(self, board, snake, depth=2):
+        eval_state = self.evaluate_state(board, snake)
+        potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move])==False}
         best_move = False
@@ -18,17 +18,17 @@ class Minimax:
         for move in alive_moves:
             new_board = board.clone()
             snakes = board.get_snakes()
-            new_board.move(self_snake.get_id(), alive_moves[move])
-            new_snake = self_snake.clone(new_board)
+            new_board.move(snake.get_id(), alive_moves[move])
+            move_snake = new_board.snakes[snake.get_id()]
             print("move:",move)
+            
             # If snake is self, get move evals for other snakes
-            if new_snake.get_id() == new_board.get_self_id():
+            if move_snake.get_id() == new_board.get_self_id():
                 print("my snake")
                 for snake_id in snakes:
-                    if snake_id != new_snake.get_id():
-                        snake = self_snake.clone(new_board)
-                        snake.set_id(snake_id) #Infinite loop here
-                        snake_move = self.minimax(new_board, snake, 0)
+                    if snake_id != move_snake.get_id():
+                        enemy_snake = new_board.snakes[snake_id]
+                        snake_move = self.minimax(new_board, enemy_snake, 0)
                         new_board.move(snake_id, snake_move[0])
                         
             # If deciding for other snakes, prevent infinite loop            
@@ -46,9 +46,9 @@ class Minimax:
             
             
             if depth > 0:
-                eval_new_state = self.minimax(new_board, new_snake, depth-1)
+                eval_new_state = self.minimax(new_board, move_snake, depth-1)
             else:
-                eval_new_state = [move, self.evaluate_state(new_board, new_snake)]
+                eval_new_state = [move, self.evaluate_state(new_board, move_snake)]
             
             if best_move:
                 if eval_new_state[1] > best_move[1]:
@@ -81,7 +81,7 @@ class Minimax:
             
         # Decrease value if snake not hungry
         if board.get_health(self_snake.id) > 80:
-            value_add = -100
+            value_add = -40
             if not board.avoid_food(move):
                 score = score + value_add
         
