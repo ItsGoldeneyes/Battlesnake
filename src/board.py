@@ -49,7 +49,7 @@ class Board:
     def point_to_list(self, point):
         return [point["x"],point["y"]]
     
-    def get_snake_collision(self, id):
+    def get_snake_collision(self, id= False):
         snakes_hitbox = []
         for snake_id in self.snakes:
             snakes_hitbox.extend(self.snakes[snake_id].get_body())
@@ -105,7 +105,7 @@ class Board:
         self.snakes[snake_id].body.pop()
         
                 
-    def collision_check(self, move, id):
+    def collision_check(self, move, id= False):
         # 1. Check board borders
         if -1 == move["x"] or move["x"] >= self.width:
             # print(" -- Horizontal Wall collision")
@@ -116,9 +116,12 @@ class Board:
             return True
         
         # 2. Check snakes
-        if move in self.get_snake_collision(id):
-            # print(" -- Snake collision")
-            return True
+        if not id:
+            self.get_snake_collision
+        else:
+            if move in self.get_snake_collision(id):
+                # print(" -- Snake collision")
+                return True
         
         # 3. Check hazards
         if move in self.hazards:
