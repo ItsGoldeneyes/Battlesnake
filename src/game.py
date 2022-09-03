@@ -19,7 +19,7 @@ class Game:
         return self.game_id
     
     def get_rules(self):
-        return self.board.get_rules()
+        return self.rules
     
     def get_snakes(self):
         return self.board.snakes

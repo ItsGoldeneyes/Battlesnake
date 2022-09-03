@@ -4,10 +4,15 @@ class BattleSnake:
         if id == "":
             id = board.get_self_id()
             
-        self.id = (id)
-        self.head, self.body = board.get_position(self.id)
-        self.length = board.get_length(self.id)
-        self.health = board.get_health(self.id)
+        self.id = id
+        
+        # Ugly workaround, snakes are in list
+        for snake in board.board["snakes"]: 
+            if snake["id"] == self.id:
+                self.head = snake["head"]
+                self.body = snake["body"]
+                self.length = snake["length"]
+                self.health = snake["health"]
     
     def get_id(self):
         return self.id

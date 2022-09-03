@@ -34,12 +34,6 @@ class Board:
     def get_snakes(self):
         return self.snakes 
     
-    def get_map(self):
-        return self.map
-    
-    def get_rules(self):
-        return self.rules
-    
     def get_self_id(self):
         return self.data["you"]["id"]
     
