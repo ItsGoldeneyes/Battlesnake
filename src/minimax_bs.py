@@ -69,7 +69,6 @@ class Minimax:
         
         # Set score to a random number between 49 and 51
         score = random.randint(49,51)
-        
         move = snake.get_head()
         
         # If a collision is possible, floodfill
@@ -90,7 +89,7 @@ class Minimax:
             value_to_subtract_a_multiple = 10
             food_dist = board.food_dist_pos(snake.get_head())
             if food_dist == 0:
-                food_score = 100
+                food_score = 1000
             else:
                 food_score = food_dist*-value_to_subtract_a_multiple
             score = score + food_score
