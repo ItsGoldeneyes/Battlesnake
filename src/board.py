@@ -41,10 +41,10 @@ class Board:
         return self.snakes[id]["head"], self.snakes[id]["body"]
     
     def get_health(self, id):
-        return self.snakes[id]["health"]
+        return self.snakes[id].get_health()
     
     def get_length(self, id):
-        return self.snakes[id]["length"]
+        return self.snakes[id].get_length()
     
     def point_to_list(self, point):
         return [point["x"],point["y"]]
