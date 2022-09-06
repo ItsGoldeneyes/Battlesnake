@@ -86,7 +86,7 @@ class Minimax:
         # Increase food relative value if snake is hungry
         elif board.get_health(snake.id) < 30:
             print("HUNGRY")
-            value_add = -10
+            value_add = 10
             food_dist = board.food_dist_pos(snake.get_head())
             food_score = food_dist*-value_add
             score = score + food_score
