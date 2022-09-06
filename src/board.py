@@ -171,4 +171,5 @@ class Board:
                 
             if self.snakes[snake_id].get_head() in self.food:
                 self.food.remove(self.snakes[snake_id].get_head())
+                self.snakes[snake_id].health = 100
         self.snakes = dict(new_snakes)
