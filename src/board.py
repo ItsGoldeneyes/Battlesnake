@@ -160,6 +160,18 @@ class Board:
             scores[move] = val
         return scores
     
+    def relative_length(self, snake_id):
+        snake_length = self.snakes[snake_id].get_length()
+        max_length = 0
+        for snake in self.snakes.values():
+            if snake.get_id() != snake_id:
+                if snake.get_length() > max_length:
+                    max_length = snake.get_length()
+        if snake_length > max_length:
+            return 0
+        else:
+            return max_length
+    
     def update_board_after_move(self):
         # Lowers HP, remove dead snakes, remove food
         new_snakes = dict(self.snakes)
