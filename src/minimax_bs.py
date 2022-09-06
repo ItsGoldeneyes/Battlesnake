@@ -20,7 +20,7 @@ class Minimax:
             snakes = board.get_snakes()
             new_board.move(snake.get_id(), alive_moves[move])
             move_snake = new_board.snakes[snake.get_id()]
-            print("move:",move)
+            print("move:", move)
             
             # If snake is self, get move evals for other snakes
             if move_snake.get_id() == new_board.get_self_id():
@@ -36,8 +36,6 @@ class Minimax:
                 print("other snake")
                 for snake_id in snakes:
                     new_board.fake_move(snake_id)
-            
-            # UPDATE BOARD NOT WORKING, doesn't know how to deal with other snakes
             
             # print('update_board')
             # print(new_snake.get_board().snakes)
@@ -72,28 +70,26 @@ class Minimax:
         move = snake.get_head()
         
         # If a collision is possible, floodfill
-        if len(alive_moves) < 3:
-            value_divide = 100
+        if len(alive_moves) <= 2:
+            value_divide = -10
             flooder = ff() # Remove this line when able to do without object
-            flood_score = flooder.floodfill(board, move) / value_divide
-            score = score + flood_score
+            flood_score = flooder.floodfill(board, move, snake.get_id()) 
+            print("FLOODFILL:", flood_score)
+            score = score + (flood_score / value_divide)
             
-        # Decrease value if snake not hungry
+        # Decrease food value if snake not hungry
         if board.get_health(snake.id) > 80:
             value_add = -40
             if not board.avoid_food(move):
                 score = score + value_add
         
-        # Increase value if Snake is hungry
+        # Increase food relative value if snake is hungry
         elif board.get_health(snake.id) < 30:
-            value_to_subtract_a_multiple = 10
+            print("HUNGRY")
+            value_add = -10
             food_dist = board.food_dist_pos(snake.get_head())
-            if food_dist == 0:
-                food_score = 1000
-            else:
-                food_score = food_dist*-value_to_subtract_a_multiple
+            food_score = food_dist*-value_add
             score = score + food_score
-            
         return score
      
     
