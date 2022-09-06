@@ -19,7 +19,7 @@ class floodfill:
         
         width = board.get_width()
         height = board.get_height()
-        area = (width*height) - len(board.get_hazards()) - len(board.get_snake_collision())
+        area = (width*height)
 
         for bucket_num in range(1,bucket_count+1):
             if score >=(area/bucket_count)*bucket_num:
