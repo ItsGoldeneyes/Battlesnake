@@ -65,29 +65,59 @@ class Minimax:
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
         
-        # Set score to a random number between 49 and 51
+        # Set score to a 50
         score = random.randint(49,51)
         move = snake.get_head()
         
         # If a collision is possible, floodfill
-        if len(alive_moves) <= 2:
+        if len(alive_moves) < 3:
+            max_score = 0
             flooder = ff() # Remove this line when able to do without object
-            flood_score = flooder.floodfill_bucket(board, flooder.floodfill(board, move, snake.get_id()))
+            flood_result = flooder.floodfill(board, move, snake.get_id())
+            flood_score = self.bucket_floodfill(flood_result, board, max_score)
             # print("FLOODFILL:", flood_score)
             score = score + flood_score
             
         # Decrease food value if snake not hungry
         # if board.get_health(snake.id) > 80:
         #     value_add = -40
-        #     if not board.avoid_food(move):
+        #     if not board.is_food(move):
         #         score = score + value_add
         
         # Increase food relative value if snake is hungry
         if board.get_health(snake.id) < 30 or board.relative_length(snake.id) > 0:
             # print("HUNGRY")
-            value_add = -10
+            max_score = 50
             food_dist = board.food_dist_pos(snake.get_head())
-            food_score = food_dist*value_add
+            food_score = self.bucket_floodfill(food_dist, board, max_score)
             score = score + food_score
             
+        # Increase score for kills getting in other snakes faces
+            
         return score
+    
+    def bucket_floodfill(self, score, board, max):
+        max_score = max
+        bucket_count = 10
+        
+        width = board.get_width()
+        height = board.get_height()
+        area = (width*height)
+
+        for bucket_num in range(1,bucket_count+1):
+            if score >=(area/bucket_count)*bucket_num:
+                return max_score/bucket_num
+        return 0
+    
+    def bucket_food_dist(self, score, board, max):
+        max_score = max
+        bucket_count = 10
+        
+        width = board.get_width()
+        height = board.get_height()
+        diagonal = width+height
+
+        for bucket_num in range(1,bucket_count+1):
+            if score >=(diagonal/bucket_count)*bucket_num:
+                return max_score/bucket_num
+        return 0

@@ -125,7 +125,7 @@ class Board:
         return False
     
     
-    def avoid_food(self, move):
+    def is_food(self, move):
         if move in self.food:
             return True
         return False
@@ -147,18 +147,6 @@ class Board:
         food = self.closest_food(pos)
         score = math.sqrt(((pos["x"]-food[0])**2) + ((pos["y"]-food[1])**2))
         return score
-    
-    def food_dist_moves(self, head, move_dict): 
-        if self.food == []:
-            scores = {move:0 for move in move_dict}
-            return scores
-
-        food = self.closest_food(head)
-        scores = {}
-        for move in move_dict:
-            val = math.sqrt(((move_dict[move]["x"]-food[0])**2) + ((move_dict[move]["y"]-food[1])**2))
-            scores[move] = val
-        return scores
     
     def relative_length(self, snake_id):
         snake_length = self.snakes[snake_id].get_length()

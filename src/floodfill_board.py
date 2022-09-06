@@ -12,19 +12,6 @@ class floodfill:
             if new_move not in self.accessed:
                 total = total + self.floodfill(board, new_move, snake_id)
         return total
-    
-    def floodfill_bucket(self, board, score):
-        max_score = 50
-        bucket_count = 10
-        
-        width = board.get_width()
-        height = board.get_height()
-        area = (width*height)
-
-        for bucket_num in range(1,bucket_count+1):
-            if score >=(area/bucket_count)*bucket_num:
-                return max_score/bucket_num
-        return 0
 
 
 # Old floodfill choose_move
@@ -49,7 +36,7 @@ class floodfill:
 #     # Avoid food if can
 #     elif self.board.get_health(self.id) > 50:
 #         no_food_moves = {move : potential_moves[move] for move in potential_moves 
-#             if self.board.avoid_food(potential_moves[move])==False and self.board.collision_check(potential_moves[move])==False}
+#             if self.board.is_food(potential_moves[move])==False and self.board.collision_check(potential_moves[move])==False}
 #         if no_food_moves != {}:
 #             alive_moves = no_food_moves
 #         move_choice = random.choice(list(alive_moves.keys()))  

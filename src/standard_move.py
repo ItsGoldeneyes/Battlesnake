@@ -42,7 +42,7 @@ class StandardMove:
         # # Avoid food if can
         # # elif self.board.get_health(self_snake.id) > 50:
         # #     no_food_moves = {move : potential_moves[move] for move in potential_moves 
-        # #         if self.board.avoid_food(potential_moves[move])==False and 
+        # #         if self.board.is_food(potential_moves[move])==False and 
         # #             self.board.collision_check(potential_moves[move])==False}
         # #     if no_food_moves != {}:
         # #         alive_moves = no_food_moves
