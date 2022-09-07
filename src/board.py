@@ -16,6 +16,7 @@ class Board:
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
         self.dead_snakes = {}
+        
     def clone(self):
         return Board(self.data)
     
@@ -51,6 +52,19 @@ class Board:
     
     def point_to_list(self, point):
         return [point["x"],point["y"]]
+    
+    def get_other_snakes(self, snake_id):
+        return {snake.get_id(): snake for snake in self.snakes.values() if snake.id != snake_id}
+    
+    def get_heads_near(self, snake_id_excluding):
+        heads = []
+        for snake_id in self.snakes.keys():
+            if snake_id != snake_id_excluding:
+                if math.sqrt((((self.snakes[snake_id].get_head()["x"]-self.snakes[snake_id_excluding].get_head()["x"]))**2) + 
+                             (((self.snakes[snake_id].get_head()["y"]-self.snakes[snake_id_excluding].get_head()["y"]))**2)) < 2:
+                    heads.append(self.snakes[snake_id].get_head())
+                
+        return len(heads)
     
     def get_snake_collision(self, id= False):
         snakes_hitbox = []
