@@ -100,15 +100,19 @@ class Minimax:
                 score += self.bucket_food_dist(food_dist, board, max= 50)
 
             # Decrease score if near enemy snake head
-            enemy_count = 0
+            enemy_near_count = 0
             for enemy_snake in board.get_other_snakes(snake.get_id()):
                 enemy_moves = board.find_moves(board.snakes[enemy_snake].get_head())
-                if enemy_moves.values() in alive_moves.values():
-                    enemy_count += 1
+                for enemy_move in enemy_moves.values():
+                    if enemy_move in alive_moves.values():
+                        enemy_near_count += 1
             
-            score -= (enemy_count * 20)
+            score -= (enemy_near_count * 50)
             
         # Decrease score for number of enemies
+        kill_value = 100
+        other_snakes = board.get_other_snakes(snake.get_id())
+        score = score - len(other_snakes)*kill_value
             
         return score
     

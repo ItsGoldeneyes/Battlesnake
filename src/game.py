@@ -29,7 +29,7 @@ class Game:
         
         if self.rules == "standard" or "solo":
             move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 5)
             
         else:
             potential_moves = self.board.find_moves(self.get_head())
