@@ -27,10 +27,13 @@ class Game:
     def turn(self, data):
         self.board = Board(data)
         
-        if self.rules == "standard" or "solo":
+        if self.rules == "solo":
+            move_type = StandardMove(self.board)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 5)
+        
+        elif self.rules == "standard":
             move_type = StandardMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
-            
         else:
             potential_moves = self.board.find_moves(self.get_head())
             alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
