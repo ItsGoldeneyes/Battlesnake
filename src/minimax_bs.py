@@ -95,7 +95,6 @@ class Minimax:
 
         # Increase score if not largest length
         if board.relative_length(snake.get_id()) != 0:
-            print(board.relative_length(snake.get_id()))
             if food_dist == 0:
                 score = score + 100
             elif food_dist < 10:
