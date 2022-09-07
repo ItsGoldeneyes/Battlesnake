@@ -141,6 +141,18 @@ class Board:
             return True
         return False
     
+    def collision_check_no_walls(self, move, snake_id= False):
+        # 2. Check snake
+        if move in self.get_snake_collision(snake_id):
+                # print(" -- Snake collision")
+                return True
+        
+        # 3. Check hazards
+        if move in self.hazards:
+            # print(" -- Hazard collision")
+            return True
+        return False
+    
     
     def is_food(self, move):
         if move in self.food:
