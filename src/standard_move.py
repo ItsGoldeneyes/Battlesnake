@@ -1,4 +1,4 @@
-from minimax_bs import Minimax
+from minimax_std import Minimax
 
 class StandardMove:
     def __init__(self, board):

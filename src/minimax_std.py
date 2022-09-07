@@ -1,4 +1,3 @@
-from floodfill_board import floodfill as ff
 import random
 
 class Minimax:    
