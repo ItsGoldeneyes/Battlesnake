@@ -2,8 +2,8 @@ from floodfill_board import floodfill as ff
 import random
 
 class Minimax:    
-    def minimax(self, board, snake, depth=2):
-        eval_state = self.evaluate_state(board, snake)
+    def minimax(self, board, snake, depth= 2, kills= 0):
+        eval_state = self.evaluate_state(board, snake, kills)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
@@ -12,7 +12,7 @@ class Minimax:
         
         # print("start")
         if len(alive_moves) == 0:
-            return ["up", -100]
+            return ["up", -1000]
         
         # print("move time")
         for move in alive_moves:
@@ -38,15 +38,15 @@ class Minimax:
                     new_board.fake_move(snake_id)
             
             # print('update_board')
-            # print(new_snake.get_board().snakes)
             # new_board.update_board_after_move()
-            # new_snake.board_update(new_board)
-            
+            # move_kills = new_board.get_kills() + kills
+            move_kills = 0
             
             if depth > 0:
-                eval_new_state = self.minimax(new_board, move_snake, depth-1)
+                eval_new_state = self.minimax(new_board, move_snake, depth-1, move_kills)
             else:
-                eval_new_state = [move, self.evaluate_state(new_board, move_snake)]
+                #Format to [move, value] for return
+                eval_new_state = [move, self.evaluate_state(new_board, move_snake, move_kills)]
             
             if best_move:
                 if eval_new_state[1] > best_move[1]:
@@ -59,7 +59,7 @@ class Minimax:
         return best_move
                     
                     
-    def evaluate_state(self, board, snake): # Scoring not working correctly
+    def evaluate_state(self, board, snake, kills): 
          # Get moves where snake survives
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
@@ -67,57 +67,66 @@ class Minimax:
         
         # Set score to a 50
         score = random.randint(49,51)
-        move = snake.get_head()
+        # score = 1
+        position = snake.get_head()
         
-        # If a collision is possible, floodfill
-        if len(alive_moves) < 3:
-            max_score = 0
-            flooder = ff() # Remove this line when able to do without object
-            flood_result = flooder.floodfill(board, move, snake.get_id())
-            flood_score = self.bucket_floodfill(flood_result, board, max_score)
-            # print("FLOODFILL:", flood_score)
-            score = score + flood_score
-            
-        # Decrease food value if snake not hungry
-        # if board.get_health(snake.id) > 80:
-        #     value_add = -40
-        #     if not board.is_food(move):
-        #         score = score + value_add
+        # Increase score for health
+        # score = score + self.bucket_health(snake.get_health(), 50)
         
-        # Increase food relative value if snake is hungry
-        if board.get_health(snake.id) < 30 or board.relative_length(snake.id) > 0:
-            # print("HUNGRY")
-            max_score = 50
-            food_dist = board.food_dist_pos(snake.get_head())
-            food_score = self.bucket_floodfill(food_dist, board, max_score)
-            score = score + food_score
-            
-        # Increase score for kills getting in other snakes faces
-            
+        # Increase score for kills
+        score = score + (kills * 50)
+        
+        # Increase score for distance to food based on health
+        food_dist = board.food_dist_pos(position)
+        if snake.get_health() > 80:
+            pass
+        elif 30 < snake.get_health() < 80:
+            if food_dist < 5:
+                score = score + 30
+            else:
+                score = score + self.bucket_food_dist(food_dist, board, max= 20)
+        elif snake.get_health() < 30:
+            if food_dist == 0:
+                score = score + 100
+            elif food_dist < 10:
+                score = score + (90/food_dist)
+            else:
+                score = score + self.bucket_food_dist(food_dist, board, max= 50)
+
+        # Increase score if not largest length
+        if board.relative_length(snake.get_id()) != 0:
+            print(board.relative_length(snake.get_id()))
+            if food_dist == 0:
+                score = score + 100
+            elif food_dist < 10:
+                score = score + (90/food_dist)
+            else:
+                score = score + self.bucket_food_dist(food_dist, board, max= 50)
+        
+        
         return score
     
-    def bucket_floodfill(self, score, board, max):
+    def bucket_food_dist(self, score, board, max= 50, bc= 10):
         max_score = max
-        bucket_count = 10
-        
-        width = board.get_width()
-        height = board.get_height()
-        area = (width*height)
-
-        for bucket_num in range(1,bucket_count+1):
-            if score >=(area/bucket_count)*bucket_num:
-                return max_score/bucket_num
-        return 0
-    
-    def bucket_food_dist(self, score, board, max):
-        max_score = max
-        bucket_count = 10
+        bucket_count = bc
         
         width = board.get_width()
         height = board.get_height()
         diagonal = width+height
 
         for bucket_num in range(1,bucket_count+1):
-            if score >=(diagonal/bucket_count)*bucket_num:
+            if score <=(diagonal/bucket_count)*bucket_num:
                 return max_score/bucket_num
+        return 0
+    
+    def bucket_health(self, health, max= 50, bc= 5):
+        max_score = max
+        bucket_count = bc
+        
+        max_health = 100
+        
+        for bucket_num in range(1, bucket_count+1):
+            if health <= (max_health/bucket_count)*bucket_num:
+                return (max_score/bucket_count)*bucket_num
+            
         return 0

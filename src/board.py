@@ -15,7 +15,7 @@ class Board:
         self.food = self.board["food"]
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
-    
+        self.dead_snakes = {}
     def clone(self):
         return Board(self.data)
     
@@ -33,6 +33,9 @@ class Board:
     
     def get_snakes(self):
         return self.snakes 
+    
+    def get_kills(self):
+        return self.kill_count
     
     def get_self_id(self):
         return self.data["you"]["id"]
@@ -155,6 +158,7 @@ class Board:
             if snake.get_id() != snake_id:
                 if snake.get_length() > max_length:
                     max_length = snake.get_length()
+        print(snake_length, max_length)
         if snake_length > max_length:
             return 0
         else:
@@ -163,9 +167,13 @@ class Board:
     def update_board_after_move(self):
         # Lowers HP, remove dead snakes, remove food
         new_snakes = dict(self.snakes)
+        dead_snakes = dict(self.dead_snakes)
+        self.kill_count = 0
         for snake_id in self.snakes:
-            if self.collision_check_not_new(new_snakes[snake_id].get_head(), snake_id) or new_snakes[snake_id].get_health() <= 0:
+            if self.collision_check(new_snakes[snake_id].get_head(), snake_id) or new_snakes[snake_id].get_health() <= 0:
+                dead_snakes[snake_id] = new_snakes[snake_id]
                 new_snakes.pop(snake_id)
+                self.kill_count = self.kill_count + 1
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 
@@ -173,3 +181,4 @@ class Board:
                 self.food.remove(self.snakes[snake_id].get_head())
                 self.snakes[snake_id].health = 100
         self.snakes = dict(new_snakes)
+        self.dead_snakes = dict(dead_snakes)
