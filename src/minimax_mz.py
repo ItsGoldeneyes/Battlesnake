@@ -15,7 +15,7 @@ class Minimax:
         
         # print("move time")
         for move in alive_moves:
-            move = self.wrap_move(move, board)
+            move = self.wrap_move(alive_moves[move], board)
             new_board = board.clone()
             snakes = board.get_snakes()
             new_board.move(snake.get_id(), alive_moves[move])
