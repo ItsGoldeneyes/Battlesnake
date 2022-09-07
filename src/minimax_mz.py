@@ -147,13 +147,13 @@ class Minimax:
         height = board.get_height()
         
         if move["x"] < 0:
-            move["x"] = width
-        elif move["x"] > width:
+            move["x"] = width-1
+        elif move["x"] > width-1:
             move["x"] = 0
             
         if move["y"] < 0:
-            move["y"] = height
-        elif move["y"] > height:
+            move["y"] = height-1
+        elif move["y"] > height-1:
             move["y"] = 0
             
         return move
