@@ -158,7 +158,7 @@ class Board:
             if snake.get_id() != snake_id:
                 if snake.get_length() > max_length:
                     max_length = snake.get_length()
-        print(snake_length, max_length)
+        # print(snake_length, max_length)
         if snake_length > max_length:
             return 0
         else:
