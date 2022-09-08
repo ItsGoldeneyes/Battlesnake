@@ -104,9 +104,10 @@ class Minimax:
                 enemy_moves = board.find_moves(board.snakes[enemy_snake].get_head())
                 for enemy_move in enemy_moves.values():
                     if enemy_move in alive_moves.values():
-                        enemy_near_count += 1
+                        if board.snakes[enemy_snake].get_length() >= snake.get_length():
+                            enemy_near_count += 1
             
-            score -= (enemy_near_count * 50)
+            score -= (enemy_near_count * 100)
             
         # Decrease score for number of enemies
         kill_value = 100
