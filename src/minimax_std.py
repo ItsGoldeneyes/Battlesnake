@@ -4,14 +4,14 @@ from iteration_utilities import unique_everseen
 
 class Minimax:    
     def minimax(self, board, snake, depth):
-        if depth > 0:
-            print("\n___________________ ")
         eval_state = self.evaluate_state(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
         best_move = False
         eval_new_state = []
+        
+        is_self = snake.get_id() == board.get_self_id()
         
         # If first turn
         if len(snake.body) != len(list(unique_everseen(snake.body))):
@@ -29,19 +29,19 @@ class Minimax:
             print("Colliding")
             return ["up", -1000]
         
-        # print("move time")
         for move in alive_moves:
-            print("\n",move, "board")
+            # if is_self:
+            #     print("\n___________________ ")
+            # print("\n" + snake.get_id(), move, "board")
+            # print("DEPTH:", depth)
             new_board = copy.deepcopy(board)
             snakes = new_board.get_snakes()
             new_board.move(snake.get_id(), alive_moves[move])
-            new_board.print_board()
+            # new_board.print_board()
             move_snake = new_board.snakes[snake.get_id()]
-            # print("move:", move)
             
             # If snake is self, get move evals for other snakes
-            if move_snake.get_id() == new_board.get_self_id():
-                # print("my snake")
+            if is_self:
                 for snake_id in snakes:
                     if snake_id != move_snake.get_id():
                         enemy_snake = new_board.snakes[snake_id]
@@ -52,29 +52,29 @@ class Minimax:
                         
             # If deciding for other snakes, prevent infinite loop            
             else:
-                # print("other snake")
-                for snake_id in snakes:
-                    new_board.fake_move(snake_id)
+                # print("\nFake move")
+                pass
             
-            # print('update_board')
             new_board.update_board_after_move()
             
-            # If snake collided in move check and was updated out
-            if move_snake.get_id() not in new_board.get_snakes():
-                print("Collided :(")
-                # print(alive_moves[move])
-                eval_new_state = [move, -1000]
-            elif depth > 0:
+            if depth > 0:
                 eval_new_state = self.minimax(new_board, move_snake, depth-1)
             else:
-                #Format to [move, value] for return
                 eval_new_state = [move, self.evaluate_state(new_board, move_snake)]
-            
-            if best_move:
-                if eval_new_state[1] > best_move[1]:
+                
+            if is_self:
+                if best_move:
+                    if eval_new_state[1] > best_move[1]:
+                        best_move = [move, eval_new_state[1]]
+                else:
                     best_move = [move, eval_new_state[1]]
             else:
-                best_move = [move, eval_new_state[1]]
+                if best_move:
+                    if eval_new_state[1] < best_move[1]:
+                        best_move = [move, eval_new_state[1]]
+                else:
+                    best_move = [move, eval_new_state[1]]
+                
             
         best_move[1] = best_move[1] + eval_state
         
@@ -101,7 +101,7 @@ class Minimax:
         # Increase score for distance to food based on health
         if board.has_food() == True:
             food_dist = board.food_dist_pos(position)
-            print("Food dist:",food_dist)
+            # print("Food dist:",food_dist)
 
             if snake.get_health() > 80:
                 pass
@@ -119,7 +119,7 @@ class Minimax:
                     score += (50/int(food_dist))
                 else:
                     score += self.bucket_food_dist(food_dist, board, max= 20)
-        print("Move score:",score)
+                    
         # Increase score if not largest length
         # if board.relative_length(snake.get_id()) != 0:
         #     if food_dist == 0:
