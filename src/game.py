@@ -27,6 +27,7 @@ class Game:
 
     def turn(self, data):
         self.board = Board(data)
+        self.board.print_board()
         
         if self.rules == "solo":
             move_type = StandardMove(self.board)
@@ -58,4 +59,5 @@ class Game:
             return move
         else:
             print("INCORRECT MOVE FORMAT:", move)
+            return self.board.find_moves(self.board.snakes[self.board.get_self_id()].get_head())
             return "up"

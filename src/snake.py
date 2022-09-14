@@ -33,3 +33,5 @@ class BattleSnake:
         self.head, self.body = board.get_position(self.id)
         self.length = board.get_length(self.id)
         self.health = board.get_health(self.id)
+        
+        return self

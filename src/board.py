@@ -25,6 +25,9 @@ class Board:
             _copy = type(self)(
                 deepcopy(self.data, memo))
             memo[id_self] = _copy
+            _copy.food = deepcopy(self.food)
+            _copy.hazards = deepcopy(self.hazards)
+            _copy.snakes = deepcopy(self.snakes)
         return _copy
     
     def get_width(self):
@@ -73,7 +76,7 @@ class Board:
                 
         return len(heads)
     
-    def get_snake_collision(self, id= False):
+    def get_snake_collision(self, id): #= False):
         snakes_hitbox = []
         for snake_id in self.snakes:
             snakes_hitbox.extend(self.snakes[snake_id].get_body())
@@ -94,7 +97,7 @@ class Board:
                 elif coord in self.hazards:
                     board_array[y_pos].append("X")
                 # Check for snakes
-                elif coord in self.get_snake_collision(): # Fix with get snake collision
+                elif coord in self.get_snake_collision(False): # Fix with get snake collision
                     board_array[y_pos].append("O")
                 # Empty space
                 else:
@@ -118,8 +121,8 @@ class Board:
     def move(self, snake_id, move):
         assert len(move) == 2
         assert type(move) == dict
-        assert 0 <= move["x"] < self.width
-        assert 0 <= move["y"] < self.height
+        assert 0 <= move["x"] <= self.width
+        assert 0 <= move["y"] <= self.height
         
         self.snakes[snake_id].head = move
         self.snakes[snake_id].body.insert(0, move)
@@ -132,24 +135,25 @@ class Board:
         self.snakes[snake_id].body.pop()
         
                 
-    def collision_check(self, move, snake_id= False):
+    def collision_check(self, move, snake_id): #= False):
+        print(move)
         # 1. Check board borders
         if -1 == move["x"] or move["x"] >= self.width:
-            # print(" -- Horizontal Wall collision")
+            print(" -- Horizontal Wall collision")
             return True
         
         if -1 == move["y"] or move["y"] >= self.height:
-            # print(" -- Vertical Wall collision")
+            print(" -- Vertical Wall collision")
             return True
         
         # 2. Check snake
         if move in self.get_snake_collision(snake_id):
-                # print(" -- Snake collision")
+                print(" -- Snake collision")
                 return True
         
         # 3. Check hazards
         if move in self.hazards:
-            # print(" -- Hazard collision")
+            print(" -- Hazard collision")
             return True
         return False
     
@@ -166,11 +170,14 @@ class Board:
         return False
     
     
+    def has_food(self):
+        return not self.food==[]
+    
     def is_food(self, move):
         if move in self.food:
             return True
         return False
-    
+
     
     def closest_food(self, point_dict):
         food_list = np.array([self.point_to_list(point) for point in self.food])
@@ -180,6 +187,7 @@ class Board:
         min_index = np.argmin(distances)
         return food_list[min_index]
         
+        
     def food_dist_pos(self, pos):
         if self.food == []:
             score = 0
@@ -188,6 +196,7 @@ class Board:
         food = self.closest_food(pos)
         score = math.sqrt(((pos["x"]-food[0])**2) + ((pos["y"]-food[1])**2))
         return score
+    
     
     def relative_length(self, snake_id):
         snake_length = self.snakes[snake_id].get_length()
@@ -204,19 +213,34 @@ class Board:
     
     def update_board_after_move(self):
         # Lowers HP, remove dead snakes, remove food
-        new_snakes = dict(self.snakes)
-        dead_snakes = dict(self.dead_snakes)
+        
+        self.snakes = {snake: self.snakes[snake].update(self) for snake in self.snakes}
+        new_snakes = deepcopy(self.snakes)
+        dead_snakes = deepcopy(self.dead_snakes)
         self.kill_count = 0
         for snake_id in self.snakes:
-            if self.collision_check(new_snakes[snake_id].get_head(), snake_id) or new_snakes[snake_id].get_health() <= 0:
+            
+            if new_snakes[snake_id].get_head() in self.food:
+                self.food.remove([snake_id].get_head())
+                new_snakes[snake_id].health = 100
+                
+            # print("Snake Head:", new_snakes[snake_id].get_head())
+            # for id in self.snakes:
+            #     if new_snakes[snake_id].get_head() in new_snakes[id].body:
+            #         print("Head in:", id)
+            #         print(self.collision_check(new_snakes[snake_id].get_head(), snake_id))
+            
+            print(snake_id, new_snakes[snake_id].get_head())
+        
+            if self.collision_check(new_snakes[snake_id].get_head(), snake_id): # or self.snakes[snake_id].get_health() <= 0:
+                # print(new_snakes[snake_id].get_head())
+                # print("Update dead snake", self.collision_check(new_snakes[snake_id].get_head(), snake_id))
                 dead_snakes[snake_id] = new_snakes[snake_id]
                 new_snakes.pop(snake_id)
                 self.kill_count = self.kill_count + 1
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 
-            if self.snakes[snake_id].get_head() in self.food:
-                self.food.remove(self.snakes[snake_id].get_head())
-                self.snakes[snake_id].health = 100
+            
         self.snakes = dict(new_snakes)
         self.dead_snakes = dict(dead_snakes)
