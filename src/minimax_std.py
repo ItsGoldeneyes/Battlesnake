@@ -14,7 +14,7 @@ class Minimax:
         # If first turn
         print(snake.body)
         if len(snake.body) != len(list(unique_everseen(snake.body))):
-            snake.body = set(snake.body)
+            snake.body = list(unique_everseen(snake.body))
             board.snakes[snake.get_id()].body = snake.body
         
         
