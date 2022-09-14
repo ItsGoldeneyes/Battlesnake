@@ -20,7 +20,7 @@ class Minimax:
         
         # If snake is surrounded by hazards
         if len(alive_moves) == 0:
-            return ["up", -1000]
+            return ["up", -1000] 
         
         # If snake is colliding
         if board.collision_check(snake.get_head(), snake.get_id()):
