@@ -30,7 +30,7 @@ class Game:
         
         if self.rules == "solo":
             move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 8)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 5)
         
         elif self.map == "arcade_maze":
            move_type = MazeMove(self.board)
@@ -38,7 +38,7 @@ class Game:
         
         elif self.rules == "standard":
             move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 0)
         
         else:
             move_type = StandardMove(self.board)

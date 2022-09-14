@@ -1,6 +1,7 @@
 from snake import BattleSnake
 import numpy as np
 import math
+from copy import deepcopy, copy
 
 
 class Board:
@@ -16,9 +17,15 @@ class Board:
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
         self.dead_snakes = {}
-        
-    def clone(self):
-        return Board(self.data)
+    
+    def __deepcopy__(self, memo):
+        id_self = id(self)        # memoization avoids unnecesary recursion
+        _copy = memo.get(id_self)
+        if _copy is None:
+            _copy = type(self)(
+                deepcopy(self.data, memo))
+            memo[id_self] = _copy
+        return _copy
     
     def get_width(self):
         return self.width
@@ -109,11 +116,16 @@ class Board:
        
        
     def move(self, snake_id, move):
+        assert len(move) == 2
+        assert type(move) == dict
+        assert 0 <= move["x"] < self.width
+        assert 0 <= move["y"] < self.height
+        
         self.snakes[snake_id].head = move
         self.snakes[snake_id].body.insert(0, move)
         if move not in self.get_food():
             self.snakes[snake_id].body.pop()
-        
+            
     
     def fake_move(self, snake_id):
         self.snakes[snake_id].body.insert(0, self.snakes[snake_id].get_head())
