@@ -17,6 +17,7 @@ class Board:
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
         self.dead_snakes = {}
+        self.recently_removed_food = {}
     
     def __deepcopy__(self, memo):
         id_self = id(self)        # memoization avoids unnecesary recursion
@@ -206,6 +207,8 @@ class Board:
         score = math.sqrt(((pos["x"]-food[0])**2) + ((pos["y"]-food[1])**2))
         return score
     
+    def point_distance(self, pos1, pos2):
+        return math.sqrt(((pos1["x"]-pos2["x"])**2) + ((pos1["y"]-pos2["y"])**2))
     
     def relative_length(self, snake_id):
         snake_length = self.snakes[snake_id].get_length()
@@ -230,6 +233,7 @@ class Board:
         for snake_id in self.snakes:
             
             if new_snakes[snake_id].get_head() in self.food:
+                self.recently_removed_food = new_snakes[snake_id].get_head()
                 self.food.remove(new_snakes[snake_id].get_head())
                 new_snakes[snake_id].health = 100
                 
@@ -242,8 +246,8 @@ class Board:
             # print(snake_id, new_snakes[snake_id].get_head())
         
             if self.collision_check(new_snakes[snake_id].get_head(), snake_id or self.snakes[snake_id].get_health() <= 0):
-                print(new_snakes[snake_id].get_head())
-                print("Update dead snake", self.collision_check(new_snakes[snake_id].get_head(), snake_id))
+                # print(new_snakes[snake_id].get_head())
+                # print("Update dead snake", self.collision_check(new_snakes[snake_id].get_head(), snake_id))
                 dead_snakes[snake_id] = new_snakes[snake_id]
                 new_snakes.pop(snake_id)
                 self.kill_count = self.kill_count + 1

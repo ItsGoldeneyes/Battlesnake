@@ -4,7 +4,7 @@ from iteration_utilities import unique_everseen
 
 class Minimax:    
     def minimax(self, board, snake, depth):
-        eval_state = self.evaluate_state(board, snake)
+        # eval_state = self.evaluate_state(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
@@ -55,20 +55,27 @@ class Minimax:
                 # print("\nFake move")
                 pass
             
+            self_score = self.evaluate_state(new_board, move_snake)
             new_board.update_board_after_move()
             
-            if depth > 0:
-                eval_new_state = self.minimax(new_board, move_snake, depth-1)
-            else:
-                eval_new_state = [move, self.evaluate_state(new_board, move_snake)]
-                
+            
+            # Maximize self score
             if is_self:
+                if depth > 0:
+                    eval_new_state = self.minimax(new_board, move_snake, depth-1)
+                else:
+                    eval_new_state = [move, self_score]
+        
                 if best_move:
                     if eval_new_state[1] > best_move[1]:
                         best_move = [move, eval_new_state[1]]
                 else:
                     best_move = [move, eval_new_state[1]]
+                    
+            # Minimize enemy score
             else:
+                eval_new_state = [move, self_score]
+                
                 if best_move:
                     if eval_new_state[1] < best_move[1]:
                         best_move = [move, eval_new_state[1]]
@@ -76,8 +83,8 @@ class Minimax:
                     best_move = [move, eval_new_state[1]]
                 
             
-        best_move[1] = best_move[1] + eval_state
-        
+        # best_move[1] = best_move[1] + eval_state
+        # print("State eval:", best_move[1])
         return best_move
                     
                     
@@ -102,32 +109,32 @@ class Minimax:
         if board.has_food() == True:
             food_dist = board.food_dist_pos(position)
             # print("Food dist:",food_dist)
-
+            
             if snake.get_health() > 80:
                 pass
             elif 30 < snake.get_health() < 80:
-                if food_dist == 0:
+                if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
                     score += 50
                 elif food_dist < 3:
                     score += (30/int(food_dist))
                 else:
                     score += self.bucket_food_dist(food_dist, board, max= 10)
             elif snake.get_health() < 30:
-                if food_dist == 0:
-                    score += 100
+                if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
+                    score += 1000
                 elif food_dist < (board.width/board.height)/5:
                     score += (50/int(food_dist))
                 else:
-                    score += self.bucket_food_dist(food_dist, board, max= 20)
+                    score += self.bucket_food_dist(food_dist, board, max= 30)
                     
-        # Increase score if not largest length
-        # if board.relative_length(snake.get_id()) != 0:
-        #     if food_dist == 0:
-        #         score += 100
-        #     elif food_dist < 10:
-        #         score += (90/food_dist)
-        #     else:
-        #         score += self.bucket_food_dist(food_dist, board, max= 50)
+            # Increase food score if not largest length
+            if board.relative_length(snake.get_id()) != 0:
+                if food_dist == 0:
+                    score += 1000
+                elif food_dist < 10:
+                    score += (50/int(food_dist))
+                else:
+                    score += self.bucket_food_dist(food_dist, board, max= 30)
 
         # Decrease score if near enemy snake head
         # enemy_near_count = 0
@@ -141,9 +148,9 @@ class Minimax:
         # score -= (enemy_near_count * 100)
             
         # Decrease score for number of enemies
-        # kill_value = 100
-        # other_snakes = board.get_other_snakes(snake.get_id())
-        # score = score - len(other_snakes)*kill_value
+        kill_value = 100
+        other_snakes = board.get_other_snakes(snake.get_id())
+        score = score - len(other_snakes)*kill_value
         
         return score
     
