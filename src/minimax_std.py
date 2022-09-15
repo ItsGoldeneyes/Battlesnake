@@ -30,14 +30,14 @@ class Minimax:
             return ["up", -1000]
         
         for move in alive_moves:
-            # if is_self:
-            #     print("\n___________________ ")
-            # print("\n" + snake.get_id(), move, "board")
-            # print("DEPTH:", depth)
+            if is_self:
+                print("\n___________________ ")
+            print("\n" + snake.get_id(), move, "board")
+            print("DEPTH:", depth)
             new_board = copy.deepcopy(board)
             snakes = new_board.get_snakes()
             new_board.move(snake.get_id(), alive_moves[move])
-            # new_board.print_board()
+            new_board.print_board()
             move_snake = new_board.snakes[snake.get_id()]
             
             # If snake is self, get move evals for other snakes
@@ -49,31 +49,34 @@ class Minimax:
                         
                         enemy_potential_moves = new_board.find_moves(enemy_snake.get_head())
                         new_board.move(snake_id, enemy_potential_moves[snake_move[0]])
-                        
-            # If deciding for other snakes, prevent infinite loop            
-            else:
-                # print("\nFake move")
-                pass
             
+            # If not self, just eval and return
+            
+            # Scoring to be evaluated, is before board update so that food evaluation works
             self_score = self.evaluate_state(new_board, move_snake)
             new_board.update_board_after_move()
             
             
-            # Maximize self score
+            # We want to maximize our score
             if is_self:
+                # If depth is > 0, then minimax. Otherwise, return score
                 if depth > 0:
                     eval_new_state = self.minimax(new_board, move_snake, depth-1)
                 else:
                     eval_new_state = [move, self_score]
         
+                # If best move exists, then compare it to new eval. If new eval is greater,
+                # It becomes new best eval
                 if best_move:
+                    
                     if eval_new_state[1] > best_move[1]:
                         best_move = [move, eval_new_state[1]]
                 else:
                     best_move = [move, eval_new_state[1]]
                     
-            # Minimize enemy score
+            # Enemy wants to minimize our score
             else:
+                # No need for minimax, just evaluate and compare
                 eval_new_state = [move, self_score]
                 
                 if best_move:
@@ -85,6 +88,8 @@ class Minimax:
             
         # best_move[1] = best_move[1] + eval_state
         # print("State eval:", best_move[1])
+        
+        # Best move is list of form [direction, direction_value]
         return best_move
                     
                     
@@ -101,6 +106,7 @@ class Minimax:
         score = 1
         position = snake.get_head()
         
+        score += (10*len(alive_moves))
         
         # Increase score for health
         # score += self.bucket_health(snake.get_health(), 50)
@@ -152,6 +158,7 @@ class Minimax:
         other_snakes = board.get_other_snakes(snake.get_id())
         score = score - len(other_snakes)*kill_value
         
+        print("Score: " + str(score))
         return score
     
     def bucket_food_dist(self, score, board, max= 50, bc= 10):
