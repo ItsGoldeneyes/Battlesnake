@@ -27,17 +27,17 @@ class Game:
 
     def turn(self, data):
         self.board = Board(data)
-        # self.board.print_board()
+        # # self.board.print_board()
         
-        if self.rules == "solo":
-            move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
+        # if self.rules == "solo":
+        #     move_type = StandardMove(self.board)
+        #     move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
-        elif self.map == "arcade_maze":
-           move_type = MazeMove(self.board)
-           move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
+        # elif self.map == "arcade_maze":
+        #    move_type = MazeMove(self.board)
+        #    move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
-        elif self.rules == "standard":
+        if self.rules == "standard":
             move_type = StandardMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
