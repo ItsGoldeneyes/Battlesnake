@@ -13,27 +13,20 @@ class Minimax:
         
         is_self = snake.get_id() == board.get_self_id()
         
-        # If first turn
+        # If first turn - body usually doubled up
         if len(snake.body) != len(list(unique_everseen(snake.body))):
             snake.body = list(unique_everseen(snake.body))
             board.snakes[snake.get_id()].body = snake.body
             return self.minimax(board, snake, 0)
-        
-        # If snake is surrounded by hazards
-        if len(alive_moves) == 0:
-            print("Trapped")
-            return ["up", -1000]
-        
-        # If snake is colliding
-        if board.collision_check(snake.get_head(), snake.get_id()):
-            print("Colliding")
-            return ["up", -1000]
         
         for move in alive_moves:
             # if is_self:
             #     print("\n___________________ ")
             # print("\n" + snake.get_id(), move, "board")
             # print("DEPTH:", depth)
+            # if board.collision_check(potential_moves[move], snake.get_id()):
+            #     print("Colliding")
+            #     return ["up", -50]
             new_board = copy.deepcopy(board)
             snakes = new_board.get_snakes()
             new_board.move(snake.get_id(), alive_moves[move])
@@ -150,7 +143,7 @@ class Minimax:
         # Decrease score for number of enemies
         kill_value = 100
         other_snakes = board.get_other_snakes(snake.get_id())
-        score = score - len(other_snakes)*kill_value
+        score -= len(other_snakes)*kill_value
         
         return score
     
