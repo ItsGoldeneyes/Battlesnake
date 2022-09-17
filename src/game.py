@@ -1,5 +1,4 @@
 from standard_move import StandardMove
-from maze_move import MazeMove
 from board import Board
 import random
 
@@ -36,8 +35,8 @@ class Game:
         # elif self.map == "arcade_maze":
         #    move_type = MazeMove(self.board)
         #    move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
-        
         if self.rules == "standard":
+            print('Standard move')
             move_type = StandardMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         

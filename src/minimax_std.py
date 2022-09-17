@@ -45,7 +45,6 @@ class Minimax:
             # If not self, just eval and return
             
             # Scoring to be evaluated, is before board update so that food evaluation works
-            self_score = self.evaluate_state(new_board, move_snake, print_output)
             new_board.update_board_after_move()
             
             
@@ -55,6 +54,7 @@ class Minimax:
                 if depth > 0:
                     eval_new_state = self.minimax(new_board, move_snake, depth-1)
                 else:
+                    self_score = self.evaluate_state(new_board, move_snake, print_output)
                     eval_new_state = [move, self_score]
         
                 # If best move exists, then compare it to new eval. If new eval is greater,
@@ -69,6 +69,7 @@ class Minimax:
             # Enemy wants to minimize our score
             else:
                 # No need for minimax, just evaluate and compare
+                self_score = self.evaluate_state(new_board, move_snake, print_output)
                 eval_new_state = [move, self_score]
                 
                 if best_move:
@@ -82,6 +83,10 @@ class Minimax:
         # print("State eval:", best_move[1])
         
         # Best move is list of form [direction, direction_value]
+        if best_move == False:
+            print("BEST MOVE FALSE")
+            print("ALIVE MOVES:", alive_moves)
+        
         return best_move
                     
                     
@@ -148,10 +153,11 @@ class Minimax:
         # Decrease score for number of enemies
         kill_value = 100
         other_snakes = board.get_other_snakes(snake.get_id())
+        score -= len(other_snakes)*kill_value
         if print_output:
-            score -= len(other_snakes)*kill_value
+            print("Score: " + str(score))
+            
         
-        print("Score: " + str(score))
         return score
     
     def bucket_food_dist(self, score, board, max= 50, bc= 10):
