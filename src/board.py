@@ -77,7 +77,7 @@ class Board:
                 
         return len(heads)
     
-    def get_snake_collision(self, id): #= False):
+    def get_snake_collision(self, id= False):
         # if id:
         #     print("get snake collision:", id)
         snakes_hitbox = []
