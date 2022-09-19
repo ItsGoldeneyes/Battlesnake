@@ -6,7 +6,7 @@ class BattleSnake:
             
         self.id = id
         
-        # Ugly workaround, snakes are in list
+        # Ugly workaround, snakes are in list in data
         for snake in board.board["snakes"]: 
             if snake["id"] == self.id:
                 self.head = snake["head"]

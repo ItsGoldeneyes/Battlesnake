@@ -4,7 +4,7 @@ from iteration_utilities import unique_everseen
 
 class Minimax:    
     def minimax(self, board, snake, depth, print_output= False):
-        # eval_state = self.evaluate_state(board, snake)
+        eval_state = self.evaluate_state(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
@@ -37,7 +37,7 @@ class Minimax:
                 for snake_id in snakes:
                     if snake_id != move_snake.get_id():
                         enemy_snake = new_board.snakes[snake_id]
-                        snake_move = self.minimax(new_board, enemy_snake, 0)
+                        snake_move = self.minimax(new_board, enemy_snake, 0, print_output= print_output)
                         
                         enemy_potential_moves = new_board.find_moves(enemy_snake.get_head())
                         new_board.move(snake_id, enemy_potential_moves[snake_move[0]])
@@ -45,6 +45,7 @@ class Minimax:
             # If not self, just eval and return
             
             # Scoring to be evaluated, is before board update so that food evaluation works
+            self_eval = self.evaluate_state(new_board, move_snake, print_output)
             new_board.update_board_after_move()
             
             
@@ -52,9 +53,9 @@ class Minimax:
             if is_self:
                 # If depth is > 0, then minimax. Otherwise, return score
                 if depth > 0:
-                    eval_new_state = self.minimax(new_board, move_snake, depth-1)
+                    eval_new_state = self.minimax(new_board, move_snake, depth-1, print_output)
                 else:
-                    self_score = self.evaluate_state(new_board, move_snake, print_output)
+                    self_score = self_eval
                     eval_new_state = [move, self_score]
         
                 # If best move exists, then compare it to new eval. If new eval is greater,
@@ -69,7 +70,7 @@ class Minimax:
             # Enemy wants to minimize our score
             else:
                 # No need for minimax, just evaluate and compare
-                self_score = self.evaluate_state(new_board, move_snake, print_output)
+                self_score = self_eval
                 eval_new_state = [move, self_score]
                 
                 if best_move:
@@ -77,15 +78,16 @@ class Minimax:
                         best_move = [move, eval_new_state[1]]
                 else:
                     best_move = [move, eval_new_state[1]]
-                
-            
-        # best_move[1] = best_move[1] + eval_state
+                    
         # print("State eval:", best_move[1])
         
         # Best move is list of form [direction, direction_value]
         if best_move == False:
             print("BEST MOVE FALSE")
             print("ALIVE MOVES:", alive_moves)
+            best_move = ["up", eval_state]
+        else:
+            best_move[1] = best_move[1] + eval_state
         
         return best_move
                     
@@ -98,62 +100,58 @@ class Minimax:
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
         
+        if board.collision_check(snake.get_head(), snake.get_id()) and board.near_tail(snake.get_head())==False:
+            return -100
+        
+        if len(alive_moves) == 0:
+            return -100
+        
         # Set score to a 50
         # score = random.randint(50,51)
-        score = 1
+        score = 0
         position = snake.get_head()
         
-        score += (10*len(alive_moves))
-        
         # Increase score for health
-        # score += self.bucket_health(snake.get_health(), 50)
+        score += self.bucket_health(snake.get_health(), 2)
         
         # Increase score for distance to food based on health
         if board.has_food() == True:
-            food_dist = board.food_dist_pos(position)
+            food_dist = board.food_dist(position)
             # print("Food dist:",food_dist)
-            
             if snake.get_health() > 80:
                 pass
+            
             elif 30 < snake.get_health() < 80:
                 if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
-                    score += 50
+                    score += 2
                 elif food_dist < 3:
-                    score += (30/int(food_dist))
+                    score += 0.5
                 else:
-                    score += self.bucket_food_dist(food_dist, board, max= 10)
+                    score += self.bucket_food_dist(food_dist, board, max= 0.5)
+                    
             elif snake.get_health() < 30:
                 if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
-                    score += 1000
+                    score += 3
                 elif food_dist < (board.width/board.height)/5:
-                    score += (50/int(food_dist))
+                    score += (1/int(food_dist))
                 else:
-                    score += self.bucket_food_dist(food_dist, board, max= 30)
+                    score += self.bucket_food_dist(food_dist, board, max= 1)
                     
             # Increase food score if not largest length
             if board.relative_length(snake.get_id()) != 0:
                 if food_dist == 0:
-                    score += 1000
+                    score += 2
                 elif food_dist < 10:
-                    score += (50/int(food_dist))
+                    score += (1/int(food_dist))
                 else:
-                    score += self.bucket_food_dist(food_dist, board, max= 30)
-
-        # Decrease score if near enemy snake head
-        # enemy_near_count = 0
-        # for enemy_snake in board.get_other_snakes(snake.get_id()):
-        #     enemy_moves = board.find_moves(board.snakes[enemy_snake].get_head())
-        #     for enemy_move in enemy_moves.values():
-        #         if enemy_move in alive_moves.values():
-        #             if board.snakes[enemy_snake].get_length() >= snake.get_length():
-        #                 enemy_near_count += 1
+                    score += self.bucket_food_dist(food_dist, board, max= 1)
         
         # score -= (enemy_near_count * 100)
             
         # Decrease score for number of enemies
-        kill_value = 100
-        other_snakes = board.get_other_snakes(snake.get_id())
-        score -= len(other_snakes)*kill_value
+        # kill_value = 100
+        # other_snakes = board.get_other_snakes(snake.get_id())
+        # score -= len(other_snakes)*kill_value
         if print_output:
             print("Score: " + str(score))
             

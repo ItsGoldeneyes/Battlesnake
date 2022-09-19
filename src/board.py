@@ -134,15 +134,16 @@ class Board:
         for y_pos in range(self.height):
             for x_pos in range(self.width):
                 coord = {"x": x_pos, "y": y_pos}
+                # Check for snakes
+                if coord in self.get_snake_collision(False): # Fix with get snake collision
+                    board_array[y_pos].append("O")
                 # Check for food
-                if coord in self.food:
+                elif coord in self.food:
                     board_array[y_pos].append("F")
                 # Check for hazards
                 elif coord in self.hazards:
                     board_array[y_pos].append("X")
-                # Check for snakes
-                elif coord in self.get_snake_collision(False): # Fix with get snake collision
-                    board_array[y_pos].append("O")
+                
                 # Empty space
                 else:
                     board_array[y_pos].append("◦")
@@ -198,7 +199,7 @@ class Board:
         return food_list[min_index]
         
         
-    def food_dist_pos(self, pos):
+    def food_dist(self, pos):
         if self.food == []:
             score = 0
             return score
@@ -257,3 +258,8 @@ class Board:
             
         self.snakes = dict(new_snakes)
         self.dead_snakes = dict(dead_snakes)
+        
+    def near_tail(self, pos):
+        for snake_id in self.snakes:
+            if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
+                return True
