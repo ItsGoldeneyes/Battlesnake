@@ -1,4 +1,5 @@
 import copy
+import math
 from iteration_utilities import unique_everseen
 
 
@@ -8,7 +9,6 @@ class Minimax:
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id())==False}
-        best_move = False
         eval_new_state = []
         
         is_self = snake.get_id() == board.get_self_id()
@@ -19,70 +19,74 @@ class Minimax:
             board.snakes[snake.get_id()].body = snake.body
             return self.minimax(board, snake, 0)
         
-        for move in alive_moves:
-            if print_output:
-                if is_self:
+        if is_self:
+            best_move = ["FALSE", -math.inf]
+            for move in alive_moves:
+                if print_output:
                     print("\n___________________ ")
-                print("\n" + snake.get_id(), move, "board")
-                print("DEPTH:", depth)
-            new_board = copy.deepcopy(board)
-            snakes = new_board.get_snakes()
-            new_board.move(snake.get_id(), alive_moves[move])
-            if print_output:
-                new_board.print_board()
-            move_snake = new_board.snakes[snake.get_id()]
-            
-            # If snake is self, get move evals for other snakes
-            if is_self:
+                    print("\n" + snake.get_id(), move, "board")
+                    print("DEPTH:", depth)
+                new_board = copy.deepcopy(board)
+                snakes = new_board.get_snakes()
+                new_board.move(snake.get_id(), alive_moves[move])
+                if print_output:
+                    new_board.print_board()
+                move_snake = new_board.snakes[snake.get_id()]
+                
+                # If snake is self, get move evals for other snakes
                 for snake_id in snakes:
                     if snake_id != move_snake.get_id():
                         enemy_snake = new_board.snakes[snake_id]
-                        snake_move = self.minimax(new_board, enemy_snake, 0, print_output= print_output)
+                        snake_move = self.minimax(new_board, enemy_snake, depth= 0, print_output= print_output)
                         
                         enemy_potential_moves = new_board.find_moves(enemy_snake.get_head())
                         new_board.move(snake_id, enemy_potential_moves[snake_move[0]])
-            
-            # If not self, just eval and return
-            
-            # Scoring to be evaluated, is before board update so that food evaluation works
-            self_eval = self.evaluate_state(new_board, move_snake, print_output)
-            new_board.update_board_after_move()
-            
-            
-            # We want to maximize our score
-            if is_self:
+                
+                # If not self, just eval and return
+                
+                # Scoring to be evaluated, is before board update so that food evaluation works
+                self_eval = self.evaluate_state(new_board, move_snake, print_output)
+                new_board.update_board_after_move()
+                
+                
+                # We want to maximize our score
                 # If depth is > 0, then minimax. Otherwise, return score
                 if depth > 0:
                     eval_new_state = self.minimax(new_board, move_snake, depth-1, print_output)
                 else:
-                    self_score = self_eval
-                    eval_new_state = [move, self_score]
+                    eval_new_state = [move, self_eval]
         
-                # If best move exists, then compare it to new eval. If new eval is greater,
-                # It becomes new best eval
-                if best_move:
-                    
-                    if eval_new_state[1] > best_move[1]:
-                        best_move = [move, eval_new_state[1]]
-                else:
+                #If new eval is greater than best move, it becomes new best eval
+                if eval_new_state[1] > best_move[1]:
                     best_move = [move, eval_new_state[1]]
                     
-            # Enemy wants to minimize our score
-            else:
-                # No need for minimax, just evaluate and compare
-                self_score = self_eval
-                eval_new_state = [move, self_score]
+        # If enemy snake
+        else:
+            best_move = ["FALSE", math.inf]
+            for move in alive_moves:
+                if print_output:
+                    print("\n" + snake.get_id(), move, "board")
+                    print("DEPTH:", depth)
+                new_board = copy.deepcopy(board)
+                snakes = new_board.get_snakes()
+                new_board.move(snake.get_id(), alive_moves[move])
+                if print_output:
+                    new_board.print_board()
+                move_snake = new_board.snakes[snake.get_id()]
                 
-                if best_move:
-                    if eval_new_state[1] < best_move[1]:
-                        best_move = [move, eval_new_state[1]]
-                else:
+                # Scoring to be evaluated, is before board update so that food evaluation works
+                self_eval = self.evaluate_state(new_board, move_snake, print_output)
+                new_board.update_board_after_move()
+                
+                # Enemy wants to minimize our score
+                # No need for minimax, just evaluate and compare
+                eval_new_state = [move, self_eval]
+                
+                if eval_new_state[1] < best_move[1]:
                     best_move = [move, eval_new_state[1]]
-                    
-        # print("State eval:", best_move[1])
         
         # Best move is list of form [direction, direction_value]
-        if best_move == False:
+        if best_move == -math.inf:
             print("BEST MOVE FALSE")
             print("ALIVE MOVES:", alive_moves)
             best_move = ["up", eval_state]
