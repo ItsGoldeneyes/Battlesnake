@@ -111,6 +111,9 @@ class Minimax:
         score = 0
         position = snake.get_head()
         
+        if 95 <= snake.get_health() <= 100:
+            score += 2
+        
         # Increase score for health
         score += self.bucket_health(snake.get_health(), 2)
         
