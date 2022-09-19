@@ -125,17 +125,19 @@ class Minimax:
                 pass
             
             elif 30 < snake.get_health() < 80:
-                if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
-                    score += 2
-                elif food_dist < 3:
+                # if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
+                #     score += 2
+                # el
+                if food_dist < 3:
                     score += 0.5
                 else:
                     score += self.bucket_food_dist(food_dist, board, max= 0.5)
                     
             elif snake.get_health() < 30:
-                if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
-                    score += 3
-                elif food_dist < (board.width/board.height)/5:
+                # if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
+                #     score += 3
+                # el
+                if food_dist < (board.width/board.height)/5:
                     score += (1/int(food_dist))
                 else:
                     score += self.bucket_food_dist(food_dist, board, max= 1)
