@@ -1,4 +1,5 @@
-from standard_move import StandardMove
+from standard.standard_move import StandardMove
+from wrapped.wrapped_move import WrappedMove
 from board import Board
 import random
 
@@ -28,6 +29,15 @@ class Game:
         self.board = Board(data)
         # # self.board.print_board()
         
+        if self.rules == "standard":
+            print('Standard move')
+            move_type = StandardMove(self.board)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+        
+        elif self.rules == "wrapped":
+            print('Wrapped move')
+            move_type = WrappedMove(self.board)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
         # if self.rules == "solo":
         #     move_type = StandardMove(self.board)
         #     move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
@@ -35,14 +45,10 @@ class Game:
         # elif self.map == "arcade_maze":
         #    move_type = MazeMove(self.board)
         #    move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
-        if self.rules == "standard":
-            print('Standard move')
-            move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
         else:
             move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
             # potential_moves = self.board.find_moves(self.get_head())
             # alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
             # if alive_moves == {}:

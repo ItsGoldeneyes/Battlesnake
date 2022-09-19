@@ -1,6 +1,6 @@
-from minimax_std import Minimax
+from wrapped.minimax_wrp import Minimax
 
-class StandardMove:
+class WrappedMove:
     def __init__(self, board):
         self.board = board
 
