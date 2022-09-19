@@ -1,5 +1,4 @@
 from standard_move import StandardMove
-from maze_move import MazeMove
 from board import Board
 import random
 
@@ -27,18 +26,19 @@ class Game:
 
     def turn(self, data):
         self.board = Board(data)
+        # # self.board.print_board()
         
-        if self.rules == "solo":
+        # if self.rules == "solo":
+        #     move_type = StandardMove(self.board)
+        #     move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
+        
+        # elif self.map == "arcade_maze":
+        #    move_type = MazeMove(self.board)
+        #    move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
+        if self.rules == "standard":
+            print('Standard move')
             move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 8)
-        
-        elif self.map == "arcade_maze":
-           move_type = MazeMove(self.board)
-           move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
-        
-        elif self.rules == "standard":
-            move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
         else:
             move_type = StandardMove(self.board)
@@ -58,4 +58,5 @@ class Game:
             return move
         else:
             print("INCORRECT MOVE FORMAT:", move)
-            return "up"
+            return self.board.find_moves(self.board.snakes[self.board.get_self_id()].get_head())
+            # return "up"
