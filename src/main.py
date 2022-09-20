@@ -22,9 +22,9 @@ def handle_info():
     return {
             "apiversion": "1",
             "author": "Goldeneyes",
-            "color": "#EB6443",
-            "head": "beluga",
-            "tail": "bolt",
+            "color": "#DAA520",
+            "head": "moto-helmet",
+            "tail": "comet",
         }
 
 
