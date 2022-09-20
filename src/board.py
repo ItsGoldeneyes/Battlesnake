@@ -116,7 +116,7 @@ class Board:
         return False
     
     
-    def collision_check_no_walls(self, move, snake_id= False):
+    def collision_check_wrapped(self, move, snake_id= False):
         # 2. Check snake
         if move in self.get_snake_collision(snake_id):
                 # print(" -- Snake collision")
@@ -263,3 +263,19 @@ class Board:
         for snake_id in self.snakes:
             if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
                 return True
+            
+    def wrap_fix(self, moves):
+        print("height:",self.height)
+        print("width:",self.width)
+        print(moves)
+        for move in moves:
+            if moves[move]["x"] >= self.width:
+                moves[move]["x"] = moves[move]["x"] - self.width
+            elif moves[move]["x"] < 0:
+                moves[move]["x"] = moves[move]["x"] + self.width
+                
+            if moves[move]["y"] >= self.height:
+                moves[move]["y"] = moves[move]["y"] - self.height
+            elif moves[move]["y"] < 0:
+                moves[move]["y"] = moves[move]["y"] + self.height
+        return moves

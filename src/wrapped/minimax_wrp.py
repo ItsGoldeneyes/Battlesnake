@@ -7,8 +7,9 @@ class Minimax:
     def minimax(self, board, snake, depth, print_output= False):
         eval_state = self.evaluate_state(board, snake)
         potential_moves = board.find_moves(snake.get_head())
-        alive_moves = {move : potential_moves[move] for move in potential_moves 
-                       if board.collision_check(potential_moves[move], snake.get_id())==False}
+        wrap_moves = board.wrap_fix(potential_moves)
+        alive_moves = {move : wrap_moves[move] for move in wrap_moves 
+                       if board.collision_check_wrapped(wrap_moves[move], snake.get_id())==False}
         eval_new_state = []
         
         is_self = snake.get_id() == board.get_self_id()
