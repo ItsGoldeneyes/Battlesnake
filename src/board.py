@@ -166,8 +166,6 @@ class Board:
     def move(self, snake_id, move):
         assert len(move) == 2
         assert type(move) == dict
-        assert 0 <= move["x"] <= self.width
-        assert 0 <= move["y"] <= self.height
         
         self.snakes[snake_id].head = move
         self.snakes[snake_id].body.insert(0, move)
@@ -265,9 +263,6 @@ class Board:
                 return True
             
     def wrap_fix(self, moves):
-        print("height:",self.height)
-        print("width:",self.width)
-        print(moves)
         for move in moves:
             if moves[move]["x"] >= self.width:
                 moves[move]["x"] = moves[move]["x"] - self.width

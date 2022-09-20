@@ -38,27 +38,15 @@ class Game:
             print('Wrapped move')
             move_type = WrappedMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
-        # if self.rules == "solo":
-        #     move_type = StandardMove(self.board)
-        #     move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
-        
-        # elif self.map == "arcade_maze":
-        #    move_type = MazeMove(self.board)
-        #    move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
+            
+        elif self.rules == "solo":
+            move_type = StandardMove(self.board)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 5)
         
         else:
             move_type = StandardMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
-            # potential_moves = self.board.find_moves(self.get_head())
-            # alive_moves = {move : potential_moves[move] for move in potential_moves if self.board.collision_check(potential_moves[move])==False}
-            # if alive_moves == {}:
-            #     return "up"
-            # if self.board.get_health(self.id) < 30:
-            #     food_dists = self.board.food_dist(self.get_head(), alive_moves)
-            #     move_choice = min(food_dists, key=food_dists.get)
-            # else:
-            #     move_choice = random.choice(list(alive_moves.keys()))
-            # move = move_choice
+            
         
         if move in self.possible_moves and move != None:
             return move

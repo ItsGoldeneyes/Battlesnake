@@ -87,7 +87,7 @@ class Minimax:
                     best_move = [move, eval_new_state[1]]
         
         # Best move is list of form [direction, direction_value]
-        if best_move == -math.inf:
+        if best_move[0] == "FALSE":
             print("BEST MOVE FALSE")
             print("ALIVE MOVES:", alive_moves)
             best_move = ["up", eval_state]
@@ -102,8 +102,9 @@ class Minimax:
         
          # Get moves where snake survives
         potential_moves = board.find_moves(snake.get_head())
-        alive_moves = {move : potential_moves[move] for move in potential_moves 
-                       if board.collision_check(potential_moves[move], snake.get_id())==False}
+        wrap_moves = board.wrap_fix(potential_moves)
+        alive_moves = {move : wrap_moves[move] for move in wrap_moves 
+                       if board.collision_check_wrapped(wrap_moves[move], snake.get_id())==False}
         
         if board.collision_check(snake.get_head(), snake.get_id()) and board.near_tail(snake.get_head())==False:
             return -100
