@@ -247,9 +247,12 @@ class Board:
             if self.collision_check(new_snakes[snake_id].get_head(), snake_id or self.snakes[snake_id].get_health() <= 0):
                 # print(new_snakes[snake_id].get_head())
                 # print("Update dead snake", self.collision_check(new_snakes[snake_id].get_head(), snake_id))
-                dead_snakes[snake_id] = new_snakes[snake_id]
-                new_snakes.pop(snake_id)
-                self.kill_count = self.kill_count + 1
+                for head_snake_id in self.get_other_snakes(snake_id):
+                    if self.snakes[head_snake_id].get_head() == self.snakes[snake_id].get_head():
+                        if self.snakes[snake_id].get_length() < self.snakes[head_snake_id].get_length():
+                            dead_snakes[snake_id] = new_snakes[snake_id]
+                            new_snakes.pop(snake_id)
+                            self.kill_count = self.kill_count + 1
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 
