@@ -30,12 +30,12 @@ class Game:
         # # self.board.print_board()
         
         if self.rules == "standard":
-            print('Standard move')
+            # print('Standard move')
             move_type = StandardMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
         
         elif self.rules == "wrapped":
-            print('Wrapped move')
+            # print('Wrapped move')
             move_type = WrappedMove(self.board)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
             

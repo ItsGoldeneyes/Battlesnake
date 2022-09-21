@@ -4,7 +4,7 @@ from iteration_utilities import unique_everseen
 
 
 class Minimax:    
-    def minimax(self, board, snake, depth, print_output= False):
+    def minimax(self, board, snake, depth, debug_mode= False):
         eval_state = self.evaluate_state(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
@@ -22,14 +22,14 @@ class Minimax:
         if is_self:
             best_move = ["FALSE", -math.inf]
             for move in alive_moves:
-                if print_output:
+                if debug_mode:
                     print("\n___________________ ")
                     print("\n" + snake.get_id(), move, "board")
                     print("DEPTH:", depth)
                 new_board = copy.deepcopy(board)
                 snakes = new_board.get_snakes()
                 new_board.move(snake.get_id(), alive_moves[move])
-                if print_output:
+                if debug_mode:
                     new_board.print_board()
                 move_snake = new_board.snakes[snake.get_id()]
                 
@@ -37,7 +37,7 @@ class Minimax:
                 for snake_id in snakes:
                     if snake_id != move_snake.get_id():
                         enemy_snake = new_board.snakes[snake_id]
-                        snake_move = self.minimax(new_board, enemy_snake, depth= 0, print_output= print_output)
+                        snake_move = self.minimax(new_board, enemy_snake, depth= 0, debug_mode= debug_mode)
                         
                         enemy_potential_moves = new_board.find_moves(enemy_snake.get_head())
                         new_board.move(snake_id, enemy_potential_moves[snake_move[0]])
@@ -45,14 +45,14 @@ class Minimax:
                 # If not self, just eval and return
                 
                 # Scoring to be evaluated, is before board update so that food evaluation works
-                self_eval = self.evaluate_state(new_board, move_snake, print_output)
+                self_eval = self.evaluate_state(new_board, move_snake, debug_mode)
                 new_board.update_board_after_move()
                 
                 
                 # We want to maximize our score
                 # If depth is > 0, then minimax. Otherwise, return score
                 if depth > 0:
-                    eval_new_state = self.minimax(new_board, move_snake, depth-1, print_output)
+                    eval_new_state = self.minimax(new_board, move_snake, depth-1, debug_mode)
                 else:
                     eval_new_state = [move, self_eval]
         
@@ -64,18 +64,18 @@ class Minimax:
         else:
             best_move = ["FALSE", math.inf]
             for move in alive_moves:
-                if print_output:
+                if debug_mode:
                     print("\n" + snake.get_id(), move, "board")
                     print("DEPTH:", depth)
                 new_board = copy.deepcopy(board)
                 snakes = new_board.get_snakes()
                 new_board.move(snake.get_id(), alive_moves[move])
-                if print_output:
+                if debug_mode:
                     new_board.print_board()
                 move_snake = new_board.snakes[snake.get_id()]
                 
                 # Scoring to be evaluated, is before board update so that food evaluation works
-                self_eval = self.evaluate_state(new_board, move_snake, print_output)
+                self_eval = self.evaluate_state(new_board, move_snake, debug_mode)
                 new_board.update_board_after_move()
                 
                 # Enemy wants to minimize our score
@@ -96,7 +96,7 @@ class Minimax:
         return best_move
                     
                     
-    def evaluate_state(self, board, snake, print_output = False): 
+    def evaluate_state(self, board, snake, debug_mode = False): 
         # TODO: Minus score for collision unless it's a safe head to head, prioritize winning
         
          # Get moves where snake survives
@@ -160,7 +160,7 @@ class Minimax:
         # kill_value = 100
         # other_snakes = board.get_other_snakes(snake.get_id())
         # score -= len(other_snakes)*kill_value
-        if print_output:
+        if debug_mode:
             print("Score: " + str(score))
             
         
