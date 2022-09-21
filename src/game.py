@@ -27,6 +27,7 @@ class Game:
 
     def turn(self, data):
         self.board = Board(data)
+        self.board.print_board()
         # # self.board.print_board()
         
         if self.rules == "standard":
