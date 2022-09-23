@@ -67,16 +67,20 @@ class Board:
     def get_other_snakes(self, snake_id):
         return {snake.get_id(): snake for snake in self.snakes.values() if snake.id != snake_id}
     
-    def get_heads_near(self, snake_id_excluding):
-        heads = []
-        for snake_id in self.snakes.keys():
-            if snake_id != snake_id_excluding:
-                if math.sqrt((((self.snakes[snake_id].get_head()["x"]-self.snakes[snake_id_excluding].get_head()["x"]))**2) + 
-                             (((self.snakes[snake_id].get_head()["y"]-self.snakes[snake_id_excluding].get_head()["y"]))**2)) < 2:
-                    heads.append(self.snakes[snake_id].get_head())
-                
-        return len(heads)
     
+    def near_head(self, snake_1, snake_2):
+        snake_2_possible = self.find_moves(self.snakes[snake_2].get_head())
+        if self.snakes[snake_1].get_head() in list(snake_2_possible.values()):
+            return True
+        return False
+        
+        
+    def near_tail(self, pos):
+        for snake_id in self.snakes:
+            if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
+                return True
+            
+            
     def get_snake_collision(self, id= False):
         # if id:
         #     print("get snake collision:", id)
@@ -171,11 +175,6 @@ class Board:
         self.snakes[snake_id].body.insert(0, move)
         if move not in self.get_food():
             self.snakes[snake_id].body.pop()
-            
-    
-    # def fake_move(self, snake_id):
-    #     self.snakes[snake_id].body.insert(0, self.snakes[snake_id].get_head())
-    #     self.snakes[snake_id].body.pop()
     
     
     def has_food(self):
@@ -183,9 +182,7 @@ class Board:
     
     
     def is_food(self, move):
-        if move in self.food:
-            return True
-        return False
+        return move in self.food
 
     
     def closest_food(self, point_dict):
@@ -206,8 +203,10 @@ class Board:
         score = math.sqrt(((pos["x"]-food[0])**2) + ((pos["y"]-food[1])**2))
         return score
     
+    
     def point_distance(self, pos1, pos2):
         return math.sqrt(((pos1["x"]-pos2["x"])**2) + ((pos1["y"]-pos2["y"])**2))
+    
     
     def relative_length(self, snake_id):
         snake_length = self.snakes[snake_id].get_length()
@@ -235,18 +234,8 @@ class Board:
                 self.recently_removed_food = new_snakes[snake_id].get_head()
                 self.food.remove(new_snakes[snake_id].get_head())
                 new_snakes[snake_id].health = 100
-                
-            # print("Snake Head:", new_snakes[snake_id].get_head())
-            # for id in self.snakes:
-            #     if new_snakes[snake_id].get_head() in new_snakes[id].body:
-            #         print("Head in:", id)
-            #         print(self.collision_check(new_snakes[snake_id].get_head(), snake_id))
-            
-            # print(snake_id, new_snakes[snake_id].get_head())
         
             if self.collision_check(new_snakes[snake_id].get_head(), snake_id or self.snakes[snake_id].get_health() <= 0):
-                # print(new_snakes[snake_id].get_head())
-                # print("Update dead snake", self.collision_check(new_snakes[snake_id].get_head(), snake_id))
                 for head_snake_id in self.get_other_snakes(snake_id):
                     if self.snakes[head_snake_id].get_head() == self.snakes[snake_id].get_head():
                         if self.snakes[snake_id].get_length() < self.snakes[head_snake_id].get_length():
@@ -256,14 +245,9 @@ class Board:
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 
-            
         self.snakes = dict(new_snakes)
         self.dead_snakes = dict(dead_snakes)
-        
-    def near_tail(self, pos):
-        for snake_id in self.snakes:
-            if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
-                return True
+            
             
     def wrap_fix(self, moves):
         for move in moves:

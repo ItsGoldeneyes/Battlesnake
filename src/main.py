@@ -6,6 +6,7 @@ from flask import request
 
 from game import Game
 
+DEBUG_MODE = True
 
 app = Flask(__name__)
 
@@ -37,7 +38,7 @@ def handle_start():
     """
     
     data = request.get_json()
-    new_game = Game(data)
+    new_game = Game(data, debug_mode= DEBUG_MODE)
     game = {new_game.get_id() : new_game}
     games.update(game)
     
@@ -57,7 +58,7 @@ def handle_move():
     if gameid in games: 
         move = games[gameid].turn(data)
     else:
-        new_game = Game(data)
+        new_game = Game(data, debug_mode= DEBUG_MODE)
         game = {new_game.get_id() : new_game}
         games.update(game)
         move = games[gameid].turn(data)

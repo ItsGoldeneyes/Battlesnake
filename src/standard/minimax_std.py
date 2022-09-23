@@ -25,7 +25,6 @@ class Minimax:
                 if debug_mode:
                     print("\n___________________ ")
                     print("\n" + snake.get_id(), move, "board")
-                    print("DEPTH:", depth)
                 new_board = copy.deepcopy(board)
                 snakes = new_board.get_snakes()
                 new_board.move(snake.get_id(), alive_moves[move])
@@ -48,6 +47,8 @@ class Minimax:
                 self_eval = self.evaluate_state(new_board, move_snake, debug_mode)
                 new_board.update_board_after_move()
                 
+                if debug_mode:
+                    print(f"Depth: {str(depth)} Score: {str(self_eval)} Snake: {str(move_snake.get_id())}")
                 
                 # We want to maximize our score
                 # If depth is > 0, then minimax. Otherwise, return score
@@ -66,7 +67,6 @@ class Minimax:
             for move in alive_moves:
                 if debug_mode:
                     print("\n" + snake.get_id(), move, "board")
-                    print("DEPTH:", depth)
                 new_board = copy.deepcopy(board)
                 snakes = new_board.get_snakes()
                 new_board.move(snake.get_id(), alive_moves[move])
@@ -77,6 +77,9 @@ class Minimax:
                 # Scoring to be evaluated, is before board update so that food evaluation works
                 self_eval = self.evaluate_state(new_board, move_snake, debug_mode)
                 new_board.update_board_after_move()
+                
+                if debug_mode:
+                    print(f"Depth: {str(depth)} Score: {str(self_eval)} Snake: {str(move_snake.get_id())}")
                 
                 # Enemy wants to minimize our score
                 # No need for minimax, just evaluate and compare
@@ -114,11 +117,10 @@ class Minimax:
         score = 0
         position = snake.get_head()
         
-        if 95 <= snake.get_health() <= 100:
-            score += 2
-        
         # Increase score for health
-        score += self.bucket_health(snake.get_health(), 2)
+        if 95 <= snake.get_health() <= 100:
+            score += 1
+        # score += self.bucket_health(snake.get_health(), 2)
         
         # Increase score for distance to food based on health
         if board.has_food() == True:
@@ -128,10 +130,9 @@ class Minimax:
                 pass
             
             elif 30 < snake.get_health() < 80:
-                # if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
-                #     score += 2
-                # el
-                if food_dist < 3:
+                if food_dist == 0:
+                    score += 1
+                elif food_dist < 3:
                     score += 0.5
                 else:
                     score += self.bucket_food_dist(food_dist, board, max= 0.5)
@@ -148,21 +149,28 @@ class Minimax:
             # Increase food score if not largest length
             if board.relative_length(snake.get_id()) != 0:
                 if food_dist == 0:
-                    score += 2
+                    score += 1
                 elif food_dist < 10:
                     score += (1/int(food_dist))
                 else:
                     score += self.bucket_food_dist(food_dist, board, max= 1)
+        
+        
+        # Increase or decrease if move is possible move of other snake
+        for enemy_snake_id in board.get_other_snakes(snake.get_id()):
+            if board.near_head(enemy_snake_id, snake.get_id()):
+                if snake.get_length() > board.snakes[enemy_snake_id].get_length():
+                    score += 0.5
+                else:
+                    score -= 2
+                
         
         # score -= (enemy_near_count * 100)
             
         # Decrease score for number of enemies
         # kill_value = 100
         # other_snakes = board.get_other_snakes(snake.get_id())
-        # score -= len(other_snakes)*kill_value
-        if debug_mode:
-            print("Score: " + str(score))
-            
+        # score -= len(other_snakes)*kill_value            
         
         return score
     
@@ -179,7 +187,7 @@ class Minimax:
                 return max_score/bucket_num
         return 0
     
-    def bucket_health(self, health, max= 50, bc= 5):
+    def bucket_health(self, health, max= 50, bc= 10):
         max_score = max
         bucket_count = bc
         

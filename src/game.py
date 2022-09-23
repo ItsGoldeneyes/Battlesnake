@@ -5,13 +5,15 @@ import random
 
 
 class Game:
-    def __init__(self, data):
+    def __init__(self, data, debug_mode= False):
+        self.debug_mode = debug_mode
+        
         self.game_id = data["game"]["id"]
         self.self_id = data["you"]["id"]
         self.map = data["game"]["map"]
         self.rules = data["game"]["ruleset"]["name"]
         self.board = Board(data)
-        
+                
         self.possible_moves = ["up", "down", "left", "right"]
         
         print(self.rules, flush= True)
@@ -27,25 +29,25 @@ class Game:
 
     def turn(self, data):
         self.board = Board(data)
-        self.board.print_board()
-        # # self.board.print_board()
+        if self.debug_mode:
+            self.board.print_board()
         
         if self.rules == "standard":
             # print('Standard move')
-            move_type = StandardMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
         elif self.rules == "wrapped":
             # print('Wrapped move')
-            move_type = WrappedMove(self.board)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
             
         elif self.rules == "solo":
-            move_type = StandardMove(self.board)
+            move_type = StandardMove(self.board, debug_mode= self.debug_mode)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
         
         else:
-            move_type = StandardMove(self.board)
+            move_type = StandardMove(self.board, debug_mode= self.debug_mode)
             move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
             
         
@@ -53,5 +55,5 @@ class Game:
             return move
         else:
             print("INCORRECT MOVE FORMAT:", move)
-            return self.board.find_moves(self.board.snakes[self.board.get_self_id()].get_head())
-            # return "up"
+            # return self.board.find_moves(self.board.snakes[self.board.get_self_id()].get_head())
+            return "up"
