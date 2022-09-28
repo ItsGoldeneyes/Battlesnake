@@ -1,5 +1,5 @@
-from move_scripts.standard_move import StandardMove
-from move_scripts.wrapped_move import WrappedMove
+from gamemodes.standard_move import StandardMove
+from gamemodes.wrapped_move import WrappedMove
 from board import Board
 import random
 

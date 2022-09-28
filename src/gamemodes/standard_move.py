@@ -1,4 +1,4 @@
-import move_scripts.standard_functions as funcs
+import gamemodes.standard_functions as funcs
 from algorithms.minimax import Minimax
 
 class StandardMove:

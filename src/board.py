@@ -108,7 +108,9 @@ class Board:
             if -1 == move["y"] or move["y"] >= self.height:
                 # print(" -- Vertical Wall collision")
                 return True
-        
+        else:
+            move = self.wrap_fix(move)
+            
         # 2. Check snake
         if move in self.get_snake_collision(snake_id):
                 # print(" -- Snake collision:", snake_id)
@@ -240,15 +242,15 @@ class Board:
         self.dead_snakes = dict(dead_snakes)
             
             
-    def wrap_fix(self, moves):
-        for move in moves:
-            if moves[move]["x"] >= self.width:
-                moves[move]["x"] = moves[move]["x"] - self.width
-            elif moves[move]["x"] < 0:
-                moves[move]["x"] = moves[move]["x"] + self.width
-                
-            if moves[move]["y"] >= self.height:
-                moves[move]["y"] = moves[move]["y"] - self.height
-            elif moves[move]["y"] < 0:
-                moves[move]["y"] = moves[move]["y"] + self.height
-        return moves
+    def wrap_fix(self, move):
+        if move["x"] >= self.width:
+            move["x"] = move["x"] - self.width
+        elif move["x"] < 0:
+            move["x"] = move["x"] + self.width
+            
+        if move["y"] >= self.height:
+            move["y"] = move["y"] - self.height
+        elif move["y"] < 0:
+            move["y"] = move["y"] + self.height
+            
+        return move

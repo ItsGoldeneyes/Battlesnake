@@ -5,15 +5,16 @@ from iteration_utilities import unique_everseen
 
 class Minimax:
     
-    def __init__(self, eval_func, debug_mode=False):
+    def __init__(self, eval_func, gamemode= 'standard', debug_mode=False):
         self.eval_func = eval_func
+        self.gamemode = gamemode
         self.debug_mode = debug_mode
         
     def minimax(self, board, snake, depth):
         eval_state = self.eval_func(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
-                       if board.collision_check(potential_moves[move], snake.get_id(), board)==False}
+                       if board.collision_check(potential_moves[move], snake.get_id(), self.gamemode)==False}
         eval_new_state = []
         
         is_self = snake.get_id() == board.get_self_id()
