@@ -1,4 +1,4 @@
-from wrapped.minimax_wrp import Minimax
+from algorithms.minimax import Minimax
 
 class WrappedMove:
     def __init__(self, board):

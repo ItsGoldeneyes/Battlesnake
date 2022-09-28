@@ -1,4 +1,5 @@
-from standard.minimax_std import Minimax
+from algorithms.minimax import Minimax
+from move_scripts.standard_move import standard_eval
 
 class StandardMove:
     def __init__(self, board, debug_mode):
