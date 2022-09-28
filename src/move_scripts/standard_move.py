@@ -1,5 +1,5 @@
+import move_scripts.standard_functions as funcs
 from algorithms.minimax import Minimax
-from move_scripts.standard_move import standard_eval
 
 class StandardMove:
     def __init__(self, board, debug_mode):
@@ -7,7 +7,7 @@ class StandardMove:
         self.board = board
 
     def choose_move(self, self_snake, depth = 2):
-        mm = Minimax()
-        move = mm.minimax(self.board, self_snake, depth, self.debug_mode)
+        mm = Minimax(funcs.standard_eval, self.debug_mode)
+        move = mm.minimax(self.board, self_snake, depth, )
         print(move)
         return move[0]

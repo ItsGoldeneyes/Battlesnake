@@ -1,5 +1,20 @@
 
-def evaluate_state(self, board, snake, debug_mode = False): 
+def wrapped_eval(board, snake): 
+    # Creating functions needed for evaluation
+    
+    def bucket_food_dist(score, board, max= 50, bc= 10):
+        max_score = max
+        bucket_count = bc
+        
+        width = board.get_width()
+        height = board.get_height()
+        diagonal = width+height
+
+        for bucket_num in range(1,bucket_count+1):
+            if score <=(diagonal/bucket_count)*bucket_num:
+                return max_score/bucket_num
+        return 0
+    
     # TODO: Minus score for collision unless it's a safe head to head, prioritize winning
     
         # Get moves where snake survives
@@ -20,7 +35,7 @@ def evaluate_state(self, board, snake, debug_mode = False):
     # Increase score for health
     if 95 <= snake.get_health() <= 100:
         score += 1
-    # score += self.bucket_health(snake.get_health(), 2)
+    # score += bucket_health(snake.get_health(), 2)
     
     # Increase score for distance to food based on health
     if board.has_food() == True:
@@ -35,7 +50,7 @@ def evaluate_state(self, board, snake, debug_mode = False):
             elif food_dist < 3:
                 score += 0.5
             else:
-                score += self.bucket_food_dist(food_dist, board, max= 0.5)
+                score += bucket_food_dist(food_dist, board, max= 0.5)
                 
         elif snake.get_health() < 30:
             # if food_dist == 0: # or snake.get_head() == board.recently_removed_food:
@@ -44,7 +59,7 @@ def evaluate_state(self, board, snake, debug_mode = False):
             if food_dist < (board.width/board.height)/5:
                 score += (1/int(food_dist))
             else:
-                score += self.bucket_food_dist(food_dist, board, max= 1)
+                score += bucket_food_dist(food_dist, board, max= 1)
                 
         # Increase food score if not largest length
         if board.relative_length(snake.get_id()) != 0:
@@ -53,7 +68,7 @@ def evaluate_state(self, board, snake, debug_mode = False):
             elif food_dist < 10:
                 score += (1/int(food_dist))
             else:
-                score += self.bucket_food_dist(food_dist, board, max= 1)
+                score += bucket_food_dist(food_dist, board, max= 1)
     
     
     # Increase or decrease if move is possible move of other snake
@@ -74,27 +89,3 @@ def evaluate_state(self, board, snake, debug_mode = False):
     
     return score
 
-def bucket_food_dist(self, score, board, max= 50, bc= 10):
-    max_score = max
-    bucket_count = bc
-    
-    width = board.get_width()
-    height = board.get_height()
-    diagonal = width+height
-
-    for bucket_num in range(1,bucket_count+1):
-        if score <=(diagonal/bucket_count)*bucket_num:
-            return max_score/bucket_num
-    return 0
-
-def bucket_health(self, health, max= 50, bc= 10):
-    max_score = max
-    bucket_count = bc
-    
-    max_health = 100
-    
-    for bucket_num in range(1, bucket_count+1):
-        if health <= (max_health/bucket_count)*bucket_num:
-            return (max_score/bucket_count)*bucket_num
-        
-    return 0

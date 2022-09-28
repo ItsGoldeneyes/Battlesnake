@@ -1,5 +1,5 @@
 
-def standard_eval(board, snake, debug_mode = False): 
+def standard_eval(board, snake): 
     # Creating functions needed for evaluation
     
     def bucket_food_dist(score, board, max= 50, bc= 10):
@@ -13,18 +13,6 @@ def standard_eval(board, snake, debug_mode = False):
         for bucket_num in range(1,bucket_count+1):
             if score <=(diagonal/bucket_count)*bucket_num:
                 return max_score/bucket_num
-        return 0
-
-    def bucket_health(health, max= 50, bc= 10):
-        max_score = max
-        bucket_count = bc
-        
-        max_health = 100
-        
-        for bucket_num in range(1, bucket_count+1):
-            if health <= (max_health/bucket_count)*bucket_num:
-                return (max_score/bucket_count)*bucket_num
-            
         return 0
     
     # TODO: Minus score for collision unless it's a safe head to head, prioritize winning
@@ -101,27 +89,3 @@ def standard_eval(board, snake, debug_mode = False):
     
     return score
 
-def bucket_food_dist(self, score, board, max= 50, bc= 10):
-    max_score = max
-    bucket_count = bc
-    
-    width = board.get_width()
-    height = board.get_height()
-    diagonal = width+height
-
-    for bucket_num in range(1,bucket_count+1):
-        if score <=(diagonal/bucket_count)*bucket_num:
-            return max_score/bucket_num
-    return 0
-
-def bucket_health(self, health, max= 50, bc= 10):
-    max_score = max
-    bucket_count = bc
-    
-    max_health = 100
-    
-    for bucket_num in range(1, bucket_count+1):
-        if health <= (max_health/bucket_count)*bucket_num:
-            return (max_score/bucket_count)*bucket_num
-        
-    return 0

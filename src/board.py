@@ -123,19 +123,6 @@ class Board:
         return False
     
     
-    def collision_check_wrapped(self, move, snake_id= False):
-        # 2. Check snake
-        if move in self.get_snake_collision(snake_id):
-                # print(" -- Snake collision")
-                return True
-        
-        # 3. Check hazards
-        if move in self.hazards:
-            # print(" -- Hazard collision")
-            return True
-        return False
-    
-    
     def print_board(self):
         board_array = [[] for i in range(self.height)]
         for y_pos in range(self.height):
@@ -160,6 +147,7 @@ class Board:
                 print(elem, end=" ")
             print("")
             # print(col)
+         
             
     def find_moves(self, position):
         return {
