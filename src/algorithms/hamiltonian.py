@@ -1,7 +1,3 @@
-from board import Board
-from snake import BattleSnake
-
-
 class Hamiltonian:
     
     def generate_linear_hamiltonian(self, board):
@@ -81,11 +77,4 @@ class Hamiltonian:
             return "right"
         
         return ""
-    
-    # def choose_move(self):
-    #     position = self.get_head()
-    #     move = self.get_hamiltonian_move(position)
-    #     print(position, move)
-    #     return move
-        
         
