@@ -1,7 +1,6 @@
 from gamemodes.standard_move import StandardMove
 from gamemodes.wrapped_move import WrappedMove
 from board import Board
-import random
 
 
 class Game:
