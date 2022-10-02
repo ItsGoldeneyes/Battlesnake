@@ -4,6 +4,11 @@ from board import Board
 
 
 class Game:
+    '''
+    This class is a Game object that contains all the information about a game.
+    Not much logic is done here aside from choosing the game type each turn.
+    It contains the active board as well as the map and rules.
+    '''
     def __init__(self, data, debug_mode= False):
         self.debug_mode = debug_mode
         
