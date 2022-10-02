@@ -1,4 +1,5 @@
 from algorithms.minimax import Minimax
+import gamemodes.wrapped_functions as funcs
 
 class WrappedMove:
     '''
