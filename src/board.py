@@ -68,9 +68,9 @@ class Board:
         return {snake.get_id(): snake for snake in self.snakes.values() if snake.id != snake_id}
     
     
-    def near_head(self, snake_1, snake_2):
+    def near_head(self, pos, snake_2):
         snake_2_possible = self.find_moves(self.snakes[snake_2].get_head())
-        if self.snakes[snake_1].get_head() in list(snake_2_possible.values()):
+        if pos in list(snake_2_possible.values()):
             return True
         return False
         
