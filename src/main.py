@@ -15,8 +15,8 @@ games = {}
 @app.get("/")
 def handle_info():
     """
-    This function is called when you register your Battlesnake on play.battlesnake.com
-    See https://docs.battlesnake.com/guides/getting-started#step-4-register-your-battlesnake
+    This function is called when the snake is registered on play.battlesnake.com.
+    It is also called when the snake's status is checked before a game.
     """
     print("INFO", flush=True)
     print(games)
@@ -32,9 +32,8 @@ def handle_info():
 @app.post("/start")
 def handle_start():
     """
-    This function is called everytime your Battlesnake enters a game.
-    It's purely for informational purposes, you don't have to make any decisions here.
-    request.json contains information about the game that's about to be played.
+    This function is called every time a game is started.
+    A "Game" object is created and stored in the games variable.
     """
     
     data = request.get_json()
@@ -50,8 +49,9 @@ def handle_start():
 @app.post("/move")
 def handle_move():
     """
-    This function is called on every turn and is how your Battlesnake decides where to move.
-    Valid moves are "up", "down", "left", or "right".
+    This function is where move logic is held.
+    Each turn, this function is called and the Battlesnake calculates a move.
+    It also contains a failsafe to recreate a game in case the snake restarts during a game.
     """
     data = request.get_json()
     gameid = data["game"]["id"]
@@ -71,8 +71,8 @@ def handle_move():
 @app.post("/end")
 def handle_end():
     """
-    This function is called when a game your Battlesnake was in has ended.
-    It's purely for informational purposes, you don't have to make any decisions here.
+    This function is called when a game the Battlesnake was in has ended.
+    The "Game" object is removed from the games dictionary.
     """
     data = request.get_json()
     games.pop(data["game"]["id"])
@@ -95,4 +95,4 @@ if __name__ == "__main__":
 
     print(f"\nRunning Battlesnake server at http://{host}:{port}", flush=True)
     # app.env = 'development'
-    app.run(host=host, port=port, debug=True)
+    app.run(host=host, port=port, debug=DEBUG_MODE)

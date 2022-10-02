@@ -5,7 +5,11 @@ from copy import deepcopy, copy
 
 
 class Board:
-    
+    '''
+    This class represents a standard board in a game of BattleSnake
+    It contains the attributes of the board (eg. width, height, hazards, food, etc.)
+    The snakes in a game are also stored in this object.
+    '''
     def __init__(self, data):
         self.data = data
         self.board = data["board"]
@@ -44,10 +48,7 @@ class Board:
         return self.food
     
     def get_snakes(self):
-        return self.snakes 
-    
-    def get_kills(self):
-        return self.kill_count
+        return self.snakes
     
     def get_self_id(self):
         return self.data["you"]["id"]
@@ -67,6 +68,18 @@ class Board:
     def get_other_snakes(self, snake_id):
         return {snake.get_id(): snake for snake in self.snakes.values() if snake.id != snake_id}
     
+    def wrap_fix(self, move):
+        if move["x"] >= self.width:
+            move["x"] = move["x"] - self.width
+        elif move["x"] < 0:
+            move["x"] = move["x"] + self.width
+
+        if move["y"] >= self.height:
+            move["y"] = move["y"] - self.height
+        elif move["y"] < 0:
+            move["y"] = move["y"] + self.height
+
+        return move
     
     def near_head(self, pos, snake_2):
         snake_2_possible = self.find_moves(self.snakes[snake_2].get_head())
@@ -220,7 +233,6 @@ class Board:
         self.snakes = {snake: self.snakes[snake].update(self) for snake in self.snakes}
         new_snakes = deepcopy(self.snakes)
         dead_snakes = deepcopy(self.dead_snakes)
-        self.kill_count = 0
         for snake_id in self.snakes:
             
             if new_snakes[snake_id].get_head() in self.food:
@@ -234,7 +246,6 @@ class Board:
                         if self.snakes[snake_id].get_length() < self.snakes[head_snake_id].get_length():
                             dead_snakes[snake_id] = new_snakes[snake_id]
                             new_snakes.pop(snake_id)
-                            self.kill_count = self.kill_count + 1
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 

@@ -1,5 +1,8 @@
 class Hamiltonian:
-    
+    '''
+    This class contains a very rudimentary implementation of a Hamiltonian cycle.
+    It is meant for a solo game on a rectangular map and has no collision detection.
+    '''
     def generate_linear_hamiltonian(self, board):
         height = board.get_height()
         width = board.get_width()

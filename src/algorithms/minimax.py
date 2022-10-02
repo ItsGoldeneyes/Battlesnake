@@ -4,7 +4,14 @@ from iteration_utilities import unique_everseen
 
 
 class Minimax:
+    '''
+    This function is a Minimax implementation for a game with multiple players.
+    The function evaluates for the main snake, then lets the enemy snakes choose their moves.
+    After the enemy snakes have chosen their move, the "self snake" chooses the option that maximizes their score.
+    This repeats until depth is reached.
     
+    The evaluation function as well as gamemode are passed in through the constructor.
+    '''
     def __init__(self, eval_func, gamemode= 'standard', debug_mode=False):
         self.eval_func = eval_func
         self.gamemode = gamemode
@@ -15,6 +22,10 @@ class Minimax:
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id(), self.gamemode)==False}
+        if self.gamemode == 'wrapped':
+            temp_moves = {move : board.wrap_fix(alive_moves[move]) for move in alive_moves}
+            alive_moves = temp_moves
+        
         eval_new_state = []
         
         is_self = snake.get_id() == board.get_self_id()
@@ -27,6 +38,7 @@ class Minimax:
         
         if is_self:
             best_move = ["FALSE", -math.inf]
+            self_eval = False
             for move in alive_moves:
                 if self.debug_mode:
                     print("\n___________________ ")
@@ -46,8 +58,11 @@ class Minimax:
                         
                         enemy_potential_moves = new_board.find_moves(enemy_snake.get_head())
                         new_board.move(snake_id, enemy_potential_moves[snake_move[0]])
-                
-                # If not self, just eval and return
+                        # if alive_moves[move] in snake.get_body():
+                        #     self_eval = -100
+
+                # if not self_eval:
+                #     self_eval = self.eval_func(new_board, move_snake)
                 
                 # Scoring to be evaluated, is before board update so that food evaluation works
                 self_eval = self.eval_func(new_board, move_snake)
@@ -98,7 +113,7 @@ class Minimax:
         if best_move[0] == "FALSE":
             print("BEST MOVE FALSE")
             print("ALIVE MOVES:", alive_moves)
-            best_move = ["up", eval_state]
+            best_move = ["up", -100]
         else:
             best_move[1] = best_move[1] + eval_state
         

@@ -2,6 +2,10 @@ import gamemodes.standard_functions as funcs
 from algorithms.minimax import Minimax
 
 class StandardMove:
+    '''
+    This class handles standard BattleSnake turns.
+    choose_move is called to kick off a move calculation
+    '''
     def __init__(self, board, debug_mode):
         self.debug_mode = debug_mode
         self.board = board

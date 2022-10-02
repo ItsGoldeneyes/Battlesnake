@@ -1,7 +1,14 @@
 
+'''
+This file contains useful functions for a standard BattleSnake game.
+
+'''
+
 def standard_eval(board, snake): 
-    # Creating functions needed for evaluation
-    
+    '''
+    This function is the standard evaluation function.
+    It takes a board and a snake and returns the evaluation for that snake.
+    '''
     def bucket_food_dist(score, board, max= 50, bc= 10):
         max_score = max
         bucket_count = bc
@@ -10,21 +17,21 @@ def standard_eval(board, snake):
         height = board.get_height()
         diagonal = width+height
 
-        for bucket_num in range(1,bucket_count+1):
+        for bucket_num in range(1, bucket_count+1):
             if score <=(diagonal/bucket_count)*bucket_num:
                 return max_score/bucket_num
         return 0
     
     # Get moves where snake survives
-    potential_moves = board.find_moves(snake.get_head())
-    alive_moves = {move : potential_moves[move] for move in potential_moves 
-                    if board.collision_check(potential_moves[move], snake.get_id())==False}
+    # potential_moves = board.find_moves(snake.get_head())
+    # alive_moves = {move : potential_moves[move] for move in potential_moves 
+    #                 if board.collision_check(potential_moves[move], snake.get_id())==False}
     
     if board.collision_check(snake.get_head(), snake.get_id()):
         return -100
     
-    if len(alive_moves) == 0:
-        return -100
+    # if len(alive_moves) == 0:
+    #     return -100
 
     # if board.near_tail(snake.get_head()):
     #     return -20
@@ -63,7 +70,6 @@ def standard_eval(board, snake):
             else:
                 score += bucket_food_dist(food_dist, board, max= 0.5)
     
-    
     # Increase or decrease if move is possible move of other snake
     # for enemy_snake_id in board.get_other_snakes(snake.get_id()):
     #     if board.near_head(position, enemy_snake_id):
@@ -71,15 +77,7 @@ def standard_eval(board, snake):
     #         #     score += 0 #0.5
     #         # else:
     #        # print("true")
-    #         score -= 5
-            
-    
-    # score -= (enemy_near_count * 100)
-        
-    # Decrease score for number of enemies
-    # kill_value = 100
-    # other_snakes = board.get_other_snakes(snake.get_id())
-    # score -= len(other_snakes)*kill_value            
+    #         score -= 5   
     
     return score
 

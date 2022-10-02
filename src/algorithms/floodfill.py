@@ -1,4 +1,9 @@
 class floodfill:
+    '''
+    This class contains a floodfill function.
+    This function checks the available area for a given move. 
+    It seems to be very inefficient, I haven't put much into it.
+    '''
     def __init__(self):
         self.accessed = []
         
