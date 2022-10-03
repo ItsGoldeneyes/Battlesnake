@@ -72,8 +72,8 @@ def wrapped_eval(board, snake):
             else:
                 score += bucket_food_dist(food_dist, board, max= 0.5)
     
-    if len(board.snakes) == 1:
-        score += 1
+    # if len(board.snakes) == 1:
+    #     score += 1
     
     return score
 
