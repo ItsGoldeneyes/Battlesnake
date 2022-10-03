@@ -11,7 +11,7 @@ class WrappedMove:
         self.board = board
 
     def choose_move(self, self_snake, depth = 2):
-        mm = Minimax(funcs.wrapped_eval, 'wrapped', self.debug_mode)
+        mm = Minimax(funcs.wrapped_eval, gamemode= 'wrapped', debug_mode= self.debug_mode)
         move = mm.minimax(self.board, self_snake, depth)
         print(move)
         return move[0]
