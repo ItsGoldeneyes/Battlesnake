@@ -93,6 +93,11 @@ class Board:
             if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
                 return True
             
+    def on_tail(self, pos):
+        for snake_id in self.snakes:
+            if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
+                return True
+            
             
     def get_snake_collision(self, id= False):
         # if id:

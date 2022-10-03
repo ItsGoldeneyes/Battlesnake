@@ -22,6 +22,7 @@ class Minimax:
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id(), self.gamemode)==False}
+        
         if self.gamemode == 'wrapped':
             temp_moves = {move : board.wrap_fix(alive_moves[move]) for move in alive_moves}
             alive_moves = temp_moves
