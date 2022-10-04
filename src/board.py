@@ -70,14 +70,14 @@ class Board:
     
     def wrap_fix(self, move):
         if move["x"] >= self.width-1:
-            move["x"] = move["x"] - self.width
+            move["x"] = move["x"] - (self.width-1)
         elif move["x"] < 0:
-            move["x"] = move["x"] + self.width
+            move["x"] = move["x"] + (self.width-1)
 
         if move["y"] >= self.height-1:
-            move["y"] = move["y"] - self.height
+            move["y"] = move["y"] - (self.width-1)
         elif move["y"] < 0:
-            move["y"] = move["y"] + self.height
+            move["y"] = move["y"] + (self.width-1)
 
         return move
     
