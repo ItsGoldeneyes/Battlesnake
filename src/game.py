@@ -49,7 +49,7 @@ class Game:
             if len(self.board.snakes) < 3:
                 # print('Wrapped move')
                 move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+                move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 4)
             else:
                 move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
                 move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
