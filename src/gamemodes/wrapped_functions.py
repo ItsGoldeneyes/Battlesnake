@@ -29,7 +29,7 @@ def wrapped_eval(board, snake):
     
     if board.collision_check(snake.get_head(), snake.get_id()):
         if board.on_tail(snake.get_head()):
-            return 0.5
+            return -0.5
         return -100
     
     # if len(alive_moves) == 0:
