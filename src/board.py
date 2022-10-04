@@ -69,12 +69,12 @@ class Board:
         return {snake.get_id(): snake for snake in self.snakes.values() if snake.id != snake_id}
     
     def wrap_fix(self, move):
-        if move["x"] >= self.width:
+        if move["x"] >= self.width-1:
             move["x"] = move["x"] - self.width
         elif move["x"] < 0:
             move["x"] = move["x"] + self.width
 
-        if move["y"] >= self.height:
+        if move["y"] >= self.height-1:
             move["y"] = move["y"] - self.height
         elif move["y"] < 0:
             move["y"] = move["y"] + self.height
