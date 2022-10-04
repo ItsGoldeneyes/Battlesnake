@@ -18,7 +18,6 @@ class Minimax:
         self.debug_mode = debug_mode
         
     def minimax(self, board, snake, depth):
-        eval_state = self.eval_func(board, snake)
         potential_moves = board.find_moves(snake.get_head())
         alive_moves = {move : potential_moves[move] for move in potential_moves 
                        if board.collision_check(potential_moves[move], snake.get_id(), self.gamemode)==False}
@@ -115,6 +114,7 @@ class Minimax:
             print("ALIVE MOVES:", alive_moves)
             best_move = ["up", -100]
         else:
-            best_move[1] = best_move[1] + eval_state
+            best_move[1] = best_move[1] + self.eval_func(board, snake)
+
         
         return best_move
