@@ -6,7 +6,7 @@ from flask import request
 
 from game import Game
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 app = Flask(__name__)
 
