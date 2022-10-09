@@ -172,8 +172,8 @@ class Board:
         return {
             "up": {"x": position['x'], "y": position['y']+1},
             "down": {"x": position['x'], "y": position['y']-1},
-            "right": {"x": position['x']+1, "y": position['y']},
-            "left": {"x": position['x']-1, "y": position['y']}
+            "left": {"x": position['x']-1, "y": position['y']},
+            "right": {"x": position['x']+1, "y": position['y']}
         }
        
        

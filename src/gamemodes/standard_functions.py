@@ -8,6 +8,8 @@ def standard_eval(board, snake_id):
     '''
     This function is the standard evaluation function.
     It takes a board and a snake and returns the evaluation for that snake.
+    
+    TODO: Separate head collisions from self + wall. Hazards separate as well for battle royale
     '''
     
     # def bucket_food_dist(score, board, max= 50, bc= 10):
