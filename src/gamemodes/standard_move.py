@@ -1,5 +1,5 @@
 import gamemodes.standard_functions as funcs
-from algorithms.minimax import Minimax
+from algorithms.minimax import minimax
 
 class StandardMove:
     '''
@@ -11,7 +11,10 @@ class StandardMove:
         self.board = board
 
     def choose_move(self, self_snake, depth = 2):
-        mm = Minimax(funcs.standard_eval, self.debug_mode)
-        move = mm.minimax(self.board, self_snake, depth, )
-        print(move)
-        return move[0]
+        
+        mm = minimax(eval_function= funcs.standard_eval,
+                           debug_mode= self.debug_mode)
+        mm_score = mm(self.board, depth)
+        
+        print(mm_score)
+        return mm_score[0]
