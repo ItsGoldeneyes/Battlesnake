@@ -28,7 +28,7 @@ def wrapped_eval(board, snake_id):
     
     snake = board.get_snake(snake_id)
     
-    if board.collision_check(snake.get_head(), snake.get_id(), 'wrapped'):
+    if board.collision_check(snake.get_head(), snake_id, 'wrapped'):
         return -100
     
     # Get moves where snake survives
