@@ -20,6 +20,7 @@ class Board:
         self.food = self.board["food"]
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
+        
         self.dead_snakes = {}
         self.recently_removed_food = {}
     
@@ -46,6 +47,9 @@ class Board:
         
     def get_food(self):
         return self.food
+    
+    def get_snake(self, snake_id):
+        return self.snakes[snake_id]
     
     def get_snakes(self):
         return self.snakes
@@ -100,24 +104,19 @@ class Board:
             
             
     def get_snake_collision(self, id= False):
-        # if id:
-        #     print("get snake collision:", id)
         snakes_hitbox = []
         for snake_id in self.snakes:
             snakes_hitbox.extend(self.snakes[snake_id].get_body())
         if id:
             if self.snakes[id].get_head() in snakes_hitbox:
-                # print("PRE-REMOVE")
-                # print(snakes_hitbox)
-                # print("REMOVE:", self.snakes[id].get_head())
                 snakes_hitbox.remove(self.snakes[id].get_head())
-        # print(snakes_hitbox)
         return snakes_hitbox
     
     
     def collision_check(self, move, snake_id, gamemode= 'standard'):
         # print("MOVE:",move)
         # 1. Check board borders
+        # print(move)
         if gamemode != 'wrapped':
             if -1 == move["x"] or move["x"] >= self.width:
                 # print(" -- Horizontal Wall collision")
@@ -173,8 +172,8 @@ class Board:
         return {
             "up": {"x": position['x'], "y": position['y']+1},
             "down": {"x": position['x'], "y": position['y']-1},
-            "right": {"x": position['x']+1, "y": position['y']},
-            "left": {"x": position['x']-1, "y": position['y']}
+            "left": {"x": position['x']-1, "y": position['y']},
+            "right": {"x": position['x']+1, "y": position['y']}
         }
        
        

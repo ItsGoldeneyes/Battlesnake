@@ -1,4 +1,4 @@
-from algorithms.minimax import Minimax
+from algorithms.minimax import minimax
 import gamemodes.wrapped_functions as funcs
 
 class WrappedMove:
@@ -11,7 +11,9 @@ class WrappedMove:
         self.board = board
 
     def choose_move(self, self_snake, depth = 2):
-        mm = Minimax(funcs.wrapped_eval, gamemode= 'wrapped', debug_mode= self.debug_mode)
-        move = mm.minimax(self.board, self_snake, depth)
-        print(move)
-        return move[0]
+        mm = minimax(eval_function= funcs.wrapped_eval,
+                           debug_mode= self.debug_mode)
+        mm_score = mm(self.board, depth)
+        
+        print(mm_score)
+        return mm_score[0]

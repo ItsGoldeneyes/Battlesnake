@@ -37,26 +37,16 @@ class Game:
             self.board.print_board()
         
         if self.rules == "standard":
-            if len(self.board.snakes) < 3:
-                # print('Standard move')
-                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
-            else:
                 move_type = StandardMove(self.board, debug_mode= self.debug_mode)
                 move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
         elif self.rules == "wrapped":
-            if len(self.board.snakes) < 3:
-                # print('Wrapped move')
-                move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
-            else:
                 move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
                 move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
             
         elif self.rules == "solo":
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 3)
+            move = move_type.choose_move(self.board.snakes[self.board.get_self_id()], depth= 2)
         
         else:
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
