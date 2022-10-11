@@ -13,7 +13,8 @@ class WrappedMove:
     def choose_move(self, depth = 2):
         
         mm = minimax(eval_function= funcs.wrapped_eval,
-                           debug_mode= self.debug_mode)
+                     gamemode= 'wrapped',
+                     debug_mode= self.debug_mode)
         mm_score = mm(self.board, depth)
         
         print(mm_score)
