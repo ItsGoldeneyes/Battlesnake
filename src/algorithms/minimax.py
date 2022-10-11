@@ -49,11 +49,14 @@ class minimax:
             print("LEAF NODE", self.eval_func(board, board.get_self_id()))
             return ['leaf', self.eval_func(board, board.get_self_id())]
         
-        if board.collision_check(board.get_snake(snake_id).get_head(), snake_id):
+        snakes = board.get_snakes()
+        
+        if snake_id not in snakes:
+            return ["collision", -100]
+        if board.collision_check(snakes[snake_id].get_head(), snake_id):
             return ["collision", -100]
         
         # print("SNAKE:",snake_id)
-        snakes = board.get_snakes()
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
         
