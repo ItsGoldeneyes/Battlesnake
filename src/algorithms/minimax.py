@@ -12,7 +12,6 @@ class minimax:
         self.gamemode = gamemode
         self.debug_mode = debug_mode
         
-        
     
     def __call__(self, board, depth= 3, snake_id= False):
         if snake_id:
@@ -20,6 +19,7 @@ class minimax:
         else:
             minimax_score = self._minimax(board.get_self_id(), board, depth)
         return minimax_score
+    
     
     def dict_next_key(self, dictionary, key):
         '''
@@ -31,7 +31,7 @@ class minimax:
         ik = dict()
         for i, k in enumerate(dictionary):
             ki[k] = i   # dictionary index_of_key
-            ik[i] = k     # dictionary key_of_index
+            ik[i] = k   # dictionary key_of_index
         
         # initializing offset
         offset = 1  # (1 for next key, but can be any existing distance)
@@ -43,40 +43,47 @@ class minimax:
         
         return result
     
+    
     def _minimax(self, snake_id, board, depth):
         if depth == 0:
             print("LEAF NODE", self.eval_func(board, board.get_self_id()))
-            return ['leaf', self.eval_func(board, board.get_self_id())] # Add collision to eval_func
+            return ['leaf', self.eval_func(board, board.get_self_id())]
         
-        print(snake_id)
+        if board.collision_check(board.get_snake(snake_id).get_head(), snake_id):
+            return ["collision", -100]
+        
+        # print("SNAKE:",snake_id)
         snakes = board.get_snakes()
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
         
+        move_scores = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
+        
+        for move in potential_moves:
+            if self.debug_mode:
+                print("\n___________________ ")
+                print("\n" + snake_id, move, "board")
+                
+            move_board = copy.deepcopy(board)
+            move_board.move(snake_id, potential_moves[move])
+            move_board.update_board_after_move() # Make more efficient
+            if self.debug_mode:
+                move_board.print_board()
+                
+            move_scores[move] = self._minimax(next_snake_id, move_board, depth-1)[1]
+        if self.debug_mode:
+            print(depth, snake_id, move_scores)
+        
         if snake_id == board.get_self_id():
-            best_move = ['Error', -math.inf] # Will return if no possible moves
-            
-            for move in potential_moves:
-                    move_board = copy.deepcopy(board)
-                    move_board.move(snake_id, potential_moves[move])
-
-                    move_score = self._minimax(next_snake_id, move_board, depth-1)
-                    
-                    if move_score[1] > best_move[1]:
-                        best_move = [move, move_score[1]]
+            #best_move = ['Error', -math.inf] # Will return if no possible moves
+            best_key = max(move_scores, key=move_scores.get)
+            best_move = [best_key, move_scores[best_key]]
             
             return best_move
 
         else:
-            best_move = ['Error', math.inf] # Will return if no possible moves
-            
-            for move in potential_moves:
-                    move_board = copy.deepcopy(board)
-                    move_board.move(snake_id, potential_moves[move])
+            #best_move = ['Error', math.inf] # Will return if no possible moves
+            best_key = min(move_scores, key=move_scores.get)
+            best_move = [best_key, move_scores[best_key]]
 
-                    move_score = self._minimax(next_snake_id, move_board, depth-1)
-                    
-                    if move_score[1] < best_move[1]:
-                        best_move = [move, move_score[1]]
-            
             return best_move

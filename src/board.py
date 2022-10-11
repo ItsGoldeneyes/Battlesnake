@@ -116,14 +116,14 @@ class Board:
     def collision_check(self, move, snake_id, gamemode= 'standard'):
         # print("MOVE:",move)
         # 1. Check board borders
-        print(move)
+        # print(move)
         if gamemode != 'wrapped':
             if -1 == move["x"] or move["x"] >= self.width:
-                print(" -- Horizontal Wall collision")
+                # print(" -- Horizontal Wall collision")
                 return True
             
             if -1 == move["y"] or move["y"] >= self.height:
-                print(" -- Vertical Wall collision")
+                # print(" -- Vertical Wall collision")
                 return True
         else:
             move = self.wrap_fix(move)

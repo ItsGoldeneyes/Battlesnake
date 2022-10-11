@@ -1,4 +1,3 @@
-
 '''
 This file contains useful functions for a standard BattleSnake game.
 
