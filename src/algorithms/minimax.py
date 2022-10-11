@@ -59,6 +59,10 @@ class minimax:
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
         
+        if self.gamemode == 'wrapped':
+            temp_moves = {move : board.wrap_fix(potential_moves[move]) for move in potential_moves}
+            potential_moves = temp_moves
+            
         move_scores = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
         
         for move in potential_moves:
