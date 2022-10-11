@@ -54,18 +54,18 @@ def wrapped_eval(board, snake_id):
             if food_dist == 0:
                 score += 1
             elif food_dist < (board.width/board.height)/5:
-                score += (0.9/int(food_dist))
+                score += (0.5/int(food_dist))
             else:
-                score += bucket_food_dist(food_dist, board, max= 0.5)
+                score += bucket_food_dist(food_dist, board, max= 0.3)
                 
         # Increase food score if not largest length
         if board.relative_length(snake.get_id()) != 0:
             if food_dist == 0:
                 score += 1
             elif food_dist < 10:
-                score += (0.9/int(food_dist))
+                score += (0.3/int(food_dist))
             else:
-                score += bucket_food_dist(food_dist, board, max= 0.5)
+                score += bucket_food_dist(food_dist, board, max= 0.3)
     
     # Increase or decrease if move is possible move of other snake
     # for enemy_snake_id in board.get_other_snakes(snake.get_id()):
