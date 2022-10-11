@@ -10,7 +10,8 @@ def standard_eval(board, snake_id):
     
     TODO: Separate head collisions from self + wall. Hazards separate as well for battle royale
     '''
-    
+    if snake_id not in board.get_snakes():
+        return -100
     # def bucket_food_dist(score, board, max= 50, bc= 10):
         
     #     max_score = max
