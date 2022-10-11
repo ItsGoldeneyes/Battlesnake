@@ -1,3 +1,4 @@
+from iteration_utilities import unique_everseen
 import copy
 import math
 
@@ -52,6 +53,13 @@ class minimax:
         
         if snake_id not in snakes:
             return ["collision", -100]
+    
+        # Body is doubled up on first turn
+        if board.turn == 1:
+            board.snakes[snake_id].body = list(unique_everseen(snakes[snake_id].get_body()))
+            snakes = board.get_snakes()
+            
+        
         if board.collision_check(snakes[snake_id].get_head(), snake_id):
             return ["collision", -100]
         
