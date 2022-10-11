@@ -11,8 +11,7 @@ def wrapped_eval(board, snake_id):
     TODO: Separate head collisions from self + wall. Hazards separate as well for battle royale
     incentivize murder
     '''
-    if snake_id not in board.get_snakes():
-        return -100
+    
     def bucket_food_dist(score, board, max= 50, bc= 10):
         
         max_score = max
@@ -27,6 +26,9 @@ def wrapped_eval(board, snake_id):
                 return max_score/bucket_num
         return 0
     
+    if snake_id not in board.get_snakes():
+        return -100
+    
     snake = board.get_snake(snake_id)
     
     if board.collision_check(snake.get_head(), snake_id):
@@ -37,8 +39,8 @@ def wrapped_eval(board, snake_id):
     position = snake.get_head()
     
     # Increase score for health
-    if 95 <= snake.get_health() <= 100:
-        score += 1
+    # if 95 <= snake.get_health() <= 100:
+    #     score += 1
     # # score += bucket_health(snake.get_health(), 2)
     
     # Increase score for distance to food based on health
@@ -66,12 +68,12 @@ def wrapped_eval(board, snake_id):
                 score += bucket_food_dist(food_dist, board, max= 0.5)
     
     # Increase or decrease if move is possible move of other snake
-    for enemy_snake_id in board.get_other_snakes(snake.get_id()):
-        if board.near_head(position, enemy_snake_id):
-            # if snake.get_length() > board.snakes[enemy_snake_id].get_length():
-            #     score += 0 #0.5
-            # else:
-           # print("true")
-            score -= 5   
+    # for enemy_snake_id in board.get_other_snakes(snake.get_id()):
+    #     if board.near_head(position, enemy_snake_id):
+    #         # if snake.get_length() > board.snakes[enemy_snake_id].get_length():
+    #         #     score += 0 #0.5
+    #         # else:
+    #        # print("true")
+    #         score -= 5   
     return score
 
