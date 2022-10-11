@@ -10,7 +10,7 @@ class StandardMove:
         self.debug_mode = debug_mode
         self.board = board
 
-    def choose_move(self, self_snake, depth = 2):
+    def choose_move(self, depth = 2):
         
         mm = minimax(eval_function= funcs.standard_eval,
                            debug_mode= self.debug_mode)
