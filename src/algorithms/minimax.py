@@ -46,7 +46,6 @@ class minimax:
     
     def _minimax(self, snake_id, board, depth):
         if depth == 0:
-            print("LEAF NODE", self.eval_func(board, board.get_self_id()))
             return ['leaf', self.eval_func(board, board.get_self_id())]
         
         snakes = board.get_snakes()
