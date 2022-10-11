@@ -9,6 +9,7 @@ def standard_eval(board, snake_id):
     It takes a board and a snake and returns the evaluation for that snake.
     
     TODO: Separate head collisions from self + wall. Hazards separate as well for battle royale
+    incentivize murder
     '''
     if snake_id not in board.get_snakes():
         return -100
