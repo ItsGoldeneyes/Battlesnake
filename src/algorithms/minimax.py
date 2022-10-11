@@ -1,3 +1,4 @@
+from iteration_utilities import unique_everseen
 import copy
 import math
 
@@ -51,7 +52,13 @@ class minimax:
         snakes = board.get_snakes()
         
         if snake_id not in snakes:
-            return ["collision", -100]
+            return ["snakenotfound", -100]
+    
+        # Body is doubled up on first turn
+        if board.turn == 0:
+            board.snakes[snake_id].body = list(unique_everseen(snakes[snake_id].get_body()))
+            snakes = board.get_snakes()
+        
         if board.collision_check(snakes[snake_id].get_head(), snake_id):
             return ["collision", -100]
         
@@ -59,6 +66,10 @@ class minimax:
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
         
+        if self.gamemode == 'wrapped':
+            temp_moves = {move : board.wrap_fix(potential_moves[move]) for move in potential_moves}
+            potential_moves = temp_moves
+            
         move_scores = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
         
         for move in potential_moves:

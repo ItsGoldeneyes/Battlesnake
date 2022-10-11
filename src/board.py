@@ -15,7 +15,7 @@ class Board:
         self.board = data["board"]
         self.width = self.board["width"]
         self.height = self.board["height"]
-        
+        self.turn = self.data["turn"]
         self.hazards = self.board["hazards"]
         self.food = self.board["food"]
         
