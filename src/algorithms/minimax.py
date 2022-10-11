@@ -55,8 +55,7 @@ class minimax:
             return ["snakenotfound", -100]
     
         # Body is doubled up on first turn
-        print(board.turn, flush=True)
-        if board.turn == 1:
+        if board.turn == 0:
             board.snakes[snake_id].body = list(unique_everseen(snakes[snake_id].get_body()))
             snakes = board.get_snakes()
         
