@@ -52,13 +52,13 @@ class minimax:
         snakes = board.get_snakes()
         
         if snake_id not in snakes:
-            return ["collision", -100]
+            return ["snakenotfound", -100]
     
         # Body is doubled up on first turn
+        print(board.turn, flush=True)
         if board.turn == 1:
             board.snakes[snake_id].body = list(unique_everseen(snakes[snake_id].get_body()))
             snakes = board.get_snakes()
-            
         
         if board.collision_check(snakes[snake_id].get_head(), snake_id):
             return ["collision", -100]
