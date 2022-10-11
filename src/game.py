@@ -38,15 +38,15 @@ class Game:
         
         if self.rules == "standard":
                 move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(depth= 3)
+                move = move_type.choose_move(depth= 2)
         
         elif self.rules == "wrapped":
                 move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(depth= 3)
+                move = move_type.choose_move(depth= 2)
             
         elif self.rules == "solo":
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 3)
+            move = move_type.choose_move(depth= 2)
         
         else:
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
