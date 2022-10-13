@@ -16,9 +16,9 @@ class minimax:
     
     def __call__(self, board, depth= 3, snake_id= False):
         if snake_id:
-            minimax_score = self._minimax(snake_id, board, depth)
+            minimax_score = self._minimax(snake_id, board, depth, alpha= -1000, beta= 1000)
         else:
-            minimax_score = self._minimax(board.get_self_id(), board, depth)
+            minimax_score = self._minimax(board.get_self_id(), board, depth, alpha= -1000, beta= 1000)
         return minimax_score
     
     
@@ -45,7 +45,7 @@ class minimax:
         return result
     
     
-    def _minimax(self, snake_id, board, depth):
+    def _minimax(self, snake_id, board, depth, alpha, beta):
         if depth == 0:
             return ['leaf', self.eval_func(board, board.get_self_id())]
         
@@ -72,29 +72,52 @@ class minimax:
             
         move_scores = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
         
-        for move in potential_moves:
-            if self.debug_mode:
-                print("\n___________________ ")
-                print("\n" + snake_id, move, "board")
-                
-            move_board = copy.deepcopy(board)
-            move_board.move(snake_id, potential_moves[move])
-            move_board.update_board_after_move() # Make more efficient
-            if self.debug_mode:
-                move_board.print_board()
-                
-            move_scores[move] = self._minimax(next_snake_id, move_board, depth-1)[1]
-        if self.debug_mode:
-            print(depth, snake_id, move_scores)
-        
         if snake_id == board.get_self_id():
-            #best_move = ['Error', -math.inf] # Will return if no possible moves
+            for move in potential_moves:
+                if self.debug_mode:
+                    print("\n___________________ ")
+                    print("\n" + snake_id, move, "board")
+                    
+                move_board = copy.deepcopy(board)
+                move_board.move(snake_id, potential_moves[move])
+                move_board.update_board_after_move() # Make more efficient
+                if self.debug_mode:
+                    move_board.print_board()
+                    
+                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
+                alpha = max(alpha, move_scores[move])
+                if move_scores[move] >= beta:
+                    break
+                
+            if self.debug_mode:
+                print(depth, snake_id, move_scores)
+                
+            # best_move = ['Error', -math.inf] # Will return if no possible moves
             best_key = max(move_scores, key=move_scores.get)
             best_move = [best_key, move_scores[best_key]]
             
             return best_move
 
         else:
+            for move in potential_moves:
+                if self.debug_mode:
+                    print("\n___________________ ")
+                    print("\n" + snake_id, move, "board")
+                    
+                move_board = copy.deepcopy(board)
+                move_board.move(snake_id, potential_moves[move])
+                move_board.update_board_after_move() # Make more efficient
+                if self.debug_mode:
+                    move_board.print_board()
+                    
+                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
+                beta = min(beta, move_scores[move])
+                if move_scores[move] <= alpha:
+                    break
+                
+            if self.debug_mode:
+                print(depth, snake_id, move_scores)
+                
             #best_move = ['Error', math.inf] # Will return if no possible moves
             best_key = min(move_scores, key=move_scores.get)
             best_move = [best_key, move_scores[best_key]]
