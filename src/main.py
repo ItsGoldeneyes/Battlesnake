@@ -7,6 +7,10 @@ import os
 
 from game import Game
 
+print(os.getenv('DEBUG_MODE', False))
+print(os.getenv('MOVE_MODE', False))
+print(os.getenv('TIMING_MODE', False))
+
 DEBUG_MODE = bool(os.getenv('DEBUG_MODE', False))
 MOVE_MODE = bool(os.getenv('MOVE_MODE', False))
 TIMING_MODE = bool(os.getenv('TIMING_MODE', False))
