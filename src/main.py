@@ -7,9 +7,9 @@ import os
 
 from game import Game
 
-DEBUG_MODE = bool(os.getenv('DATABASE_URL', False))
-MOVE_MODE = bool(os.getenv('DATABASE_URL', False))
-TIMING_MODE = bool(os.getenv('DATABASE_URL', False))
+DEBUG_MODE = bool(os.getenv('DEBUG_MODE', False))
+MOVE_MODE = bool(os.getenv('MOVE_MODE', False))
+TIMING_MODE = bool(os.getenv('TIMING_MODE', False))
 
 app = Flask(__name__)
 
