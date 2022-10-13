@@ -16,9 +16,9 @@ class minimax:
     
     def __call__(self, board, depth= 3, snake_id= False):
         if snake_id:
-            minimax_score = self._minimax(snake_id, board, depth, alpha= -1000, beta= 1000)
+            minimax_score = self._minimax(snake_id, board, depth, alpha= -math.inf, beta= math.inf)
         else:
-            minimax_score = self._minimax(board.get_self_id(), board, depth, alpha= -1000, beta= 1000)
+            minimax_score = self._minimax(board.get_self_id(), board, depth, alpha= -math.inf, beta= math.inf)
         return minimax_score
     
     
