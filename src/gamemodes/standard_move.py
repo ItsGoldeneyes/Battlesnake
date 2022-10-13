@@ -16,5 +16,4 @@ class StandardMove:
                            debug_mode= self.debug_mode)
         mm_score = mm(self.board, depth)
         
-        print(mm_score)
         return mm_score[0]
