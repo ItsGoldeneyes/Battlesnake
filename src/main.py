@@ -15,6 +15,10 @@ DEBUG_MODE = bool(os.getenv('DEBUG_MODE', False))
 MOVE_MODE = bool(os.getenv('MOVE_MODE', False))
 TIMING_MODE = bool(os.getenv('TIMING_MODE', False))
 
+print(DEBUG_MODE)
+print(MOVE_MODE)
+print(TIMING_MODE)
+
 app = Flask(__name__)
 
 games = {}
