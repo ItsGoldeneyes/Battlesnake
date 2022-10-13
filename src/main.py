@@ -76,7 +76,7 @@ def handle_move():
         if TIMING_MODE:
             turn_end = datetime.utcnow()
             turn_duration = turn_end - turn_start
-            print(f" DURATION  {turn_duration.total_seconds()*1000}")
+            print(f" DURATION {turn_duration.total_seconds()*1000}")
     
     return {"move": move, "shout": ""}
 
