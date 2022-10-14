@@ -1,5 +1,4 @@
 from datetime import datetime
-from decouple import config
 from flask import request
 from flask import Flask
 import logging
@@ -7,13 +6,9 @@ import os
 
 from game import Game
 
-DEBUG_MODE = os.getenv('DEBUG_MODE', False)=="True"
-MOVE_MODE = os.getenv('MOVE_MODE', False)=="True"
-TIMING_MODE = os.getenv('TIMING_MODE', False)=="True"
-
-print(DEBUG_MODE)
-print(MOVE_MODE)
-print(TIMING_MODE)
+DEBUG_MODE = os.getenv('DEBUG_MODE', "True")=="True"
+MOVE_MODE = os.getenv('MOVE_MODE', "False")=="True"
+TIMING_MODE = os.getenv('TIMING_MODE', "False")=="True"
 
 app = Flask(__name__)
 
@@ -43,7 +38,7 @@ def handle_start():
     This function is called every time a game is started.
     A "Game" object is created and stored in the games variable.
     """
-    
+    print("")
     data = request.get_json()
     new_game = Game(data, debug_mode= DEBUG_MODE)
     game = {new_game.get_id() : new_game}

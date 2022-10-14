@@ -76,7 +76,7 @@ class minimax:
             for move in potential_moves:
                 if self.debug_mode:
                     print("\n___________________ ")
-                    print("\n" + snake_id, move, "board")
+                    print("\n" + "MY_SNAKE", move, "board")
                     
                 move_board = copy.deepcopy(board)
                 move_board.move(snake_id, potential_moves[move])
@@ -102,7 +102,7 @@ class minimax:
             for move in potential_moves:
                 if self.debug_mode:
                     print("\n___________________ ")
-                    print("\n" + snake_id, move, "board")
+                    print("\n" + "OTHER_SNAKE", move, "board")
                     
                 move_board = copy.deepcopy(board)
                 move_board.move(snake_id, potential_moves[move])

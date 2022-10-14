@@ -11,7 +11,8 @@ def wrapped_eval(board, snake_id):
     TODO: Separate head collisions from self + wall. Hazards separate as well for battle royale
     incentivize murder
     '''
-    
+    if snake_id not in board.get_snakes():
+        return -100
     def bucket_food_dist(score, board, max= 50, bc= 10):
         
         max_score = max
@@ -26,12 +27,16 @@ def wrapped_eval(board, snake_id):
                 return max_score/bucket_num
         return 0
     
-    if snake_id not in board.get_snakes():
-        return -100
-    
     snake = board.get_snake(snake_id)
+    snake_pos = snake.get_head()
     
-    if board.collision_check(snake.get_head(), snake_id):
+    if board.head_collision_check(snake_pos, snake_id):
+        return -50
+    
+    if board.body_collision_check(snake_pos, snake_id):
+        return -100
+
+    if board.hazard_collision_check(snake_pos, snake_id):
         return -100
 
     # Base score
