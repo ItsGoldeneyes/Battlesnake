@@ -1,13 +1,14 @@
 from iteration_utilities import unique_everseen
+from multiprocessing import Pool
 import copy
 import math
 
-from board import Board
-from snake import BattleSnake
-
-
-
-class minimax:    
+class minimax:
+    '''
+    This function is a Minimax implementation for a game with multiple players.
+    The evaluation function as well as gamemode are passed in through the constructor.
+    Run Minimax by calling the object
+    '''
     def __init__(self, eval_function, gamemode= 'standard', debug_mode=False):
         self.eval_func = eval_function
         self.gamemode = gamemode
