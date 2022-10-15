@@ -131,7 +131,7 @@ class Board:
         # Get head collisions and check if move is in it
         other_snakes = self.get_other_snakes(snake_id)
         heads = [other_snakes[id].get_head() for id in other_snakes.keys() 
-                 if other_snakes[id].get_length() > other_snakes[snake_id].get_length()]
+                 if other_snakes[id].get_length() > self.snakes[snake_id].get_length()]
         if move in heads:
             return True
         return False
