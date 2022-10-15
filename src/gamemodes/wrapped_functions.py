@@ -52,7 +52,7 @@ def wrapped_eval(board, snake_id):
     if board.has_food() == True:
         food_dist = board.food_dist(position)
         # print("Food dist:",food_dist)
-        if 98 <= snake.get_health() <= 100:
+        if 95 <= snake.get_health() <= 100:
             score += 1
             
         elif snake.get_health() < 30:
