@@ -103,7 +103,7 @@ class minimax:
                 print(depth, snake_id, move_scores)
                 
             best_key = max(move_scores, key=move_scores.get)
-            best_move = [best_key, move_scores[best_key]]
+            best_move = [best_key, move_scores[best_key]+0.1]
             
             return best_move
 
@@ -129,6 +129,6 @@ class minimax:
                 print(depth, snake_id, move_scores)
                 
             best_key = min(move_scores, key=move_scores.get)
-            best_move = [best_key, move_scores[best_key]]
+            best_move = [best_key, move_scores[best_key]+0.1]
 
             return best_move
