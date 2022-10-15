@@ -25,7 +25,6 @@ class minimax:
     def dict_next_key(self, dictionary, key):
         '''
         Taken from https://www.geeksforgeeks.org/python-get-next-key-in-dictionary/
-        O(1)
         '''
         # prepare additional dictionaries
         ki = dict()
@@ -49,8 +48,10 @@ class minimax:
         if depth == 0:
             return ['leaf', self.eval_func(board, board.get_self_id())]
         
+        # Get snakes early, cleaning  up code
         snakes = board.get_snakes()
         
+        # If snake was removed for some reason
         if snake_id not in snakes:
             return ["snakenotfound", -100]
     
@@ -59,13 +60,14 @@ class minimax:
             board.snakes[snake_id].body = list(unique_everseen(snakes[snake_id].get_body()))
             snakes = board.get_snakes()
         
+        # If collision, terminate branch
         if board.collision_check(snakes[snake_id].get_head(), snake_id):
             return ["collision", -100]
         
-        # print("SNAKE:",snake_id)
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
         
+        # Apply "wrap fix" to moves, wrapping offscreen moves across the board
         if self.gamemode == 'wrapped':
             temp_moves = {move : board.wrap_fix(potential_moves[move]) for move in potential_moves}
             potential_moves = temp_moves
@@ -77,7 +79,8 @@ class minimax:
                 if self.debug_mode:
                     print("\n___________________ ")
                     print("\n" + "MY_SNAKE", move, "board")
-                    
+                
+                # Copy board and move snake on new board
                 move_board = copy.deepcopy(board)
                 move_board.move(snake_id, potential_moves[move])
                 move_board.update_board_after_move() # Make more efficient
@@ -92,7 +95,6 @@ class minimax:
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
                 
-            # best_move = ['Error', -math.inf] # Will return if no possible moves
             best_key = max(move_scores, key=move_scores.get)
             best_move = [best_key, move_scores[best_key]]
             
@@ -103,7 +105,8 @@ class minimax:
                 if self.debug_mode:
                     print("\n___________________ ")
                     print("\n" + "OTHER_SNAKE", move, "board")
-                    
+                
+                # Copy board and move snake on new board
                 move_board = copy.deepcopy(board)
                 move_board.move(snake_id, potential_moves[move])
                 move_board.update_board_after_move() # Make more efficient
@@ -118,7 +121,6 @@ class minimax:
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
                 
-            #best_move = ['Error', math.inf] # Will return if no possible moves
             best_key = min(move_scores, key=move_scores.get)
             best_move = [best_key, move_scores[best_key]]
 

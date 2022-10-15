@@ -98,35 +98,6 @@ class Board:
         return snakes_hitbox
     
     
-    def collision_check(self, move, snake_id):
-        # print("MOVE:",move)
-        # 1. Check board borders
-        # print(move)
-        if self.gamemode != 'wrapped':
-            if -1 == move["x"] or move["x"] >= self.width:
-                # print(" -- Horizontal Wall collision")
-                return True
-            
-            if -1 == move["y"] or move["y"] >= self.height:
-                # print(" -- Vertical Wall collision")
-                return True
-        else:
-            move = self.wrap_fix(move)
-            
-        # 2. Check snake
-        if move in self.get_snake_collision(snake_id):
-                # print(" -- Snake collision:", snake_id)
-                return True
-        
-        # 3. Check hazards
-        if self.gamemode != 'royale':
-            if move in self.hazards:
-                # print(" -- Hazard collision")
-                return True
-            
-        return False
-    
-    
     def head_collision_check(self, move, snake_id):
         # Get head collisions and check if move is in it
         other_snakes = self.get_other_snakes(snake_id)
@@ -171,6 +142,18 @@ class Board:
             return True
         return False
     
+    def collision_check(self, move, snake_id):
+        
+        if self.head_collision_check(move, snake_id):
+            return True
+        if self.body_collision_check(move, snake_id):
+            return True
+        if self.wall_collision_check(move):
+            return True
+        if self.hazard_collision_check(move):
+            return True
+            
+        return False
     
     def print_board(self):
         board_array = [[] for i in range(self.height)]
