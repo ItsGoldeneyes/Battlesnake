@@ -36,7 +36,7 @@ def wrapped_eval(board, snake_id):
     if board.body_collision_check(snake_pos, snake_id):
         return -100
 
-    if board.hazard_collision_check(snake_pos, snake_id):
+    if board.hazard_collision_check(snake_pos):
         return -100
 
     # Base score
