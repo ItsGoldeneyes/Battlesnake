@@ -142,7 +142,8 @@ class Board:
         heads = [other_snakes[id].get_head() for id in other_snakes.keys()]
         bodies = [self.snakes[id].get_body() for id in self.snakes.keys()]
         for head in heads:
-            bodies.remove(head)
+            if head in bodies:
+                bodies.remove(head)
             
         if move in bodies:
             return True
