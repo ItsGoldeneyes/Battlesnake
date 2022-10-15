@@ -54,6 +54,10 @@ class minimax:
         # If snake was removed for some reason
         if snake_id not in snakes:
             return ["snakenotfound", -100]
+        
+        # If snake was removed for some reason
+        if board.get_self_id() not in snakes:
+            return ["snakenotfound", -100]
     
         # Body is doubled up on first turn
         if board.turn == 0:
