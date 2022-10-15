@@ -16,9 +16,9 @@ class minimax:
     
     def __call__(self, board, depth= 3, snake_id= False):
         if snake_id:
-            minimax_score = self._minimax(snake_id, board, depth, alpha= -math.inf, beta= math.inf)
+            minimax_score = self._minimax(snake_id, board, depth)
         else:
-            minimax_score = self._minimax(board.get_self_id(), board, depth, alpha= -math.inf, beta= math.inf)
+            minimax_score = self._minimax(board.get_self_id(), board, depth)
         return minimax_score
     
     
@@ -44,7 +44,7 @@ class minimax:
         return result
     
     
-    def _minimax(self, snake_id, board, depth, alpha, beta):
+    def _minimax(self, snake_id, board, depth, alpha= -math.inf, beta= math.inf):
         if depth == 0:
             return ['leaf', self.eval_func(board, board.get_self_id())]
         
@@ -52,11 +52,11 @@ class minimax:
         snakes = board.get_snakes()
         
         # If snake was removed for some reason
-        if snake_id not in snakes:
+        if board.get_self_id() not in snakes:
             return ["snakenotfound", -100]
         
         # If snake was removed for some reason
-        if board.get_self_id() not in snakes:
+        if snake_id not in snakes:
             return ["snakenotfound", -100]
     
         # Body is doubled up on first turn
@@ -66,7 +66,10 @@ class minimax:
         
         # If collision, terminate branch
         if board.collision_check(snakes[board.get_self_id()].get_head(), board.get_self_id()):
-            return ["collision", -100]
+            eval = self.eval_func(board, board.get_self_id())
+            if eval > 0:
+                pass
+            return ["collision", eval]
         
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
