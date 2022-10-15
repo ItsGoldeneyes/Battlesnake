@@ -108,14 +108,19 @@ class Board:
         return False
     
     
-    def body_collision_check(self, move, snake_id):
-        other_snakes = self.get_other_snakes(snake_id)
-        heads = [other_snakes[id].get_head() for id in other_snakes.keys()]
-        bodies = [self.snakes[id].get_body() for id in self.snakes.keys()]
+    def body_collision_check(self, move):
+        heads = [self.snakes[id].get_head() for id in self.snakes.keys()]
+        bodies = []
+        for id in self.snakes.keys():
+            bodies.extend(self.snakes[id].get_body())
+        # print(move)
+        # print("bodies",bodies)
+        # print("heads",heads)
         for head in heads:
             if head in bodies:
                 bodies.remove(head)
-            
+        
+        # print(move in bodies)
         if move in bodies:
             return True
         return False
@@ -146,7 +151,7 @@ class Board:
         
         if self.head_collision_check(move, snake_id):
             return True
-        if self.body_collision_check(move, snake_id):
+        if self.body_collision_check(move):
             return True
         if self.wall_collision_check(move):
             return True

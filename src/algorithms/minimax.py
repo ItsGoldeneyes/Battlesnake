@@ -61,7 +61,7 @@ class minimax:
             snakes = board.get_snakes()
         
         # If collision, terminate branch
-        if board.collision_check(snakes[snake_id].get_head(), snake_id):
+        if board.collision_check(snakes[board.get_self_id()].get_head(), snake_id):
             return ["collision", -100]
         
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
@@ -77,7 +77,7 @@ class minimax:
         if snake_id == board.get_self_id():
             for move in potential_moves:
                 if self.debug_mode:
-                    print("\n___________________ ")
+                    print("\n"+"_____"*depth)
                     print("\n" + "MY_SNAKE", move, "board")
                 
                 # Copy board and move snake on new board
@@ -103,7 +103,7 @@ class minimax:
         else:
             for move in potential_moves:
                 if self.debug_mode:
-                    print("\n___________________ ")
+                    print("\n"+"_____"*depth)
                     print("\n" + "OTHER_SNAKE", move, "board")
                 
                 # Copy board and move snake on new board
