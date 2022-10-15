@@ -1,16 +1,19 @@
+from datetime import datetime
+from flask import request
+from flask import Flask
 import logging
 import os
 
-from flask import Flask
-from flask import request
-
 from game import Game
 
-DEBUG_MODE = False
+DEBUG_MODE = os.getenv('DEBUG_MODE', "True")=="True"
+MOVE_MODE = os.getenv('MOVE_MODE', "False")=="True"
+TIMING_MODE = os.getenv('TIMING_MODE', "False")=="True"
 
 app = Flask(__name__)
 
 games = {}
+start_times = {}
 
 @app.get("/")
 def handle_info():
@@ -35,14 +38,17 @@ def handle_start():
     This function is called every time a game is started.
     A "Game" object is created and stored in the games variable.
     """
-    
+    print("")
     data = request.get_json()
     new_game = Game(data, debug_mode= DEBUG_MODE)
     game = {new_game.get_id() : new_game}
     games.update(game)
     
-    print(f"{data['game']['id']} START", flush=True)
-    print(f"{data['game']['id']} RULES {new_game.get_rules()}")
+    if TIMING_MODE:
+        start_times[data['game']['id']] = datetime.utcnow()
+            
+    print(f"START {data['game']['id']}")
+    print(f"RULES {data['game']['id']} {new_game.get_rules()}", flush=True)
     return "ok"
 
 
@@ -53,6 +59,7 @@ def handle_move():
     Each turn, this function is called and the Battlesnake calculates a move.
     It also contains a failsafe to recreate a game in case the snake restarts during a game.
     """
+    turn_start = datetime.utcnow()
     data = request.get_json()
     gameid = data["game"]["id"]
     if gameid in games: 
@@ -62,7 +69,13 @@ def handle_move():
         game = {new_game.get_id() : new_game}
         games.update(game)
         move = games[gameid].turn(data)
-    print(f"{gameid} MOVE {move}", flush=True)
+        
+    if MOVE_MODE:
+        print(f"MOVE {move}", end="", flush=True)
+        if TIMING_MODE:
+            turn_end = datetime.utcnow()
+            turn_duration = turn_end - turn_start
+            print(f" DURATION {turn_duration.total_seconds()*1000}")
     
     return {"move": move, "shout": ""}
 
@@ -74,10 +87,18 @@ def handle_end():
     This function is called when a game the Battlesnake was in has ended.
     The "Game" object is removed from the games dictionary.
     """
+    if TIMING_MODE:
+        game_end = datetime.utcnow()
+        
     data = request.get_json()
     games.pop(data["game"]["id"])
     
-    print(f"{data['game']['id']} END")
+    print(f"END  {data['game']['id']}")
+    
+    if TIMING_MODE:
+        game_time = game_end - start_times[data["game"]["id"]]
+        print(f"-- Game took: {game_time.total_seconds()} seconds")
+    
     return "ok"
 
 

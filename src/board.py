@@ -19,6 +19,8 @@ class Board:
         self.hazards = self.board["hazards"]
         self.food = self.board["food"]
         
+        self.gamemode = self.data["game"]["ruleset"]["name"]
+        
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
         
         self.dead_snakes = {}
@@ -84,23 +86,6 @@ class Board:
             move["y"] = move["y"] + (self.width-1)
 
         return move
-    
-    def near_head(self, pos, snake_2):
-        snake_2_possible = self.find_moves(self.snakes[snake_2].get_head())
-        if pos in list(snake_2_possible.values()):
-            return True
-        return False
-        
-        
-    def near_tail(self, pos):
-        for snake_id in self.snakes:
-            if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
-                return True
-            
-    def on_tail(self, pos):
-        for snake_id in self.snakes:
-            if self.point_distance(self.snakes[snake_id].get_body()[-1], pos) <= 1:
-                return True
             
             
     def get_snake_collision(self, id= False):
@@ -113,34 +98,67 @@ class Board:
         return snakes_hitbox
     
     
-    def collision_check(self, move, snake_id, gamemode= 'standard'):
-        # print("MOVE:",move)
-        # 1. Check board borders
-        # print(move)
-        if gamemode != 'wrapped':
-            if -1 == move["x"] or move["x"] >= self.width:
-                # print(" -- Horizontal Wall collision")
-                return True
-            
-            if -1 == move["y"] or move["y"] >= self.height:
-                # print(" -- Vertical Wall collision")
-                return True
-        else:
-            move = self.wrap_fix(move)
-            
-        # 2. Check snake
-        if move in self.get_snake_collision(snake_id):
-                # print(" -- Snake collision:", snake_id)
-                return True
-        
-        # 3. Check hazards
-        if gamemode != 'royale':
-            if move in self.hazards:
-                # print(" -- Hazard collision")
-                return True
-            
+    def head_collision_check(self, move, snake_id):
+        # Get head collisions and check if move is in it
+        other_snakes = self.get_other_snakes(snake_id)
+        heads = [other_snakes[id].get_head() for id in other_snakes.keys() 
+                 if other_snakes[id].get_length() > self.snakes[snake_id].get_length()]
+        if move in heads:
+            return True
         return False
     
+    
+    def body_collision_check(self, move):
+        heads = [self.snakes[id].get_head() for id in self.snakes.keys()]
+        bodies = []
+        for id in self.snakes.keys():
+            bodies.extend(self.snakes[id].get_body())
+        # print(move)
+        # print("bodies",bodies)
+        # print("heads",heads)
+        for head in heads:
+            if head in bodies:
+                bodies.remove(head)
+        
+        # print(move in bodies)
+        if move in bodies:
+            return True
+        return False
+    
+    
+    def wall_collision_check(self, move):
+        # Check for wall collision
+        if self.gamemode == "wrapped":
+            return False
+        
+        if -1 == move["x"] or move["x"] >= self.width:
+            # print(" -- Horizontal Wall collision")
+            return True
+        
+        if -1 == move["y"] or move["y"] >= self.height:
+            # print(" -- Vertical Wall collision")
+            return True
+        return False
+
+
+    def hazard_collision_check(self, move):
+        # Check for hazard collisions
+        if move in self.hazards:
+            return True
+        return False
+    
+    def collision_check(self, move, snake_id):
+        
+        if self.head_collision_check(move, snake_id):
+            return True
+        if self.body_collision_check(move):
+            return True
+        if self.wall_collision_check(move):
+            return True
+        if self.hazard_collision_check(move):
+            return True
+            
+        return False
     
     def print_board(self):
         board_array = [[] for i in range(self.height)]
