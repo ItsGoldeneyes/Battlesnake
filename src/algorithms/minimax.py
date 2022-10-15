@@ -88,9 +88,9 @@ class minimax:
                     move_board.print_board()
                     
                 move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
-                # if move_scores[move] >= beta:
-                #     break
-                # alpha = max(alpha, move_scores[move])
+                if move_scores[move] >= beta:
+                    break
+                alpha = max(alpha, move_scores[move])
                 
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
@@ -114,9 +114,9 @@ class minimax:
                     move_board.print_board()
                     
                 move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
-                # if move_scores[move] <= alpha:
-                #     break
-                # beta = min(beta, move_scores[move])
+                if move_scores[move] <= alpha:
+                    break
+                beta = min(beta, move_scores[move])
                 
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
