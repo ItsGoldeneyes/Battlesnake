@@ -6,9 +6,9 @@ import os
 
 from game import Game
 
-DEBUG_MODE = os.getenv('DEBUG_MODE', "True")=="True"
-MOVE_MODE = os.getenv('MOVE_MODE', "False")=="True"
-TIMING_MODE = os.getenv('TIMING_MODE', "False")=="True"
+DEBUG_MODE = os.getenv('DEBUG_MODE', "False")=="True"
+MOVE_MODE = os.getenv('MOVE_MODE', "True")=="True"
+TIMING_MODE = os.getenv('TIMING_MODE', "True")=="True"
 
 app = Flask(__name__)
 
