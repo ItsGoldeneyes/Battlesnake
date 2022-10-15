@@ -61,7 +61,7 @@ class minimax:
             snakes = board.get_snakes()
         
         # If collision, terminate branch
-        if board.collision_check(snakes[board.get_self_id()].get_head(), snake_id):
+        if board.collision_check(snakes[board.get_self_id()].get_head(), board.get_self_id()):
             return ["collision", -100]
         
         potential_moves  = board.find_moves(snakes[snake_id].get_head())
