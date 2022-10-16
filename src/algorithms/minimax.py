@@ -73,7 +73,7 @@ class minimax:
                 pass
             return ["collision", eval]
         
-        potential_moves  = board.find_moves(snakes[snake_id].get_head())
+        potential_moves  = board.get_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
         
         # Apply "wrap fix" to moves, wrapping offscreen moves across the board

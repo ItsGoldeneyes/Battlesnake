@@ -13,18 +13,17 @@ class Board:
     def __init__(self, data):
         self.data = data
         self.board = data["board"]
+        self.turn = self.data["turn"]
+        self.gamemode = self.data["game"]["ruleset"]["name"]
+        
         self.width = self.board["width"]
         self.height = self.board["height"]
-        self.turn = self.data["turn"]
         self.hazards = self.board["hazards"]
         self.food = self.board["food"]
-        
-        self.gamemode = self.data["game"]["ruleset"]["name"]
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
         
         self.dead_snakes = {}
-        self.recently_removed_food = {}
     
     def __deepcopy__(self, memo):
         id_self = id(self)        # memoization avoids unnecesary recursion
@@ -186,7 +185,7 @@ class Board:
             # print(col)
          
             
-    def find_moves(self, position):
+    def get_moves(self, position):
         return {
             "up": {"x": position['x'], "y": position['y']+1},
             "down": {"x": position['x'], "y": position['y']-1},
@@ -258,7 +257,6 @@ class Board:
         for snake_id in self.snakes:
             
             if new_snakes[snake_id].get_head() in self.food:
-                self.recently_removed_food = new_snakes[snake_id].get_head()
                 self.food.remove(new_snakes[snake_id].get_head())
                 new_snakes[snake_id].health = 100
         
