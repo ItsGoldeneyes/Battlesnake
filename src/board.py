@@ -49,6 +49,9 @@ class Board:
     def get_food(self):
         return self.food
     
+    def get_turn(self):
+        return self.turn
+    
     def get_snake(self, snake_id):
         return self.snakes[snake_id]
     
