@@ -9,10 +9,11 @@ class minimax:
     The evaluation function as well as gamemode are passed in through the constructor.
     Run Minimax by calling the object
     '''
-    def __init__(self, eval_function, gamemode= 'standard', debug_mode=False):
+    def __init__(self, eval_function, gamemode= 'standard', debug_mode=False, alpha_beta=True):
         self.eval_func = eval_function
         self.gamemode = gamemode
         self.debug_mode = debug_mode
+        self.alpha_beta = alpha_beta
         
     
     def __call__(self, board, depth= 3, snake_id= False):
@@ -96,9 +97,10 @@ class minimax:
                     move_board.print_board()
                     
                 move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
-                if move_scores[move] >= beta:
-                    break
-                alpha = max(alpha, move_scores[move])
+                if self.alpha_beta:
+                    if move_scores[move] >= beta:
+                        break
+                    alpha = max(alpha, move_scores[move])
                 
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
@@ -122,9 +124,10 @@ class minimax:
                     move_board.print_board()
                     
                 move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
-                if move_scores[move] <= alpha:
-                    break
-                beta = min(beta, move_scores[move])
+                if self.alpha_beta:
+                    if move_scores[move] <= alpha:
+                        break
+                    beta = min(beta, move_scores[move])
                 
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
