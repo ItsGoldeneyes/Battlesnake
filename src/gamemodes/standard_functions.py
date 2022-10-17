@@ -54,6 +54,7 @@ def standard_eval(board, snake_id):
     # Increase score for distance to food based on health
     if board.has_food() == True:
         food_dist = board.food_dist(position)
+        
         # print("Food dist:",food_dist)
         if 95 <= snake.get_health() <= 100:
             score += 1

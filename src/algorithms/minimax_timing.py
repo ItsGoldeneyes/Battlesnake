@@ -4,7 +4,7 @@ import copy
 import math
 import time
 
-class minimax:
+class minimax_timing:
     '''
     This function is a Minimax implementation for a game with multiple players.
     The evaluation function as well as gamemode are passed in through the constructor.
