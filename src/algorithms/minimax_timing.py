@@ -124,13 +124,13 @@ class minimax:
                 
                 # Copy board and move snake on new board
                 move_board = copy.deepcopy(board)
-                move_board.move(snake_id, potential_moves[move])
                 
                 time_A = time.perf_counter()
                 print("-- creating move_board took", (time_A-time_B)*1000,'ms')
                 
                 time_B = time.perf_counter()
                 
+                move_board.move(snake_id, potential_moves[move])
                 move_board.update_board_after_move() # Make more efficient
                 
                 time_A = time.perf_counter()
