@@ -28,16 +28,20 @@ class Board:
         self.dead_snakes = {}
     
     def __deepcopy__(self, memo):
-        id_self = id(self)        # memoization avoids unnecesary recursion
-        _copy = memo.get(id_self)
-        if _copy is None:
-            _copy = type(self)(
-                deepcopy(self.data, memo))
-            memo[id_self] = _copy
-            _copy.food = deepcopy(self.food)
-            _copy.hazards = deepcopy(self.hazards)
-            _copy.snakes = deepcopy(self.snakes)
-        return _copy
+        self.update_data()
+        return Board(self.data)
+    
+    
+    def update_data(self):
+        data = self.data
+        data['board']['food'] = self.food
+        data['snakes'] = []
+        for snake_id in self.snakes:
+            snake_dict = self.snakes[snake_id].get_info
+            data['snakes'].append(snake_dict)
+        
+        self.data = data
+    
     
     def get_width(self):
         return self.width
@@ -246,6 +250,7 @@ class Board:
             return max_length
     
     def update_board_after_move(self):
+        # self.update_data()
         # Lowers HP, remove dead snakes, remove food
         
         self.snakes = {snake: self.snakes[snake].update(self) for snake in self.snakes}
