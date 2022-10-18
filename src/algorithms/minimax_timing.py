@@ -128,9 +128,11 @@ class minimax_timing:
                 time_A = time.perf_counter()
                 print("-- creating move_board took", (time_A-time_B)*1000,'ms')
                 
-                time_B = time.perf_counter()
-                
                 move_board.move(snake_id, potential_moves[move])
+                
+                time_B = time.perf_counter()
+                print("-- move took", (time_B-time_A)*1000,'ms')
+                
                 move_board.update_board_after_move() # Make more efficient
                 
                 time_A = time.perf_counter()
