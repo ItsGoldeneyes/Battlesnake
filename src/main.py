@@ -1,7 +1,9 @@
 from datetime import datetime
 from flask import request
 from flask import Flask
+from types import SimpleNamespace
 import logging
+import json
 import os
 
 from game import Game
@@ -39,7 +41,10 @@ def handle_start():
     A "Game" object is created and stored in the games variable.
     """
     print("")
-    data = request.get_json()
+    data_json = request.get_json()
+    # Parse JSON into an object with attributes corresponding to dict keys.
+    data = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
+    
     new_game = Game(data, debug_mode= DEBUG_MODE)
     game = {new_game.get_id() : new_game}
     games.update(game)
