@@ -1,8 +1,8 @@
-from datetime import datetime
 from flask import request
 from flask import Flask
 from types import SimpleNamespace
 import logging
+import time
 import json
 import os
 
@@ -44,13 +44,13 @@ def handle_start():
     data_json = request.get_json()
     # Parse JSON into an object with attributes corresponding to dict keys.
     data = json.loads(data_json, object_hook=lambda d: SimpleNamespace(**d))
-    
+    #GOTTA DO THIS NEXT lol
     new_game = Game(data, debug_mode= DEBUG_MODE)
     game = {new_game.get_id() : new_game}
     games.update(game)
     
     if TIMING_MODE:
-        start_times[data['game']['id']] = datetime.utcnow()
+        start_times[data['game']['id']] = time.perf_counter()
             
     print(f"START {data['game']['id']}")
     print(f"RULES {data['game']['id']} {new_game.get_rules()}", flush=True)
@@ -64,7 +64,7 @@ def handle_move():
     Each turn, this function is called and the Battlesnake calculates a move.
     It also contains a failsafe to recreate a game in case the snake restarts during a game.
     """
-    turn_start = datetime.utcnow()
+    turn_start = time.perf_counter()
     data = request.get_json()
     gameid = data["game"]["id"]
     if gameid in games: 
@@ -78,9 +78,9 @@ def handle_move():
     if MOVE_MODE:
         print(f"MOVE {move}", end="", flush=True)
         if TIMING_MODE:
-            turn_end = datetime.utcnow()
+            turn_end = time.perf_counter()
             turn_duration = turn_end - turn_start
-            print(f" DURATION {turn_duration.total_seconds()*1000}")
+            print(f" DURATION {turn_duration*1000}ms")
     
     return {"move": move, "shout": ""}
 
@@ -93,7 +93,7 @@ def handle_end():
     The "Game" object is removed from the games dictionary.
     """
     if TIMING_MODE:
-        game_end = datetime.utcnow()
+        game_end = time.perf_counter()
         
     data = request.get_json()
     games.pop(data["game"]["id"])
@@ -102,7 +102,7 @@ def handle_end():
     
     if TIMING_MODE:
         game_time = game_end - start_times[data["game"]["id"]]
-        print(f"-- Game took: {game_time.total_seconds()} seconds")
+        print(f"-- Game took: {game_time} seconds")
     
     return "ok"
 
