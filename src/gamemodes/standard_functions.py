@@ -47,9 +47,9 @@ def standard_eval(board, snake_id):
     position = snake.get_head()
     
     # Increase score for health
-    # if 95 <= snake.get_health() <= 100:
-    #     score += 1
-    # # score += bucket_health(snake.get_health(), 2)
+    if 90 <= snake.get_health() <= 100:
+        score += 1
+    # score += bucket_health(snake.get_health(), 2)
     
     # Increase score for distance to food based on health
     if board.has_food() == True:
