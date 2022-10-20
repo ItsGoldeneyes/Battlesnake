@@ -88,7 +88,8 @@ class BattleSnake:
         '''
         When a board is updated, this function is called for each snake.
         '''
-        self.head, self.body = board.get_position(self.id)
+        self.body = board.get_position(self.id)
+        self.head = self.body[0]
         self.length = board.get_length(self.id)
         self.health = board.get_health(self.id)
         

@@ -55,10 +55,14 @@ class minimax:
         
         # If snake was removed for some reason
         if board.get_self_id() not in snakes:
+            if self.debug_mode:
+                print("Self snake not found")
             return ["snakenotfound", -100]
         
         # If snake was removed for some reason
         if snake_id not in snakes:
+            if self.debug_mode:
+                print("Current snake not found")
             return ["snakenotfound", -100]
     
         # Body is doubled up on first turn
@@ -68,13 +72,27 @@ class minimax:
         
         # If collision, terminate branch
         if board.collision_check(snakes[board.get_self_id()].get_head(), board.get_self_id()):
+            if self.debug_mode:
+                print("Self collision")
             eval = self.eval_func(board, board.get_self_id())
+            if eval > 0:
+                pass
+            return ["collision", eval]
+        
+        # If collision, terminate branch
+        if board.collision_check(snakes[snake_id].get_head(), snake_id):
+            if self.debug_mode:
+                print("Current collision")
+            eval = self.eval_func(board, snake_id)
             if eval > 0:
                 pass
             return ["collision", eval]
         
         potential_moves  = board.get_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
+        
+        if self.debug_mode:
+            print(potential_moves)
         
         # Apply "wrap fix" to moves, wrapping offscreen moves across the board
         if self.gamemode == 'wrapped':
