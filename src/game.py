@@ -53,7 +53,7 @@ class Game:
             move = move_type.choose_move(depth= 6)
             
         
-        if move[0] in self.possible_moves and move != None:
+        if move[0] in self.possible_moves and move[1] != None:
             return move[0], move[1]
         else:
             print(self.possible_moves)
