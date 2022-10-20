@@ -28,4 +28,4 @@ class WrappedMove:
                 return random.choice(alive_moves)
         
         print(mm_score)
-        return mm_score[0]
+        return mm_score

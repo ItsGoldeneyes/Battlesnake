@@ -26,4 +26,4 @@ class StandardMove:
             else:
                 return random.choice(alive_moves)
         
-        return mm_score[0]
+        return mm_score

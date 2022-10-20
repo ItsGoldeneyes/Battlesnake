@@ -25,8 +25,6 @@ class Board:
         self.self_id = self.data["you"]["id"]
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
-        
-        self.dead_snakes = {}
     
     def __deepcopy__(self, memo):
         # id_self = id(self)        # memoization avoids unnecesary recursion
@@ -269,24 +267,24 @@ class Board:
         
         self.snakes = {snake: self.snakes[snake].update(self) for snake in self.snakes}
         new_snakes = deepcopy(self.snakes)
-        dead_snakes = deepcopy(self.dead_snakes)
+        food_removed = 0
         for snake_id in self.snakes:
             
             if new_snakes[snake_id].get_head() in self.food:
                 self.food.remove(new_snakes[snake_id].get_head())
+                food_removed += 1
                 new_snakes[snake_id].health = 100
         
             if self.collision_check(new_snakes[snake_id].get_head(), snake_id or self.snakes[snake_id].get_health() <= 0):
                 for head_snake_id in self.get_other_snakes(snake_id):
                     if self.snakes[head_snake_id].get_head() == self.snakes[snake_id].get_head():
                         if self.snakes[snake_id].get_length() < self.snakes[head_snake_id].get_length():
-                            dead_snakes[snake_id] = new_snakes[snake_id]
                             new_snakes.pop(snake_id)
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 
         self.snakes = dict(new_snakes)
-        self.dead_snakes = dict(dead_snakes)
+        self.food_removed = food_removed
             
             
     def wrap_fix(self, move):

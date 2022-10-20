@@ -1,5 +1,4 @@
 from iteration_utilities import unique_everseen
-from multiprocessing import Pool
 import copy
 import math
 
@@ -45,10 +44,10 @@ class minimax:
         
         return result
     
-    
-    def _minimax(self, snake_id, board, depth, alpha= -math.inf, beta= math.inf):
+
+    def _minimax(self, snake_id, board, depth, alpha= -math.inf, beta= math.inf, food_count= 0):
         if depth == 0:
-            return ['leaf', self.eval_func(board, board.get_self_id())]
+            return ['leaf', self.eval_func(board, board.get_self_id(), food_count)]
         
         # Get snakes early, cleaning  up code
         snakes = board.get_snakes()
@@ -75,24 +74,11 @@ class minimax:
             if self.debug_mode:
                 print("Self collision")
             eval = self.eval_func(board, board.get_self_id())
-            if eval > 0:
-                pass
-            return ["collision", eval]
-        
-        # If collision, terminate branch
-        if board.collision_check(snakes[snake_id].get_head(), snake_id):
-            if self.debug_mode:
-                print("Current collision")
-            eval = self.eval_func(board, snake_id)
-            if eval > 0:
-                pass
-            return ["collision", eval]
+            if eval < 0:
+                return ["collision", eval]
         
         potential_moves  = board.get_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
-        
-        if self.debug_mode:
-            print(potential_moves)
         
         # Apply "wrap fix" to moves, wrapping offscreen moves across the board
         if self.gamemode == 'wrapped':
@@ -111,10 +97,12 @@ class minimax:
                 move_board = copy.deepcopy(board)
                 move_board.move(snake_id, potential_moves[move])
                 move_board.update_board_after_move() # Make more efficient
+                move_food = move_board.food_removed
                 if self.debug_mode:
+                    print(f"Food eaten: {move_food + food_count}")
                     move_board.print_board()
                     
-                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
+                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta, food_count+move_food)[1]
                 if self.alpha_beta:
                     if move_scores[move] >= beta:
                         break
@@ -141,7 +129,7 @@ class minimax:
                 if self.debug_mode:
                     move_board.print_board()
                     
-                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
+                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta, food_count)[1]
                 if self.alpha_beta:
                     if move_scores[move] <= alpha:
                         break

@@ -63,15 +63,15 @@ def handle_move():
     data = request.get_json()
     gameid = data["game"]["id"]
     if gameid in games: 
-        move = games[gameid].turn(data)
+        move, score = games[gameid].turn(data)
     else:
         new_game = Game(data, debug_mode= DEBUG_MODE)
         game = {new_game.get_id() : new_game}
         games.update(game)
-        move = games[gameid].turn(data)
+        move, score = games[gameid].turn(data)
         
     if MOVE_MODE:
-        print(f"MOVE {move}", end="", flush=True)
+        print(f"MOVE {move} SCORE {score}", end="", flush=True)
         if TIMING_MODE:
             turn_end = time.perf_counter()
             turn_duration = turn_end - turn_start

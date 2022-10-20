@@ -38,24 +38,24 @@ class Game:
         
         if self.rules == "standard":
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
+            move = move_type.choose_move(depth= 7)
         
         elif self.rules == "wrapped":
             move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
+            move = move_type.choose_move(depth= 7)
             
         elif self.rules == "solo":
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
+            move = move_type.choose_move(depth= 7)
         
         else:
             move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
+            move = move_type.choose_move(depth= 7)
             
         
-        if move in self.possible_moves and move != None:
-            return move
+        if move[0] in self.possible_moves and move != None:
+            return move[0], move[1]
         else:
             print("INCORRECT MOVE FORMAT:", move)
             # return self.board.get_moves(self.board.snakes[self.board.get_self_id()].get_head())
-            return "up"
+            return "up", -100
