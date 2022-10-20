@@ -57,6 +57,7 @@ class Game:
             return move[0], move[1]
         else:
             print(self.possible_moves)
-            print(f"INCORRECT MOVE FORMAT:, 'f{move}'")
+            print(move in self.possible_moves)
+            print(f"INCORRECT MOVE FORMAT:, '{move}'")
             # return self.board.get_moves(self.board.snakes[self.board.get_self_id()].get_head())
             return "up", -100
