@@ -72,6 +72,7 @@ class Game:
                 move_type = StandardMove(self.board, debug_mode= self.debug_mode)
                 move = move_type.choose_move(depth= 6)
             
+        print("GAME OUTPUT", move)
         
         if move[0] in self.possible_moves and move[1] != None:
             return move[0], move[1]

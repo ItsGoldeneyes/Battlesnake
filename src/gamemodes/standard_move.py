@@ -18,12 +18,10 @@ class StandardMove:
         mm_score = mm(self.board, depth)
         
         # If given move is a collision, choose random alive move
-        if mm_score[1] < 0:
-            possible_moves = self.board.get_moves(self.board.snakes[self.board.get_self_id()].get_head())
-            alive_moves = [move for move in possible_moves if not self.board.collision_check(possible_moves[move])]
-            if len(alive_moves) == 0:
-                pass
-            else:
-                return [random.choice(alive_moves),-100]
+        possible_moves = self.board.get_moves(self.board.snakes[self.board.get_self_id()].get_head())
+        alive_moves = [move for move in possible_moves if not self.board.collision_check(possible_moves[move])]
         
+        if mm_score[0] not in alive_moves:
+            return [random.choice(alive_moves), -100]
+            
         return mm_score
