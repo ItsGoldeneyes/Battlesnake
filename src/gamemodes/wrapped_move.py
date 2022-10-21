@@ -23,7 +23,7 @@ class WrappedMove:
         alive_moves = [move for move in possible_moves if not self.board.collision_check(possible_moves[move])]
         
         if len(alive_moves) == 0:
-            return [random.choice(possible_moves), -100]
+            return ['up', -100]
         
         if mm_score[0] not in alive_moves:
             return [random.choice(alive_moves), -100]
