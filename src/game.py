@@ -36,24 +36,6 @@ class Game:
         if self.debug_mode:
             self.board.print_board()
         
-        if len(self.board.snakes) == 4:
-        
-            if self.rules == "standard":
-                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(depth= 4)
-            
-            elif self.rules == "wrapped":
-                move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(depth= 4)
-                
-            elif self.rules == "solo":
-                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(depth= 4)
-            
-            else:
-                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-                move = move_type.choose_move(depth= 4)
-                
         if len(self.board.snakes) <= 2:
             
             if self.rules == "standard":
@@ -71,9 +53,24 @@ class Game:
             else:
                 move_type = StandardMove(self.board, debug_mode= self.debug_mode)
                 move = move_type.choose_move(depth= 6)
+                
+        else:
+            if self.rules == "standard":
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
             
-        print("GAME OUTPUT", move)
-        
+            elif self.rules == "wrapped":
+                move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+                
+            elif self.rules == "solo":
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+            
+            else:
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+            
         if move[0] in self.possible_moves and move[1] != None:
             return move[0], move[1]
         else:
