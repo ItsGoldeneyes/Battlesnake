@@ -3,7 +3,7 @@ This file contains useful functions for a standard BattleSnake game.
 
 '''
 
-def standard_eval(board, snake_id): 
+def standard_eval(board, snake_id, food_count= 0): 
     '''
     This function is the standard evaluation function.
     It takes a board and a snake and returns the evaluation for that snake.
@@ -46,32 +46,28 @@ def standard_eval(board, snake_id):
     score = 0
     position = snake.get_head()
     
+    score += food_count
     # Increase score for health
-    # if 95 <= snake.get_health() <= 100:
-    #     score += 1
-    # # score += bucket_health(snake.get_health(), 2)
-    
+    if snake.get_health() > 50:
+        score += 0.2
+            
     # Increase score for distance to food based on health
     if board.has_food() == True:
         food_dist = board.food_dist(position)
-        # print("Food dist:",food_dist)
-        if 95 <= snake.get_health() <= 100:
-            score += 1
-            
-        elif snake.get_health() < 30:
-            if food_dist < (board.width/board.height)/5:
+        
+        if food_dist < (board.get_width()/board.get_height())/5:
+            score += (0.5/int(food_dist))
+        else:
+            score += bucket_food_dist(food_dist, board, max= 0.3)
+                
+        # Increase food score if not largest length
+        if board.relative_length(snake.get_id()) != 0:
+            if food_dist < (board.get_width()/board.get_height())/5:
                 score += (0.5/int(food_dist))
             else:
                 score += bucket_food_dist(food_dist, board, max= 0.3)
                 
-        # Increase food score if not largest length
-        if board.relative_length(snake.get_id()) != 0:
-            if food_dist < 10:
-                score += (0.3/int(food_dist))
-            else:
-                score += bucket_food_dist(food_dist, board, max= 0.3)
-                
-    score -= (len(board.snakes)-1)/5
+    # Decrease score for each enemy snake    
+    score -= (len(board.snakes)-1)/3
     
     return score
-

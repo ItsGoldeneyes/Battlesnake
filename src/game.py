@@ -36,26 +36,43 @@ class Game:
         if self.debug_mode:
             self.board.print_board()
         
-        if self.rules == "standard":
-            move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
-        
-        elif self.rules == "wrapped":
-            move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
+        if len(self.board.snakes) <= 2:
             
-        elif self.rules == "solo":
-            move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
-        
-        else:
-            move_type = StandardMove(self.board, debug_mode= self.debug_mode)
-            move = move_type.choose_move(depth= 4)
+            if self.rules == "standard":
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 6)
             
-        
-        if move in self.possible_moves and move != None:
-            return move
+            elif self.rules == "wrapped":
+                move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 6)
+                
+            elif self.rules == "solo":
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 6)
+            
+            else:
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 6)
+                
         else:
-            print("INCORRECT MOVE FORMAT:", move)
-            # return self.board.find_moves(self.board.snakes[self.board.get_self_id()].get_head())
-            return "up"
+            if self.rules == "standard":
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+            
+            elif self.rules == "wrapped":
+                move_type = WrappedMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+                
+            elif self.rules == "solo":
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+            
+            else:
+                move_type = StandardMove(self.board, debug_mode= self.debug_mode)
+                move = move_type.choose_move(depth= 4)
+            
+        if move[0] in self.possible_moves and move[1] != None:
+            return move[0], move[1]
+        else:
+            print(f"INCORRECT MOVE FORMAT:, '{move}'")
+            return "up", -100

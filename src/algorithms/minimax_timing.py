@@ -1,8 +1,10 @@
 from iteration_utilities import unique_everseen
+from multiprocessing import Pool
 import copy
 import math
+import time
 
-class minimax:
+class minimax_timing:
     '''
     This function is a Minimax implementation for a game with multiple players.
     The evaluation function as well as gamemode are passed in through the constructor.
@@ -13,9 +15,12 @@ class minimax:
         self.gamemode = gamemode
         self.debug_mode = debug_mode
         self.alpha_beta = alpha_beta
+        self.turn = None
         
     
     def __call__(self, board, depth= 3, snake_id= False):
+        self.turn = board.get_turn()
+        
         if snake_id:
             minimax_score = self._minimax(snake_id, board, depth)
         else:
@@ -44,41 +49,55 @@ class minimax:
         
         return result
     
-
-    def _minimax(self, snake_id, board, depth, alpha= -math.inf, beta= math.inf, food_count= 0):
+    
+    def _minimax(self, snake_id, board, depth, alpha= -math.inf, beta= math.inf):
         if depth == 0:
-            return ['leaf', self.eval_func(board, board.get_self_id(), food_count)]
+            return ['leaf', self.eval_func(board, board.get_self_id())]
+        
+        time_A = time.perf_counter()
         
         # Get snakes early, cleaning  up code
         snakes = board.get_snakes()
         
         # If snake was removed for some reason
         if board.get_self_id() not in snakes:
-            if self.debug_mode:
-                print("Self snake not found")
             return ["snakenotfound", -100]
+        
         
         # If snake was removed for some reason
         if snake_id not in snakes:
-            if self.debug_mode:
-                print("Current snake not found")
             return ["snakenotfound", -100]
+        
+        time_B = time.perf_counter()
+        print("snakenotfound took", (time_B-time_A)*1000,'ms')
     
+
         # Body is doubled up on first turn
-        if board.turn == 0:
-            board.snakes[snake_id].body = list(unique_everseen(snakes[snake_id].get_body()))
+        if self.turn == 0:
+            board.snakes[snake_id].body.pop()
             snakes = board.get_snakes()
+        
+        time_A = time.perf_counter()
+        
+        print("turn 1 check took", (time_A-time_B)*1000,'ms')
         
         # If collision, terminate branch
         if board.collision_check(snakes[board.get_self_id()].get_head(), board.get_self_id()):
-            if self.debug_mode:
-                print("Self collision")
             eval = self.eval_func(board, board.get_self_id())
-            if eval < 0:
-                return ["collision", eval]
+            if eval > 0:
+                pass
+            return ["collision", eval]
+        
+        time_B = time.perf_counter()
+        print("collision check took", (time_B-time_A)*1000,'ms')
+        
         
         potential_moves  = board.get_moves(snakes[snake_id].get_head())
         next_snake_id = self.dict_next_key(snakes, snake_id)
+        
+        time_A = time.perf_counter()
+        print("potential moves took", (time_A-time_B)*1000,'ms')
+        
         
         # Apply "wrap fix" to moves, wrapping offscreen moves across the board
         if self.gamemode == 'wrapped':
@@ -87,32 +106,67 @@ class minimax:
             
         move_scores = {'up': 0, 'down': 0, 'left': 0, 'right': 0}
         
+        time_B = time.perf_counter()
+        print("wrap fix took", (time_B-time_A)*1000,'ms')
+        
+        
         if snake_id == board.get_self_id():
             for move in potential_moves:
+                print("MOVE", move)
+                time_A = time.perf_counter()
+                
                 if self.debug_mode:
                     print("\n"+"_____"*depth)
                     print("\n" + "MY_SNAKE", move, "board")
                 
+                time_B = time.perf_counter()
+                print("-- debug mode 1 took", (time_B-time_A)*1000,'ms')
+                
                 # Copy board and move snake on new board
                 move_board = copy.deepcopy(board)
+                
+                time_A = time.perf_counter()
+                print("-- creating move_board took", (time_A-time_B)*1000,'ms')
+                
                 move_board.move(snake_id, potential_moves[move])
+                
+                time_B = time.perf_counter()
+                print("-- move took", (time_B-time_A)*1000,'ms')
+                
                 move_board.update_board_after_move() # Make more efficient
-                move_food = move_board.food_removed
+                
+                time_A = time.perf_counter()
+                print("-- update board took", (time_A-time_B)*1000,'ms')
+                
+                
                 if self.debug_mode:
-                    print(f"Food eaten: {move_food + food_count}")
                     move_board.print_board()
-                    
-                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta, food_count+move_food)[1]
+                
+                time_B = time.perf_counter()
+                print("-- debug mode 2 took", (time_B-time_A)*1000,'ms')
+                
+                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
+                
+                time_A = time.perf_counter()
+                print("-- Recursion took", (time_A-time_B)*1000,'ms')
+                
+                
                 if self.alpha_beta:
                     if move_scores[move] >= beta:
                         break
                     alpha = max(alpha, move_scores[move])
+                    
+                time_B = time.perf_counter()
+                print("-- alpha beta took", (time_B-time_A)*1000,'ms')
                 
             if self.debug_mode:
                 print(depth, snake_id, move_scores)
                 
             best_key = max(move_scores, key=move_scores.get)
             best_move = [best_key, move_scores[best_key]+0.1]
+            
+            time_A = time.perf_counter()
+            print("-- Max key took", (time_A-time_B)*1000,'ms')
             
             return best_move
 
@@ -129,7 +183,7 @@ class minimax:
                 if self.debug_mode:
                     move_board.print_board()
                     
-                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta, food_count)[1]
+                move_scores[move] = self._minimax(next_snake_id, move_board, depth-1, alpha, beta)[1]
                 if self.alpha_beta:
                     if move_scores[move] <= alpha:
                         break

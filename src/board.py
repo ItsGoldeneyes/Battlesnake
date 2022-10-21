@@ -1,7 +1,8 @@
 from snake import BattleSnake
-import numpy as np
 import math
 from copy import deepcopy, copy
+import json
+import os
 
 
 class Board:
@@ -13,30 +14,46 @@ class Board:
     def __init__(self, data):
         self.data = data
         self.board = data["board"]
+        self.turn = self.data["turn"]
+        self.gamemode = self.data["game"]["ruleset"]["name"]
+        
         self.width = self.board["width"]
         self.height = self.board["height"]
-        self.turn = self.data["turn"]
         self.hazards = self.board["hazards"]
         self.food = self.board["food"]
         
-        self.gamemode = self.data["game"]["ruleset"]["name"]
+        self.self_id = self.data["you"]["id"]
         
         self.snakes = {snake["id"] : BattleSnake(self, snake["id"]) for snake in self.board["snakes"]}
-        
-        self.dead_snakes = {}
-        self.recently_removed_food = {}
     
     def __deepcopy__(self, memo):
-        id_self = id(self)        # memoization avoids unnecesary recursion
-        _copy = memo.get(id_self)
-        if _copy is None:
-            _copy = type(self)(
-                deepcopy(self.data, memo))
-            memo[id_self] = _copy
-            _copy.food = deepcopy(self.food)
-            _copy.hazards = deepcopy(self.hazards)
-            _copy.snakes = deepcopy(self.snakes)
-        return _copy
+        # id_self = id(self)        # memoization avoids unnecesary recursion
+        # _copy = memo.get(id_self)
+        # if _copy is None:
+        #     _copy = type(self)(
+        #         deepcopy(self.data, memo))
+        #     memo[id_self] = _copy
+        #     _copy.food = deepcopy(self.food)
+        #     _copy.hazards = deepcopy(self.hazards)
+        #     _copy.snakes = deepcopy(self.snakes)
+        # return _copy
+        self.update_data()
+        # out_file = open("json.json", "w")
+        # json.dump(self.data, out_file)
+        data = json.loads(json.dumps(self.data))
+        return Board(data)
+    
+    def update_data(self):
+        data = self.data
+        data['board']['food'] = self.food
+        data['snakes'] = []
+        for snake_id in self.snakes:
+            if snake_id == self.get_self_id():
+                data['you'] = self.snakes[snake_id].get_info()
+            snake_dict = self.snakes[snake_id].get_info()
+            data['snakes'].append(snake_dict)
+        
+        self.data = data
     
     def get_width(self):
         return self.width
@@ -50,6 +67,9 @@ class Board:
     def get_food(self):
         return self.food
     
+    def get_turn(self):
+        return self.turn
+    
     def get_snake(self, snake_id):
         return self.snakes[snake_id]
     
@@ -57,10 +77,10 @@ class Board:
         return self.snakes
     
     def get_self_id(self):
-        return self.data["you"]["id"]
+        return self.self_id
     
     def get_position(self, id):
-        return self.snakes[id].get_head(), self.snakes[id].get_body()
+        return self.snakes[id].get_body()
     
     def get_health(self, id):
         return self.snakes[id].get_health()
@@ -101,8 +121,11 @@ class Board:
     def head_collision_check(self, move, snake_id):
         # Get head collisions and check if move is in it
         other_snakes = self.get_other_snakes(snake_id)
-        heads = [other_snakes[id].get_head() for id in other_snakes.keys() 
-                 if other_snakes[id].get_length() >= self.snakes[snake_id].get_length()]
+        if snake_id:
+            heads = [other_snakes[id].get_head() for id in other_snakes.keys() 
+                    if other_snakes[id].get_length() >= self.snakes[snake_id].get_length()]
+        else:
+            heads = [other_snakes[id].get_head() for id in other_snakes.keys()]
         if move in heads:
             return True
         return False
@@ -147,7 +170,7 @@ class Board:
             return True
         return False
     
-    def collision_check(self, move, snake_id):
+    def collision_check(self, move, snake_id=False):
         
         if self.head_collision_check(move, snake_id):
             return True
@@ -186,7 +209,7 @@ class Board:
             # print(col)
          
             
-    def find_moves(self, position):
+    def get_moves(self, position):
         return {
             "up": {"x": position['x'], "y": position['y']+1},
             "down": {"x": position['x'], "y": position['y']-1},
@@ -212,29 +235,18 @@ class Board:
     def is_food(self, move):
         return move in self.food
 
-    
-    def closest_food(self, point_dict):
-        food_list = np.array([self.point_to_list(point) for point in self.food])
-        point = np.array([self.point_to_list(point_dict)])
-        
-        distances = np.linalg.norm(food_list-point, axis=1)
-        min_index = np.argmin(distances)
-        return food_list[min_index]
-        
-        
-    def food_dist(self, pos):
-        if self.food == []:
-            score = 0
-            return score
 
-        food = self.closest_food(pos)
-        score = math.sqrt(((pos["x"]-food[0])**2) + ((pos["y"]-food[1])**2))
-        return score
-    
-    
-    def point_distance(self, pos1, pos2):
-        return math.sqrt(((pos1["x"]-pos2["x"])**2) + ((pos1["y"]-pos2["y"])**2))
-    
+    def point_distance(self, point1, point2):
+        return math.sqrt((point1['x']-point2['x'])**2 
+                         + (point1['y']-point2['y'])**2)
+        
+
+    def food_dist(self, point):
+        food = self.get_food()
+        food.sort(key = lambda x: self.point_distance(x, point))
+        self.food = food
+        return self.point_distance(food[0], point)
+        
     
     def relative_length(self, snake_id):
         snake_length = self.snakes[snake_id].get_length()
@@ -250,29 +262,29 @@ class Board:
             return max_length
     
     def update_board_after_move(self):
+        # self.update_data()
         # Lowers HP, remove dead snakes, remove food
         
         self.snakes = {snake: self.snakes[snake].update(self) for snake in self.snakes}
         new_snakes = deepcopy(self.snakes)
-        dead_snakes = deepcopy(self.dead_snakes)
+        food_removed = 0
         for snake_id in self.snakes:
             
             if new_snakes[snake_id].get_head() in self.food:
-                self.recently_removed_food = new_snakes[snake_id].get_head()
                 self.food.remove(new_snakes[snake_id].get_head())
+                food_removed += 1
                 new_snakes[snake_id].health = 100
         
             if self.collision_check(new_snakes[snake_id].get_head(), snake_id or self.snakes[snake_id].get_health() <= 0):
                 for head_snake_id in self.get_other_snakes(snake_id):
                     if self.snakes[head_snake_id].get_head() == self.snakes[snake_id].get_head():
                         if self.snakes[snake_id].get_length() < self.snakes[head_snake_id].get_length():
-                            dead_snakes[snake_id] = new_snakes[snake_id]
                             new_snakes.pop(snake_id)
             else:
                 new_snakes[snake_id].health = new_snakes[snake_id].get_health() - 1
                 
         self.snakes = dict(new_snakes)
-        self.dead_snakes = dict(dead_snakes)
+        self.food_removed = food_removed
             
             
     def wrap_fix(self, move):

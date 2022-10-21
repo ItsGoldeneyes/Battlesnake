@@ -1,6 +1,7 @@
 {
     "game": {
       "id": "game-00fe20da-94ad-11ea-bb37",
+      "map": "standard",
       "ruleset": {
         "name": "wrapped"
       }
