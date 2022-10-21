@@ -66,6 +66,6 @@ def wrapped_eval(board, snake_id, food_count= 0):
                 score += bucket_food_dist(food_dist, board, max= 0.3)
                 
     # Decrease score for each enemy snake    
-    score -= (len(board.snakes)-1)/2
+    score -= (len(board.snakes)-1)/3
     
     return score
