@@ -6,6 +6,7 @@ import os
 
 from game import Game
 
+PORT = os.getenv('PORT', "8008")
 DEBUG_MODE = os.getenv('DEBUG_MODE', "False")=="True"
 MOVE_MODE = os.getenv('MOVE_MODE', "True")=="True"
 TIMING_MODE = os.getenv('TIMING_MODE', "True")=="True"
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
     host = "0.0.0.0"
-    port = int(os.environ.get("PORT", "8080"))
+    port = int(PORT)
 
     print(f"\nRunning Battlesnake server at http://{host}:{port}", flush=True)
     # app.env = 'development'
