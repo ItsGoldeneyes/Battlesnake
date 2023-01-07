@@ -1,3 +1,6 @@
+from copy import copy, deepcopy
+import src.funcs.snake
+
 '''
 Board format is a dictionary with the following keys:
     'height': The height of the board.
@@ -7,8 +10,7 @@ Board format is a dictionary with the following keys:
     'hazard_damage': The amount of damage a snake takes when it collides with a hazard.
 '''
 
-
-def make_move(board, snake, move) -> dict:
+def make_move(board, snake_id, move) -> dict:
     '''
     Make a move on the board.
     Change the board parameter and return a state dictionary.
@@ -16,19 +18,34 @@ def make_move(board, snake, move) -> dict:
         'snake': The main snake's body before the move.
         'food': Coordinates of any removed food.
     '''
-    pass
+    state = {
+        'snake': deepcopy(board['snakes'][snake_id]['body']),
+        'food': food_check(board, board['snakes'][snake_id])
+    }
 
-def unmake_move(board, state) -> None:
+    board['snakes'][snake_id]['body'].insert(move, 0)
+    
+    if not state['food']:
+        board['snakes'][snake_id]['body'].pop()
+    
+    return state
+
+def unmake_move(board, snake_id, state) -> None:
     '''
     Reset the board parameter to the state parameter.
     '''
-    pass
+    board['snakes'][snake_id]['body'] = state['snake']
+    
+    if state['food']:
+        board['food'].append(state['snake'][0])
 
 def food_check(board, snake) -> bool:
     '''
     Check for food collisions on the board.
     Return True or False
     '''
+    
+    
     pass
 
 def collision_check(board, snake) -> int:
