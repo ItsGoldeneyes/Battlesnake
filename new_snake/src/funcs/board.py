@@ -45,7 +45,6 @@ def food_check(board, snake) -> bool:
     Return True or False
     '''
     
-    
     pass
 
 def collision_check(board, snake) -> int:
