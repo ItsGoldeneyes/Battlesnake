@@ -27,7 +27,7 @@ def handle_info():
     return {
             "apiversion": "1",
             "author": "Goldeneyes",
-            "color": "#88EBB8",
+            "color": "#FFD700",
             "head": "all-seeing",
             "tail": "mlh-gene",
         }
