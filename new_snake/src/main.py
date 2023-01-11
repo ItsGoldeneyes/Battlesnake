@@ -4,8 +4,9 @@ import logging
 import time
 import os
 
-from game import Game
+from game import SnakeGame
 
+PORT = os.getenv('PORT', "8008")
 DEBUG_MODE = os.getenv('DEBUG_MODE', "False")=="True"
 MOVE_MODE = os.getenv('MOVE_MODE', "True")=="True"
 TIMING_MODE = os.getenv('TIMING_MODE', "True")=="True"
@@ -40,15 +41,12 @@ def handle_start():
     """
     print("")
     data = request.get_json()
-    new_game = Game(data, debug_mode= DEBUG_MODE)
+    new_game = SnakeGame(data)
     game = {new_game.get_id() : new_game}
     games.update(game)
-    
-    if TIMING_MODE:
-        start_times[data['game']['id']] = time.perf_counter()
             
     print(f"START {data['game']['id']}")
-    print(f"RULES {data['game']['id']} {new_game.get_rules()}", flush=True)
+    print(f"  RULES {new_game.get_rules()}", flush=True)
     return "ok"
 
 
@@ -59,24 +57,21 @@ def handle_move():
     Each turn, this function is called and the Battlesnake calculates a move.
     It also contains a failsafe to recreate a game in case the snake restarts during a game.
     """
-    turn_start = time.perf_counter()
+    start_time = time.perf_counter()
     data = request.get_json()
     gameid = data["game"]["id"]
+    
     if gameid in games: 
-        move, score = games[gameid].turn(data)
+        move = games[gameid].turn(data)
     else:
-        new_game = Game(data, debug_mode= DEBUG_MODE)
+        new_game = SnakeGame(data)
         game = {new_game.get_id() : new_game}
         games.update(game)
-        move, score = games[gameid].turn(data)
+        move = games[gameid].turn(data)
         
-    if MOVE_MODE:
-        print(f"MOVE {move} SCORE {score}", end="", flush=True)
-        if TIMING_MODE:
-            turn_end = time.perf_counter()
-            turn_duration = turn_end - turn_start
-            print(f" DURATION {turn_duration*1000}ms")
-    
+    end_time = time.perf_counter()
+        
+    print(f'  MOVE {move}, TIME {end_time - start_time}')
     return {"move": move, "shout": ""}
 
 
@@ -86,25 +81,18 @@ def handle_end():
     """
     This function is called when a game the Battlesnake was in has ended.
     The "Game" object is removed from the games dictionary.
-    """
-    if TIMING_MODE:
-        game_end = time.perf_counter()
-        
+    """        
     data = request.get_json()
     games.pop(data["game"]["id"])
     
-    print(f"END  {data['game']['id']}")
-    
-    if TIMING_MODE:
-        game_time = game_end - start_times[data["game"]["id"]]
-        print(f"-- Game took: {game_time} seconds")
+    print(f"END {data['game']['id']}")
     
     return "ok"
 
 
 @app.after_request
 def identify_server(response):
-    response.headers["Server"] = "BattlesnakeOfficial/starter-snake-python"
+    response.headers["Server"] = "Golden/Snake"
     return response
 
 
@@ -112,7 +100,7 @@ if __name__ == "__main__":
     logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
     host = "0.0.0.0"
-    port = int(os.environ.get("PORT", "8080"))
+    port = int(PORT)
 
     print(f"\nRunning Battlesnake server at http://{host}:{port}", flush=True)
     # app.env = 'development'
