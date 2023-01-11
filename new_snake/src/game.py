@@ -1,22 +1,30 @@
+import algorithms.minimax as minimax
+
 import time
 
 class SnakeGame:
-    def __init__(self):
+    def __init__(self, data):
         '''
         Process the initial game data and set up the game.
         Start timers if needed.
         '''
-        
+        self.game_id = data['game']['id']
+        self.game_rules = data['game']['ruleset']['name']
         # Maybe?
         # if game.type == 'wrapped':
         #     self.turn = self.wrapped_turn 
-        pass
     
     def get_id(self) -> str:
         '''
         Return the game id.
         '''
-        pass
+        return self.game_id
+    
+    def get_rules(self) -> dict:
+        '''
+        Return the game rules.
+        '''
+        return self.game_rules
     
     def save_game(self) -> bool:
         '''
@@ -61,7 +69,8 @@ class SnakeGame:
         '''
         Process the current turn data and return the next move.
         '''
-        board = self.pull_data(data)
+        self.board = self.pull_data(data)
+        mm = minimax.BSMinimax(3, self.game_rules)
+        move = mm()
         
-        
-        pass
+        return move

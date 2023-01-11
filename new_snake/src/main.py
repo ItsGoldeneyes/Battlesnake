@@ -4,7 +4,7 @@ import logging
 import time
 import os
 
-from game import Game
+from game import SnakeGame
 
 PORT = os.getenv('PORT', "8008")
 DEBUG_MODE = os.getenv('DEBUG_MODE', "False")=="True"
@@ -41,7 +41,7 @@ def handle_start():
     """
     print("")
     data = request.get_json()
-    new_game = Game(data, debug_mode= DEBUG_MODE)
+    new_game = SnakeGame(data)
     game = {new_game.get_id() : new_game}
     games.update(game)
             
@@ -57,17 +57,21 @@ def handle_move():
     Each turn, this function is called and the Battlesnake calculates a move.
     It also contains a failsafe to recreate a game in case the snake restarts during a game.
     """
+    start_time = time.perf_counter()
     data = request.get_json()
     gameid = data["game"]["id"]
     
     if gameid in games: 
         move = games[gameid].turn(data)
     else:
-        new_game = Game(data, debug_mode= DEBUG_MODE)
+        new_game = SnakeGame(data)
         game = {new_game.get_id() : new_game}
         games.update(game)
         move = games[gameid].turn(data)
-    
+        
+    end_time = time.perf_counter()
+        
+    print(f'  MOVE {move}, TIME {end_time - start_time}')
     return {"move": move, "shout": ""}
 
 

@@ -1,5 +1,5 @@
 from copy import copy, deepcopy
-import src.funcs.snake
+import funcs.snake
 
 '''
 Board format is a dictionary with the following keys:
@@ -8,6 +8,7 @@ Board format is a dictionary with the following keys:
     'food': A list of coordinates representing the food on the board.
     'hazard': A list of coordinates representing the hazards on the board.
     'hazard_damage': The amount of damage a snake takes when it collides with a hazard.
+    'snakes': A dictionary of snake objects.
 '''
 
 def make_move(board, snake_id, move) -> dict:
