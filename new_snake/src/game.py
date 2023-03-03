@@ -36,23 +36,24 @@ class SnakeGame:
         '''
         Pull board and snake data from request
         '''
-        snakes = {}
-        
-        snakes[data['you']['id']] = {'id': data['you']['id'],
+        snakes = {
+            data['you']['id']:
+            {'id': data['you']['id'],
                 'head': data['you']['head'],
                 'body': data['you']['body'],
                 'health': data['you']['health']
+            }
         }
             
         for snake in data['board']['snakes']:
             if snake['id'] == data['you']['id']:
                 continue
-            snakes[snake['id']] = {
+            snakes.append( {
                 'id': snake['id'],
                 'head': snake['head'],
                 'body': snake['body'],
                 'health': snake['health'],
-            }
+            } )
         
         board = {
             'height': data['board']['height'],
@@ -70,7 +71,8 @@ class SnakeGame:
         Process the current turn data and return the next move.
         '''
         self.board = self.pull_data(data)
+        print(self.board['snakes'])
         mm = minimax.BSMinimax(3, self.game_rules)
-        move = mm()
+        move = mm(self.board)
         
         return move
