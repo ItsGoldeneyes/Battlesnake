@@ -48,12 +48,12 @@ class SnakeGame:
         for snake in data['board']['snakes']:
             if snake['id'] == data['you']['id']:
                 continue
-            snakes.append( {
+            snakes[snake['id']] = {
                 'id': snake['id'],
                 'head': snake['head'],
                 'body': snake['body'],
                 'health': snake['health'],
-            } )
+            } 
         
         board = {
             'height': data['board']['height'],

@@ -1,6 +1,6 @@
 
 
-def solo_eval():
+def solo_eval(board, snake_id):
     
     return 0
 

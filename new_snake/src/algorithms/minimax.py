@@ -8,14 +8,15 @@ import math
 
 class BSMinimax():
     def __init__(self, depth=3, ruleset=False) -> None:
-        if not ruleset:
-            self.eval_func = eval.standard_eval()
-        elif ruleset == 'solo':
-            self.eval_func = eval.solo_eval()
-        elif ruleset == 'standard':
-            self.eval_func = eval.standard_eval()
-        elif ruleset == 'wrapped':
-            self.eval_func = eval.wrapped_eval()
+        self.eval_func = eval.solo_eval
+        # if not ruleset:
+        #     self.eval_func = eval.standard_eval
+        # elif ruleset == 'solo':
+        #     self.eval_func = eval.solo_eval
+        # elif ruleset == 'standard':
+        #     self.eval_func = eval.standard_eval
+        # elif ruleset == 'wrapped':
+        #     self.eval_func = eval.wrapped_eval
         
         self.depth = depth
         
@@ -25,7 +26,7 @@ class BSMinimax():
         '''
         
         self.snake_id = board['snakes'][list(board['snakes'].keys())[0]]['id']
-        
+        print(self.snake_id)
         # Get the best move
         move = self._minimax(board, 1, self.snake_id)
         
@@ -43,7 +44,7 @@ class BSMinimax():
         # Base case
         if depth == 0:
             print("base case")
-            return self.eval_func(board, self.snake_id)
+            return ['base', self.eval_func(board, self.snake_id)]
         
         # If not self snake, best move
         if snake_id != self.snake_id:
@@ -51,6 +52,7 @@ class BSMinimax():
             time.sleep(0.1)
             best_move = ['up', -math.inf]
             for move in ['up', 'down', 'left', 'right']:
+                print('dir: {}'.format(move))
                 # Get the board state
                 last_state = funcs.board.make_move(board, move, snake_id)
                 

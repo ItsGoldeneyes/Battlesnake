@@ -19,12 +19,13 @@ def make_move(board, snake_id, move) -> dict:
         'snake': The main snake's body before the move.
         'food': Coordinates of any removed food.
     '''
+    print("snake_id: ", snake_id)
     state = {
         'snake': deepcopy(board['snakes'][snake_id]['body']),
-        'food': food_check(board, board['snakes'][snake_id])
+        'food': food_check(board, snake_id)
     }
 
-    board['snakes'][snake_id]['body'].insert(move, 0)
+    board['snakes'][snake_id]['body'].insert(0, move)
     
     if not state['food']:
         board['snakes'][snake_id]['body'].pop()
@@ -87,6 +88,16 @@ def dict_next_key(dictionary, key):
         result = ik[index_of_next_key] if index_of_next_key in ik else None
         
         return result
+    
+def get_move(board, snake_id, dir):
+    if dir == "up":
+        return board[snake_id]['head'][0], board[snake_id]['head'][1] + 1
+    elif dir == "down":
+        return board[snake_id]['head'][0], board[snake_id]['head'][1] - 1
+    elif dir == "left":
+        return board[snake_id]['head'][0] - 1, board[snake_id]['head'][1]
+    elif dir == "right":
+        return board[snake_id]['head'][0] + 1, board[snake_id]['head'][1]
     
 def collision_check(board, snake_id) -> int:
     '''
