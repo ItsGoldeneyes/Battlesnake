@@ -20,9 +20,9 @@ class BSMinimax():
         
     def __call__(self) -> dict:
         '''
-        Return a the results of single run through minimax.
+        Return the results of single run through minimax.
         '''
-        return 'left'
+        return 'right'
     
     def order_moves(self):
         pass
