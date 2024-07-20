@@ -4,4 +4,3 @@ __pycache__/
 .cmd
 .idea
 .vscode
-ml_snake/combat-reptile.sqlite
