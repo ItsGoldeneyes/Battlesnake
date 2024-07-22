@@ -13,6 +13,11 @@
 import random
 import typing
 import bottle
+import os
+import torch
+from torch import nn
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
@@ -44,8 +49,16 @@ def end(game_state: typing.Dict):
 # Valid moves are "up", "down", "left", or "right"
 # See https://docs.battlesnake.com/api/example-move for available data
 def move(game_state: typing.Dict) -> typing.Dict:
+    # Needed for training, sets game_state to bottle request body
     if not game_state:
         game_state = bottle.request.json
+
+
+
+
+
+
+
 
     # Choose a random direction to move in
     possible_moves = ["up", "down", "left", "right"]
